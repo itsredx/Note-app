@@ -1,0 +1,29 @@
+PyThra Toolkit Initialized
+dir:  C:\Projects\desktop\note-app
+dir:  C:\Projects\desktop\note-app
+Traceback (most recent call last):
+  File "C:\Projects\desktop\note-app\lib\main.py", line 14, in <module>
+    from screens.note_editor_screen import NoteEditorScreen
+  File "C:\Projects\desktop\note-app\lib\screens\note_editor_screen.py", line 13, in <module>
+    from lib.constants.colors import *
+  File "C:\Projects\desktop\note-app\lib\__init__.py", line 8, in <module>
+    from plugins.markdown import widget
+  File "C:\Projects\desktop\note-app\plugins\markdown\__init__.py", line 6, in <module>
+    from .widget import MarkdownEditor
+  File "C:\Projects\desktop\note-app\plugins\markdown\widget.py", line 4, in <module>
+    from .editor_state import MarkdownEditorState
+  File "C:\Projects\desktop\note-app\plugins\markdown\editor_state.py", line 14, in <module>
+    framework = Framework.instance()  # Placeholder for the framework reference
+  File "C:\Users\SMILETECH COMPUTERS\Documents\pythra-toolkit\pythra\core.py", line 68, in instance
+    cls._instance = cls()
+                    ~~~^^
+  File "C:\Users\SMILETECH COMPUTERS\Documents\pythra-toolkit\pythra\core.py", line 98, in __init__
+    print(f"\U0001f3af PyThra Framework | Project Root detected at: {self.project_root}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\SMILETECH COMPUTERS\Documents\pythra-toolkit\pythra\window\webwidget.py", line 170, in write
+    self.original_stream.write(message)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f3af' in position 0: character maps to <undefined>

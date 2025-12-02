@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note App</title>
+    <!-- ADD SIMPLEBAR CSS -->
+    <link rel="stylesheet" href="./js/scroll-bar/simplebar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+                <link id="base-stylesheet" type="text/css" rel="stylesheet" href="styles.css">
+
+                <style id="dynamic-styles">
+.shared-container-0 { box-sizing: border-box; width: 100vw; height: 100vh; }
+
+.shared-container-1 { box-sizing: border-box; background: #E7E0EC; padding: 32px; height: 80vh; }
+.shared-column-0 { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; direction: ltr; }
+
+            .shared-text-0 {
+                margin: 0; /* Reset default paragraph margin */
+                padding: 0;
+                
+                
+                
+            }
+            
+.shared-elevatedbutton-0 { display: inline-flex; align-items: center; justify-content: center; padding: 8px 16px; margin: 4px; border: none; border-radius: 20px; background-color: blue; color: white; cursor: pointer; text-align: center; text-decoration: none; outline: none; box-sizing: border-box; overflow: hidden; position: relative; transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s linear; -webkit-appearance: none; -moz-appearance: none; appearance: none; box-shadow: 0px 1.0px 2.0px 0px rgba(0,0,0,0.15), 0px 2.0px 4.0px 1px rgba(0,0,0,0.10); }
+.shared-elevatedbutton-0:hover { 
+                box-shadow: 0px 1.5px 3.0px 0px rgba(0,0,0,0.18), 0px 3.0px 6.0px 1px rgba(0,0,0,0.13); 
+                
+                /* Add background overlay? */ 
+                }
+.shared-elevatedbutton-0:active { box-shadow: none; background-color: rgba(0, 0, 0, 0.12) }
+.shared-elevatedbutton-0.disabled { background-color: rgba(0, 0, 0, 0.12); color: rgba(0, 0, 0, 0.38); box-shadow: none; cursor: default; pointer-events: none; }
+</style>
+
+                
+        <script src="qwebchannel.js"></script>
+        <script>
+            // Suppress inset-area deprecation warnings
+            (function() {
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                    const message = args.join(' ');
+                    if (message.includes('inset-area') || 
+                        message.includes('position-area') ||
+                        message.includes('has been deprecated')) {
+                        return; // Suppress these specific warnings
+                    }
+                    originalWarn.apply(console, args);
+                };
+            })();
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                new QWebChannel(qt.webChannelTransport, (channel) => {
+                    window.pywebview = channel.objects.pywebview;
+                    console.log("PyWebChannel connected.");
+                });
+            });
+            function handleClick(name) { if(window.pywebview) window.pywebview.on_pressed_str(name, ()=>{}); }
+            function handleClickWithArgs(callback_name, ...args) {
+                if (window.pywebview) {
+                    console.log("index", args);
+                    window.pywebview.on_pressed(callback_name, ...args).then(function(response) {
+                        console.log(response);
+                    }).catch(function(error) {
+                        console.error(error);
+                    });
+                } else {
+                    console.error('pywebview is not defined');
+                }
+            }
+            function handleItemTap(name, index) { if(window.pywebview) window.pywebview.on_item_tap(name, index, ()=>{}); }
+            function handleInput(name, value) {
+                if(window.pywebview) {
+                    window.pywebview.on_input_changed(name, value, ()=>{});
+                }
+            }
+        </script>
+        
+
+                
+
+            </head>
+<body>
+    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class="shared-container-0"><div id="fw_id_3" class=""><div id="fw_id_4" class=""><div id="fw_id_5" class="shared-container-1"><div id="fw_id_6" class="shared-column-0"><p id="fw_id_7" class="shared-text-0">DashBoard Page</p><div id="fw_id_8" class="" style="height: 24px"></div><button id="fw_id_9" class="shared-elevatedbutton-0" onclick="handleClick('&lt;lambda&gt;')"><p id="fw_id_10" class="shared-text-0">Go to Note</p></button></div></div></div></div></div></div></div>
+    <div id="overlay-container"></div>
+
+    <!-- ADD SIMPLEBAR JS -->
+    <script src="./js/scroll-bar/simplebar.min.js"></script>
+    <!-- ADD THE NEW SLIDER JS ENGINE -->
+    
+</body>
+</html>

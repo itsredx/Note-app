@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note App</title>
+    <!-- ADD SIMPLEBAR CSS -->
+    <link rel="stylesheet" href="./js/scroll-bar/simplebar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link id="base-stylesheet" type="text/css" rel="stylesheet" href="styles.css?v=1761988355">
+    <style id="dynamic-styles">
+.shared-container-2 { box-sizing: border-box; width: 100vw; height: 100vh; }
+.shared-center-0 { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;  }
+.shared-stack-0 { position: relative; display: grid; width: fit-content; height: fit-content; justify-items: start; align-items: start; direction: ltr; overflow: hidden; }
+.shared-stack-0 > * { grid-area: 1 / 1; }
+.shared-column-1 { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; height: 100%; direction: ltr; }
+
+.shared-container-1 { box-sizing: border-box; background: #2c2c2c; padding: 0.0px 20px; width: 100vw; height: 70px; }
+.shared-row-2 { display: flex; flex-direction: row; justify-content: space-between; align-items: stretch; width: 100%; height: 100%;direction: ltr; }
+
+.shared-container-0 { box-sizing: border-box; padding: 20px 0.0px 0.0px; }
+.shared-row-0 { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; width: 100%; direction: ltr; }
+.shared-iconbutton-0 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-0 > i, .shared-iconbutton-0 > img, .shared-iconbutton-0 > svg, .shared-iconbutton-0 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-0:hover { background-color: #383838; }
+.shared-iconbutton-0:active { background-color: rgba(211, 211, 211, 0.12); }
+.shared-iconbutton-0.active { background-color: rgba(211, 211, 211, 0.12); }
+.shared-iconbutton-0.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+
+                .material-icon-0 {
+                    position: relative;
+                    font-family: 'Material Symbols Rounded';
+                    font-weight: normal;
+                    font-style: normal;
+                    font-size: 24px;
+                    
+                    line-height: 1;
+                    letter-spacing: normal;
+                    text-transform: none;
+                    z-index: 100;
+                    display: inline-block;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    direction: ltr;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-feature-settings: 'liga';
+                    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                }
+            
+.shared-column-0 { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; height: 100%; direction: ltr; }
+
+            .shared-text-0 {
+                margin: 0; /* Reset default paragraph margin */
+                padding: 0;
+                color: #EDEDED; font-size: 18px; font-weight: bold;
+                
+                
+            }
+            
+
+            .shared-text-1 {
+                margin: 0; /* Reset default paragraph margin */
+                padding: 0;
+                color: #9E9E9E; font-size: 14px;
+                
+                
+            }
+            
+.shared-row-1 { display: flex; flex-direction: row; justify-content: flex-end; align-items: flex-start; width: 100%; direction: ltr; }
+.shared-iconbutton-1 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: None; cursor: pointer; outline: none; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-1 > i, .shared-iconbutton-1 > img, .shared-iconbutton-1 > svg, .shared-iconbutton-1 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-1:hover { background-color: #383838; }
+.shared-iconbutton-1:active { background-color: rgba(0, 0, 0, 0.12); }
+.shared-iconbutton-1.active { background-color: rgba(0, 0, 0, 0.12); }
+.shared-iconbutton-1.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.shared-image-0 { display: block; object-fit: contain;   object-position: center;}
+
+.shared-container-5 { box-sizing: border-box; width: 100vw; height: calc(100vh - 70px); }
+
+.shared-container-4 { box-sizing: border-box; background: #2c2c2c; border-width: 1px; border-style: solid; border-color: #5a5a5a; border-radius: 16px; padding: 8px; }
+.shared-row-3 { display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%; direction: ltr; }
+
+        .shared-dropdown-1.dropdown-container {
+            position: relative;
+            width: 330px;
+            heifht: auto; //TODO
+            font-family: sans-serif;
+        }
+        .shared-dropdown-1 .dropdown-value-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background-color: #4c4c4c;
+            color: #d3d3d3;
+            border: 1px solid transparent;
+            border-radius: 8.0px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .shared-dropdown-1.open .dropdown-value-container {
+            border-color: #6750A4; /* Highlight when open */
+        }
+        .shared-dropdown-1 .dropdown-caret {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            transform: rotate(180deg);
+            transition: transform 0.2s ease-in-out;
+        }
+        .shared-dropdown-1.open .dropdown-caret {
+            transform: rotate(0deg);
+        }
+        .shared-dropdown-1 .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 500px;
+            background-color: #4c4c4c;
+            color: #d3d3d3;
+            border: 1px solid transparent;
+            border-radius: 8.0px;
+            list-style: none;
+            margin: 0.0px 0.0px 12px;
+            padding: 4px 0;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .shared-dropdown-1.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-550px);
+        }
+        .shared-dropdown-1 .dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .shared-dropdown-1 .dropdown-item:hover {
+            background-color: rgba(103, 80, 164, 0.37); /* Hover color */
+        }
+        .shared-dropdown-1 .dropdown-value-container:hover {
+            background-color: #383838; /* Hover color */
+        }
+        .shared-dropdown-1 .dropdown-menu:hover {
+            background-color: #4c4c4c; /* Hover color */
+        }
+        
+.shared-iconbutton-2 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-2 > i, .shared-iconbutton-2 > img, .shared-iconbutton-2 > svg, .shared-iconbutton-2 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-2:hover { background-color: #383838; }
+.shared-iconbutton-2:active { background-color: rgba(211, 211, 211, 0.12); }
+.shared-iconbutton-2.active { background-color: rgba(211, 211, 211, 0.5); }
+.shared-iconbutton-2.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+
+                .pythra-toolbar-font-color-btn {
+                    position: relative;
+                    font-family: 'Material Symbols Rounded';
+                    font-weight: normal;
+                    font-style: normal;
+                    font-size: 24px;
+                    
+                    line-height: 1;
+                    letter-spacing: normal;
+                    text-transform: none;
+                    z-index: 100;
+                    display: inline-block;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    direction: ltr;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-feature-settings: 'liga';
+                    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                }
+            
+.pythra-toolbar-bold { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-bold > i, .pythra-toolbar-bold > img, .pythra-toolbar-bold > svg, .pythra-toolbar-bold > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-bold:hover { background-color: #383838; }
+.pythra-toolbar-bold:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-bold.active { background-color: rgba(211, 211, 211, 0.5); }
+.pythra-toolbar-bold.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.pythra-toolbar-italic { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-italic > i, .pythra-toolbar-italic > img, .pythra-toolbar-italic > svg, .pythra-toolbar-italic > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-italic:hover { background-color: #383838; }
+.pythra-toolbar-italic:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-italic.active { background-color: rgba(211, 211, 211, 0.5); }
+.pythra-toolbar-italic.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.pythra-toolbar-underline { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-underline > i, .pythra-toolbar-underline > img, .pythra-toolbar-underline > svg, .pythra-toolbar-underline > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-underline:hover { background-color: #383838; }
+.pythra-toolbar-underline:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-underline.active { background-color: rgba(211, 211, 211, 0.5); }
+.pythra-toolbar-underline.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.pythra-toolbar-strikethrough { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-strikethrough > i, .pythra-toolbar-strikethrough > img, .pythra-toolbar-strikethrough > svg, .pythra-toolbar-strikethrough > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-strikethrough:hover { background-color: #383838; }
+.pythra-toolbar-strikethrough:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-strikethrough.active { background-color: rgba(211, 211, 211, 0.5); }
+.pythra-toolbar-strikethrough.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.shared-iconbutton-3 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-3 > i, .shared-iconbutton-3 > img, .shared-iconbutton-3 > svg, .shared-iconbutton-3 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-3:hover { background-color: #383838; }
+.shared-iconbutton-3:active { background-color: rgba(211, 211, 211, 0.12); }
+.shared-iconbutton-3.active { background-color: rgba(211, 211, 211, 0.12); }
+.shared-iconbutton-3.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.pythra-toolbar-ul { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-ul > i, .pythra-toolbar-ul > img, .pythra-toolbar-ul > svg, .pythra-toolbar-ul > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-ul:hover { background-color: #383838; }
+.pythra-toolbar-ul:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-ul.active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-ul.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+.pythra-toolbar-ol { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; outline: none; border-radius: 8.0px; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .pythra-toolbar-ol > i, .pythra-toolbar-ol > img, .pythra-toolbar-ol > svg, .pythra-toolbar-ol > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.pythra-toolbar-ol:hover { background-color: #383838; }
+.pythra-toolbar-ol:active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-ol.active { background-color: rgba(211, 211, 211, 0.12); }
+.pythra-toolbar-ol.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+
+.shared-container-3 { box-sizing: border-box; background: #d3d3d3; margin: 0.0px 12px; width: 2px; height: 30px; }
+.shared-elevatedbutton-0 { display: inline-flex; align-items: center; justify-content: center; padding: 8px 16px; margin: 0px; border: none; border-radius: 8.0px; background-color: #4c4c4c; color: #d3d3d3; cursor: pointer; text-align: center; text-decoration: none; outline: none; box-sizing: border-box; overflow: hidden; position: relative; transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s linear; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+.shared-elevatedbutton-0:hover { 
+                 
+                background-color: #383838;
+                /* Add background overlay? */ 
+                }
+.shared-elevatedbutton-0:active { box-shadow: none; background-color: rgba(0, 0, 0, 0.12) }
+.shared-elevatedbutton-0.disabled { background-color: rgba(0, 0, 0, 0.12); color: rgba(0, 0, 0, 0.38); box-shadow: none; cursor: default; pointer-events: none; }
+
+
+                .material-icon-1 {
+                    position: relative;
+                    font-family: 'Material Symbols Rounded';
+                    font-weight: normal;
+                    font-style: normal;
+                    font-size: 24px;
+                    color: #d3d3d3;
+                    line-height: 1;
+                    letter-spacing: normal;
+                    text-transform: none;
+                    z-index: 100;
+                    display: inline-block;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    direction: ltr;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-feature-settings: 'liga';
+                    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                }
+            
+
+            .shared-text-2 {
+                margin: 0; /* Reset default paragraph margin */
+                padding: 0;
+                font-size: 20px;
+                
+                
+            }
+            </style>
+    
+        <script src="qwebchannel.js"></script>
+        <script>
+            // Suppress inset-area deprecation warnings
+            (function() {
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                    const message = args.join(' ');
+                    if (message.includes('inset-area') || 
+                        message.includes('position-area') ||
+                        message.includes('has been deprecated')) {
+                        return; // Suppress these specific warnings
+                    }
+                    originalWarn.apply(console, args);
+                };
+            })();
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                new QWebChannel(qt.webChannelTransport, (channel) => {
+                    window.pywebview = channel.objects.pywebview;
+                    console.log("PyWebChannel connected.");
+                });
+            });
+            function handleClick(name) { if(window.pywebview) window.pywebview.on_pressed_str(name, ()=>{}); }
+            function handleClickWithArgs(callback_name, ...args) {
+                if (window.pywebview) {
+                    console.log("index", args);
+                    window.pywebview.on_pressed(callback_name, ...args).then(function(response) {
+                        console.log(response);
+                    }).catch(function(error) {
+                        console.error(error);
+                    });
+                } else {
+                    console.error('pywebview is not defined');
+                }
+            }
+            function handleItemTap(name, index) { if(window.pywebview) window.pywebview.on_item_tap(name, index, ()=>{}); }
+            function handleInput(name, value) {
+                if(window.pywebview) {
+                    window.pywebview.on_input_changed(name, value, ()=>{});
+                }
+            }
+        </script>
+        
+    
+</head>
+<body>
+    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class="shared-container-2"><div id="fw_id_3" class="shared-center-0"><div id="fw_id_4" class="shared-stack-0"><div id="fw_id_5" class="shared-container-2"><div id="fw_id_6" class="shared-column-1"><div id="fw_id_7" class="shared-container-1"><div id="fw_id_8" class="shared-row-2"><div id="fw_id_9" class="shared-container-0"><div id="fw_id_10" class="shared-row-0"><button id="fw_id_11" class="shared-iconbutton-0" onclick="handleClick('changeMode')"><i id="fw_id_12" class="material-icon-0">arrow_back</i></button><div id="fw_id_13" class="" style="width: 16px"></div><div id="fw_id_14" class="shared-column-0"><p id="fw_id_15" class="shared-text-0" style="color: #EDEDED; font-size: 18; font-weight: bold">Welcome</p><p id="fw_id_16" class="shared-text-1" style="color: #9E9E9E; font-size: 14">first file</p></div></div></div><div id="fw_id_17" class="shared-container-0"><div id="fw_id_18" class="shared-row-1"><button id="fw_id_19" class="shared-iconbutton-0" onclick="handleClick('changeMode')" title="Light Mode"><i id="fw_id_20" class="material-icon-0">light_mode</i></button><div id="fw_id_21" class="" style="width: 12px"></div><button id="fw_id_22" class="shared-iconbutton-0" onclick="handleClick('incrementCounter')" title="Save"><i id="fw_id_23" class="material-icon-0">save</i></button><div id="fw_id_24" class="" style="width: 12px"></div><button id="fw_id_25" class="shared-iconbutton-1" onclick="handleClick('incrementCounter')" title="Ai Chat"><img id="fw_id_26" class="shared-image-0" src="http://localhost:8008/ICON-LIGHT.png" alt=""></button><div id="fw_id_27" class="" style="width: 12px"></div><button id="fw_id_28" class="shared-iconbutton-0" onclick="handleClick('incrementCounter')" title="User Account &amp; Settings"><i id="fw_id_29" class="material-icon-0">account_circle</i></button></div></div></div></div><div id="fw_id_31" class="shared-container-5"></div></div></div><div id="fw_id_32" class="" style="position: absolute; height: 40; width: 100vw; bottom: 18px; top: ; right: ; left: "><div id="fw_id_33" class="shared-center-0"><div id="fw_id_34" class="shared-container-4"><div id="fw_id_35" class="shared-row-3">
+        <div id="fw_id_36" class="dropdown-container shared-dropdown-1">
+            <div class="dropdown-value-container">
+                <span>System Default</span>
+                <svg class="dropdown-caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path></svg>
+            </div>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item" data-value="System Default">System Default</li><li class="dropdown-item" data-value="Arial">Arial</li><li class="dropdown-item" data-value="Verdana">Verdana</li><li class="dropdown-item" data-value="Times New Roman">Times New Roman</li><li class="dropdown-item" data-value="Georgia">Georgia</li><li class="dropdown-item" data-value="Courier New">Courier New</li><li class="dropdown-item" data-value="Agency FB">Agency FB</li><li class="dropdown-item" data-value="Algerian">Algerian</li><li class="dropdown-item" data-value="All Cracked Out">All Cracked Out</li><li class="dropdown-item" data-value="Anton">Anton</li><li class="dropdown-item" data-value="Arial Rounded MT Bold">Arial Rounded MT Bold</li><li class="dropdown-item" data-value="BERNIER Distressed">BERNIER Distressed</li><li class="dropdown-item" data-value="BERNIER Regular">BERNIER Regular</li><li class="dropdown-item" data-value="BERNIER Shade">BERNIER Shade</li><li class="dropdown-item" data-value="Bahnschrift">Bahnschrift</li><li class="dropdown-item" data-value="Baskerville Old Face">Baskerville Old Face</li><li class="dropdown-item" data-value="Bauhaus 93">Bauhaus 93</li><li class="dropdown-item" data-value="Beauty Handwriting">Beauty Handwriting</li><li class="dropdown-item" data-value="Bell MT">Bell MT</li><li class="dropdown-item" data-value="Berlin Sans FB">Berlin Sans FB</li><li class="dropdown-item" data-value="Berlin Sans FB Demi">Berlin Sans FB Demi</li><li class="dropdown-item" data-value="Bernard MT Condensed">Bernard MT Condensed</li><li class="dropdown-item" data-value="Black Future">Black Future</li><li class="dropdown-item" data-value="Blackadder ITC">Blackadder ITC</li><li class="dropdown-item" data-value="Bodoni Bd BT">Bodoni Bd BT</li><li class="dropdown-item" data-value="Bodoni Bk BT">Bodoni Bk BT</li><li class="dropdown-item" data-value="Bodoni MT">Bodoni MT</li><li class="dropdown-item" data-value="Book Antiqua">Book Antiqua</li><li class="dropdown-item" data-value="Bookman Old Style">Bookman Old Style</li><li class="dropdown-item" data-value="Bookshelf Symbol 7">Bookshelf Symbol 7</li><li class="dropdown-item" data-value="Bradley Hand ITC">Bradley Hand ITC</li><li class="dropdown-item" data-value="Britannic Bold">Britannic Bold</li><li class="dropdown-item" data-value="Broadway">Broadway</li><li class="dropdown-item" data-value="Broken Glass">Broken Glass</li><li class="dropdown-item" data-value="Brush Script MT">Brush Script MT</li><li class="dropdown-item" data-value="CARBON-DROID">CARBON-DROID</li><li class="dropdown-item" data-value="Calibri">Calibri</li><li class="dropdown-item" data-value="Californian FB">Californian FB</li><li class="dropdown-item" data-value="Calisto MT">Calisto MT</li><li class="dropdown-item" data-value="Cambria">Cambria</li><li class="dropdown-item" data-value="Candara">Candara</li><li class="dropdown-item" data-value="Cascadia Code">Cascadia Code</li><li class="dropdown-item" data-value="Cascadia Mono">Cascadia Mono</li><li class="dropdown-item" data-value="Castellar">Castellar</li><li class="dropdown-item" data-value="CentSchbkCyrill BT">CentSchbkCyrill BT</li><li class="dropdown-item" data-value="Centaur">Centaur</li><li class="dropdown-item" data-value="Century">Century</li><li class="dropdown-item" data-value="Century Gothic">Century Gothic</li><li class="dropdown-item" data-value="Century Schoolbook">Century Schoolbook</li><li class="dropdown-item" data-value="Century725 Cn BT">Century725 Cn BT</li><li class="dropdown-item" data-value="Century751 BT">Century751 BT</li><li class="dropdown-item" data-value="Century751 No2 BT">Century751 No2 BT</li><li class="dropdown-item" data-value="Century751 SeBd BT">Century751 SeBd BT</li><li class="dropdown-item" data-value="Chewy">Chewy</li><li class="dropdown-item" data-value="Chiller">Chiller</li><li class="dropdown-item" data-value="Clarendon BT">Clarendon BT</li><li class="dropdown-item" data-value="Clarendon Blk BT">Clarendon Blk BT</li><li class="dropdown-item" data-value="Clarendon Lt BT">Clarendon Lt BT</li><li class="dropdown-item" data-value="Coffee Soda">Coffee Soda</li><li class="dropdown-item" data-value="Collier Repstein">Collier Repstein</li><li class="dropdown-item" data-value="Colonna MT">Colonna MT</li><li class="dropdown-item" data-value="Comic Sans MS">Comic Sans MS</li><li class="dropdown-item" data-value="Consolas">Consolas</li><li class="dropdown-item" data-value="Constantia">Constantia</li><li class="dropdown-item" data-value="Cooper Black">Cooper Black</li><li class="dropdown-item" data-value="Copperplate Gothic Bold">Copperplate Gothic Bold</li><li class="dropdown-item" data-value="Copperplate Gothic Light">Copperplate Gothic Light</li><li class="dropdown-item" data-value="Corbel">Corbel</li><li class="dropdown-item" data-value="Curlz MT">Curlz MT</li><li class="dropdown-item" data-value="DESIGNER">DESIGNER</li><li class="dropdown-item" data-value="DFGothic-EB">DFGothic-EB</li><li class="dropdown-item" data-value="DFKaiSho-SB">DFKaiSho-SB</li><li class="dropdown-item" data-value="DFMincho-SU">DFMincho-SU</li><li class="dropdown-item" data-value="DFMincho-UB">DFMincho-UB</li><li class="dropdown-item" data-value="DFMincho-W5">DFMincho-W5</li><li class="dropdown-item" data-value="DFPOP1-W9">DFPOP1-W9</li><li class="dropdown-item" data-value="DRUZHOK">DRUZHOK</li><li class="dropdown-item" data-value="DeVinne Txt BT">DeVinne Txt BT</li><li class="dropdown-item" data-value="DisSenso">DisSenso</li><li class="dropdown-item" data-value="Disappeared without a trace">Disappeared without a trace</li><li class="dropdown-item" data-value="Don Jos?">Don Jos?</li><li class="dropdown-item" data-value="Double Tracker">Double Tracker</li><li class="dropdown-item" data-value="Drover">Drover</li><li class="dropdown-item" data-value="Drover 3D">Drover 3D</li><li class="dropdown-item" data-value="Drover 3D Italic">Drover 3D Italic</li><li class="dropdown-item" data-value="Drover Condensed">Drover Condensed</li><li class="dropdown-item" data-value="Drover Condensed Italic">Drover Condensed Italic</li><li class="dropdown-item" data-value="Drover Expanded">Drover Expanded</li><li class="dropdown-item" data-value="Drover Expanded Italic">Drover Expanded Italic</li><li class="dropdown-item" data-value="Drover Gradient">Drover Gradient</li><li class="dropdown-item" data-value="Drover Gradient Italic">Drover Gradient Italic</li><li class="dropdown-item" data-value="Drover Halftone">Drover Halftone</li><li class="dropdown-item" data-value="Drover Halftone Italic">Drover Halftone Italic</li><li class="dropdown-item" data-value="Drover Italic">Drover Italic</li><li class="dropdown-item" data-value="Drover Rough">Drover Rough</li><li class="dropdown-item" data-value="Drover Rough Italic">Drover Rough Italic</li><li class="dropdown-item" data-value="Drover Semi-Italic">Drover Semi-Italic</li><li class="dropdown-item" data-value="Drover Super-Italic">Drover Super-Italic</li><li class="dropdown-item" data-value="Drover Title">Drover Title</li><li class="dropdown-item" data-value="Drover Title Italic">Drover Title Italic</li><li class="dropdown-item" data-value="Dubai">Dubai</li><li class="dropdown-item" data-value="Ebrima">Ebrima</li><li class="dropdown-item" data-value="Edwardian Script ITC">Edwardian Script ITC</li><li class="dropdown-item" data-value="Elephant">Elephant</li><li class="dropdown-item" data-value="Embassy BT">Embassy BT</li><li class="dropdown-item" data-value="Engravers MT">Engravers MT</li><li class="dropdown-item" data-value="EngraversGothic BT">EngraversGothic BT</li><li class="dropdown-item" data-value="Eras Bold ITC">Eras Bold ITC</li><li class="dropdown-item" data-value="Eras Demi ITC">Eras Demi ITC</li><li class="dropdown-item" data-value="Eras Light ITC">Eras Light ITC</li><li class="dropdown-item" data-value="Eras Medium ITC">Eras Medium ITC</li><li class="dropdown-item" data-value="Erica One">Erica One</li><li class="dropdown-item" data-value="Exotc350 Bd BT">Exotc350 Bd BT</li><li class="dropdown-item" data-value="Exotc350 DmBd BT">Exotc350 DmBd BT</li><li class="dropdown-item" data-value="FS Ariapenciroman">FS Ariapenciroman</li><li class="dropdown-item" data-value="Facon">Facon</li><li class="dropdown-item" data-value="Felix Titling">Felix Titling</li><li class="dropdown-item" data-value="Flames">Flames</li><li class="dropdown-item" data-value="Footlight MT Light">Footlight MT Light</li><li class="dropdown-item" data-value="Forte">Forte</li><li class="dropdown-item" data-value="Franklin Gothic Book">Franklin Gothic Book</li><li class="dropdown-item" data-value="Franklin Gothic Demi">Franklin Gothic Demi</li><li class="dropdown-item" data-value="Franklin Gothic Demi Cond">Franklin Gothic Demi Cond</li><li class="dropdown-item" data-value="Franklin Gothic Heavy">Franklin Gothic Heavy</li><li class="dropdown-item" data-value="Franklin Gothic Medium">Franklin Gothic Medium</li><li class="dropdown-item" data-value="Franklin Gothic Medium Cond">Franklin Gothic Medium Cond</li><li class="dropdown-item" data-value="Freehand521 BT">Freehand521 BT</li><li class="dropdown-item" data-value="Freestyle Script">Freestyle Script</li><li class="dropdown-item" data-value="French Script MT">French Script MT</li><li class="dropdown-item" data-value="Futura">Futura</li><li class="dropdown-item" data-value="Futura Bk">Futura Bk</li><li class="dropdown-item" data-value="Futura Bk BT">Futura Bk BT</li><li class="dropdown-item" data-value="Futura Condensed Demi">Futura Condensed Demi</li><li class="dropdown-item" data-value="Futura Condensed Extra Bold">Futura Condensed Extra Bold</li><li class="dropdown-item" data-value="Futura D OT">Futura D OT</li><li class="dropdown-item" data-value="Futura Display P OT">Futura Display P OT</li><li class="dropdown-item" data-value="Futura ICG">Futura ICG</li><li class="dropdown-item" data-value="Futura ICG Book">Futura ICG Book</li><li class="dropdown-item" data-value="Futura ICG XBold">Futura ICG XBold</li><li class="dropdown-item" data-value="Futura LH Extra Bold">Futura LH Extra Bold</li><li class="dropdown-item" data-value="Futura Md BT">Futura Md BT</li><li class="dropdown-item" data-value="Futura P OT">Futura P OT</li><li class="dropdown-item" data-value="Futura SC T OT">Futura SC T OT</li><li class="dropdown-item" data-value="Futura Std">Futura Std</li><li class="dropdown-item" data-value="Futura Stencil ICG">Futura Stencil ICG</li><li class="dropdown-item" data-value="Futura T OT">Futura T OT</li><li class="dropdown-item" data-value="Futura Thin">Futura Thin</li><li class="dropdown-item" data-value="Futura URW Extra Bold">Futura URW Extra Bold</li><li class="dropdown-item" data-value="Futura URW Heavy">Futura URW Heavy</li><li class="dropdown-item" data-value="Futura URW Medium">Futura URW Medium</li><li class="dropdown-item" data-value="Futura-Bold">Futura-Bold</li><li class="dropdown-item" data-value="Futura-Bold-Italic">Futura-Bold-Italic</li><li class="dropdown-item" data-value="Futura-Condensed-Thin">Futura-Condensed-Thin</li><li class="dropdown-item" data-value="Futura-CondensedExtraBold-Normal">Futura-CondensedExtraBold-Normal</li><li class="dropdown-item" data-value="Futura-CondensedLight-Normal">Futura-CondensedLight-Normal</li><li class="dropdown-item" data-value="Futura-CondensedMedium">Futura-CondensedMedium</li><li class="dropdown-item" data-value="Futura-ExtraBold">Futura-ExtraBold</li><li class="dropdown-item" data-value="Futura-Heavy">Futura-Heavy</li><li class="dropdown-item" data-value="Futura-Light">Futura-Light</li><li class="dropdown-item" data-value="Futura-Medium">Futura-Medium</li><li class="dropdown-item" data-value="FuturaBookCTT">FuturaBookCTT</li><li class="dropdown-item" data-value="FuturaDemiCTT">FuturaDemiCTT</li><li class="dropdown-item" data-value="FuturaEugenia">FuturaEugenia</li><li class="dropdown-item" data-value="FuturaEugeniaCTT">FuturaEugeniaCTT</li><li class="dropdown-item" data-value="FuturaLight">FuturaLight</li><li class="dropdown-item" data-value="FuturaLightCTT">FuturaLightCTT</li><li class="dropdown-item" data-value="FuturaTLig">FuturaTLig</li><li class="dropdown-item" data-value="Futura_Book-Bold">Futura_Book-Bold</li><li class="dropdown-item" data-value="Futura_Book-Normal">Futura_Book-Normal</li><li class="dropdown-item" data-value="Futura_Book-Normal-Italic">Futura_Book-Normal-Italic</li><li class="dropdown-item" data-value="Futura_Extra_Black-Normal">Futura_Extra_Black-Normal</li><li class="dropdown-item" data-value="GF Ordner Inverted">GF Ordner Inverted</li><li class="dropdown-item" data-value="GL-StarTaker">GL-StarTaker</li><li class="dropdown-item" data-value="Gabriola">Gabriola</li><li class="dropdown-item" data-value="Gadugi">Gadugi</li><li class="dropdown-item" data-value="Garamond">Garamond</li><li class="dropdown-item" data-value="Generic Techno">Generic Techno</li><li class="dropdown-item" data-value="Geo">Geo</li><li class="dropdown-item" data-value="GeoSlab703 Md BT">GeoSlab703 Md BT</li><li class="dropdown-item" data-value="GeoSlab703 MdCn BT">GeoSlab703 MdCn BT</li><li class="dropdown-item" data-value="Geometr212 BkCn BT">Geometr212 BkCn BT</li><li class="dropdown-item" data-value="Geometr415 Blk BT">Geometr415 Blk BT</li><li class="dropdown-item" data-value="Geometr706 BlkCn BT">Geometr706 BlkCn BT</li><li class="dropdown-item" data-value="Gideon Roman">Gideon Roman</li><li class="dropdown-item" data-value="Gigi">Gigi</li><li class="dropdown-item" data-value="Gill Sans MT">Gill Sans MT</li><li class="dropdown-item" data-value="Gill Sans MT Condensed">Gill Sans MT Condensed</li><li class="dropdown-item" data-value="Gill Sans MT Ext Condensed Bold">Gill Sans MT Ext Condensed Bold</li><li class="dropdown-item" data-value="Gill Sans Ultra Bold">Gill Sans Ultra Bold</li><li class="dropdown-item" data-value="Gill Sans Ultra Bold Condensed">Gill Sans Ultra Bold Condensed</li><li class="dropdown-item" data-value="Gloucester MT Extra Condensed">Gloucester MT Extra Condensed</li><li class="dropdown-item" data-value="Goldroom">Goldroom</li><li class="dropdown-item" data-value="Gorditas">Gorditas</li><li class="dropdown-item" data-value="Goudy Old Style">Goudy Old Style</li><li class="dropdown-item" data-value="Goudy Stout">Goudy Stout</li><li class="dropdown-item" data-value="Haettenschweiler">Haettenschweiler</li><li class="dropdown-item" data-value="Harlow Solid Italic">Harlow Solid Italic</li><li class="dropdown-item" data-value="Harrington">Harrington</li><li class="dropdown-item" data-value="Heebo">Heebo</li><li class="dropdown-item" data-value="High Tower Text">High Tower Text</li><li class="dropdown-item" data-value="Hokuba Grabs">Hokuba Grabs</li><li class="dropdown-item" data-value="Humanst521 BT">Humanst521 BT</li><li class="dropdown-item" data-value="Humanst521 Lt BT">Humanst521 Lt BT</li><li class="dropdown-item" data-value="Humnst777 BT">Humnst777 BT</li><li class="dropdown-item" data-value="Humnst777 Blk BT">Humnst777 Blk BT</li><li class="dropdown-item" data-value="Humnst777 BlkCn BT">Humnst777 BlkCn BT</li><li class="dropdown-item" data-value="Humnst777 Cn BT">Humnst777 Cn BT</li><li class="dropdown-item" data-value="Humnst777 Lt BT">Humnst777 Lt BT</li><li class="dropdown-item" data-value="Impact">Impact</li><li class="dropdown-item" data-value="Imprint MT Shadow">Imprint MT Shadow</li><li class="dropdown-item" data-value="Informal Roman">Informal Roman</li><li class="dropdown-item" data-value="Ink Free">Ink Free</li><li class="dropdown-item" data-value="Inspiration">Inspiration</li><li class="dropdown-item" data-value="Isenheim">Isenheim</li><li class="dropdown-item" data-value="Javanese Text">Javanese Text</li><li class="dropdown-item" data-value="JetBrainsMono NF">JetBrainsMono NF</li><li class="dropdown-item" data-value="JetBrainsMono NFM">JetBrainsMono NFM</li><li class="dropdown-item" data-value="JetBrainsMono NFP">JetBrainsMono NFP</li><li class="dropdown-item" data-value="JetBrainsMonoNL NF">JetBrainsMonoNL NF</li><li class="dropdown-item" data-value="JetBrainsMonoNL NFM">JetBrainsMonoNL NFM</li><li class="dropdown-item" data-value="JetBrainsMonoNL NFP">JetBrainsMonoNL NFP</li><li class="dropdown-item" data-value="Jokerman">Jokerman</li><li class="dropdown-item" data-value="Juice ITC">Juice ITC</li><li class="dropdown-item" data-value="Kaufmann BT">Kaufmann BT</li><li class="dropdown-item" data-value="Kristen ITC">Kristen ITC</li><li class="dropdown-item" data-value="Kunstler Script">Kunstler Script</li><li class="dropdown-item" data-value="Leelawadee UI">Leelawadee UI</li><li class="dropdown-item" data-value="Linetoline">Linetoline</li><li class="dropdown-item" data-value="Lucida Bright">Lucida Bright</li><li class="dropdown-item" data-value="Lucida Calligraphy">Lucida Calligraphy</li><li class="dropdown-item" data-value="Lucida Console">Lucida Console</li><li class="dropdown-item" data-value="Lucida Fax">Lucida Fax</li><li class="dropdown-item" data-value="Lucida Handwriting">Lucida Handwriting</li><li class="dropdown-item" data-value="Lucida Sans">Lucida Sans</li><li class="dropdown-item" data-value="Lucida Sans Typewriter">Lucida Sans Typewriter</li><li class="dropdown-item" data-value="Lucida Sans Unicode">Lucida Sans Unicode</li><li class="dropdown-item" data-value="MADE CARVING Outline Personal Use">MADE CARVING Outline Personal Use</li><li class="dropdown-item" data-value="MADE CARVING Personal Use">MADE CARVING Personal Use</li><li class="dropdown-item" data-value="MS Gothic">MS Gothic</li><li class="dropdown-item" data-value="MS Outlook">MS Outlook</li><li class="dropdown-item" data-value="MS Reference Sans Serif">MS Reference Sans Serif</li><li class="dropdown-item" data-value="MS Reference Specialty">MS Reference Specialty</li><li class="dropdown-item" data-value="MT Extra">MT Extra</li><li class="dropdown-item" data-value="MV Boli">MV Boli</li><li class="dropdown-item" data-value="Magneto">Magneto</li><li class="dropdown-item" data-value="Maiandra GD">Maiandra GD</li><li class="dropdown-item" data-value="Malgun Gothic">Malgun Gothic</li><li class="dropdown-item" data-value="Marvello">Marvello</li><li class="dropdown-item" data-value="Material Symbols Outlined">Material Symbols Outlined</li><li class="dropdown-item" data-value="Material Symbols Outlined 36pt">Material Symbols Outlined 36pt</li><li class="dropdown-item" data-value="Material Symbols Rounded">Material Symbols Rounded</li><li class="dropdown-item" data-value="Material Symbols Sharp">Material Symbols Sharp</li><li class="dropdown-item" data-value="Matura MT Script Capitals">Matura MT Script Capitals</li><li class="dropdown-item" data-value="Mechanical Demo">Mechanical Demo</li><li class="dropdown-item" data-value="MetaAccanthis">MetaAccanthis</li><li class="dropdown-item" data-value="MetaAccanthisAlternate">MetaAccanthisAlternate</li><li class="dropdown-item" data-value="Mickey Mouse Line PERSONAL USE">Mickey Mouse Line PERSONAL USE</li><li class="dropdown-item" data-value="Mickey Mouse PERSONAL USE">Mickey Mouse PERSONAL USE</li><li class="dropdown-item" data-value="Microsoft Himalaya">Microsoft Himalaya</li><li class="dropdown-item" data-value="Microsoft JhengHei">Microsoft JhengHei</li><li class="dropdown-item" data-value="Microsoft New Tai Lue">Microsoft New Tai Lue</li><li class="dropdown-item" data-value="Microsoft PhagsPa">Microsoft PhagsPa</li><li class="dropdown-item" data-value="Microsoft Sans Serif">Microsoft Sans Serif</li><li class="dropdown-item" data-value="Microsoft Tai Le">Microsoft Tai Le</li><li class="dropdown-item" data-value="Microsoft YaHei">Microsoft YaHei</li><li class="dropdown-item" data-value="Microsoft Yi Baiti">Microsoft Yi Baiti</li><li class="dropdown-item" data-value="MingLiU-ExtB">MingLiU-ExtB</li><li class="dropdown-item" data-value="Mistral">Mistral</li><li class="dropdown-item" data-value="Modern No. 20">Modern No. 20</li><li class="dropdown-item" data-value="Mongolian Baiti">Mongolian Baiti</li><li class="dropdown-item" data-value="Monotype Corsiva">Monotype Corsiva</li><li class="dropdown-item" data-value="Montserrat">Montserrat</li><li class="dropdown-item" data-value="Moran">Moran</li><li class="dropdown-item" data-value="Myanmar Text">Myanmar Text</li><li class="dropdown-item" data-value="NeverMind Rounded Mono">NeverMind Rounded Mono</li><li class="dropdown-item" data-value="News701 BT">News701 BT</li><li class="dropdown-item" data-value="News706 BT">News706 BT</li><li class="dropdown-item" data-value="NewsGoth BT">NewsGoth BT</li><li class="dropdown-item" data-value="NewsGoth Cn BT">NewsGoth Cn BT</li><li class="dropdown-item" data-value="NewsGoth Lt BT">NewsGoth Lt BT</li><li class="dropdown-item" data-value="Niagara Engraved">Niagara Engraved</li><li class="dropdown-item" data-value="Niagara Solid">Niagara Solid</li><li class="dropdown-item" data-value="Nightmare Woods">Nightmare Woods</li><li class="dropdown-item" data-value="Nirmala UI">Nirmala UI</li><li class="dropdown-item" data-value="OCR A Extended">OCR A Extended</li><li class="dropdown-item" data-value="OCR-A BT">OCR-A BT</li><li class="dropdown-item" data-value="OCR-B 10 BT">OCR-B 10 BT</li><li class="dropdown-item" data-value="Old English Text MT">Old English Text MT</li><li class="dropdown-item" data-value="Onyx">Onyx</li><li class="dropdown-item" data-value="Orbit">Orbit</li><li class="dropdown-item" data-value="Oswald">Oswald</li><li class="dropdown-item" data-value="Outward">Outward</li><li class="dropdown-item" data-value="Pacifico">Pacifico</li><li class="dropdown-item" data-value="Palace Script MT">Palace Script MT</li><li class="dropdown-item" data-value="Palatino Linotype">Palatino Linotype</li><li class="dropdown-item" data-value="Papyrus">Papyrus</li><li class="dropdown-item" data-value="Parchment">Parchment</li><li class="dropdown-item" data-value="Perpetua">Perpetua</li><li class="dropdown-item" data-value="Perpetua Titling MT">Perpetua Titling MT</li><li class="dropdown-item" data-value="Pilowlava">Pilowlava</li><li class="dropdown-item" data-value="Pimpaw Cat">Pimpaw Cat</li><li class="dropdown-item" data-value="Playbill">Playbill</li><li class="dropdown-item" data-value="Playwrite AU SA">Playwrite AU SA</li><li class="dropdown-item" data-value="Playwrite IE">Playwrite IE</li><li class="dropdown-item" data-value="PoemScriptW00-Regular">PoemScriptW00-Regular</li><li class="dropdown-item" data-value="Poor Richard">Poor Richard</li><li class="dropdown-item" data-value="Pretty Vintage">Pretty Vintage</li><li class="dropdown-item" data-value="Pristina">Pristina</li><li class="dropdown-item" data-value="QTOptimum">QTOptimum</li><li class="dropdown-item" data-value="Rage Italic">Rage Italic</li><li class="dropdown-item" data-value="Raleway">Raleway</li><li class="dropdown-item" data-value="Ravie">Ravie</li><li class="dropdown-item" data-value="Remington">Remington</li><li class="dropdown-item" data-value="Rockinline">Rockinline</li><li class="dropdown-item" data-value="Rockwell">Rockwell</li><li class="dropdown-item" data-value="Rockwell Condensed">Rockwell Condensed</li><li class="dropdown-item" data-value="Rockwell Extra Bold">Rockwell Extra Bold</li><li class="dropdown-item" data-value="Rockwill">Rockwill</li><li class="dropdown-item" data-value="Rowdex">Rowdex</li><li class="dropdown-item" data-value="Rubik">Rubik</li><li class="dropdown-item" data-value="Ruda">Ruda</li><li class="dropdown-item" data-value="Rustyne">Rustyne</li><li class="dropdown-item" data-value="SUSE">SUSE</li><li class="dropdown-item" data-value="Sans Serif Collection">Sans Serif Collection</li><li class="dropdown-item" data-value="Schadow BT">Schadow BT</li><li class="dropdown-item" data-value="Script MT Bold">Script MT Bold</li><li class="dropdown-item" data-value="Segoe Fluent Icons">Segoe Fluent Icons</li><li class="dropdown-item" data-value="Segoe MDL2 Assets">Segoe MDL2 Assets</li><li class="dropdown-item" data-value="Segoe Print">Segoe Print</li><li class="dropdown-item" data-value="Segoe Script">Segoe Script</li><li class="dropdown-item" data-value="Segoe UI">Segoe UI</li><li class="dropdown-item" data-value="Segoe UI Emoji">Segoe UI Emoji</li><li class="dropdown-item" data-value="Segoe UI Historic">Segoe UI Historic</li><li class="dropdown-item" data-value="Segoe UI Symbol">Segoe UI Symbol</li><li class="dropdown-item" data-value="Segoe UI Variable">Segoe UI Variable</li><li class="dropdown-item" data-value="Showcard Gothic">Showcard Gothic</li><li class="dropdown-item" data-value="SimSun">SimSun</li><li class="dropdown-item" data-value="SimSun-ExtB">SimSun-ExtB</li><li class="dropdown-item" data-value="SimSun-ExtG">SimSun-ExtG</li><li class="dropdown-item" data-value="Sitka">Sitka</li><li class="dropdown-item" data-value="Slidexiaxing">Slidexiaxing</li><li class="dropdown-item" data-value="Snap ITC">Snap ITC</li><li class="dropdown-item" data-value="Spartical Graffiti Line PERSO">Spartical Graffiti Line PERSO</li><li class="dropdown-item" data-value="Spartical Graffiti PERSONAL USE">Spartical Graffiti PERSONAL USE</li><li class="dropdown-item" data-value="Square721 BT">Square721 BT</li><li class="dropdown-item" data-value="Square721 Cn BT">Square721 Cn BT</li><li class="dropdown-item" data-value="Stencil">Stencil</li><li class="dropdown-item" data-value="Street Of Exodus">Street Of Exodus</li><li class="dropdown-item" data-value="Swis721 BT">Swis721 BT</li><li class="dropdown-item" data-value="Swis721 Blk BT">Swis721 Blk BT</li><li class="dropdown-item" data-value="Swis721 BlkCn BT">Swis721 BlkCn BT</li><li class="dropdown-item" data-value="Swis721 Cn BT">Swis721 Cn BT</li><li class="dropdown-item" data-value="Swis721 Hv BT">Swis721 Hv BT</li><li class="dropdown-item" data-value="Swis721 Lt BT">Swis721 Lt BT</li><li class="dropdown-item" data-value="Swis721 LtEx BT">Swis721 LtEx BT</li><li class="dropdown-item" data-value="Swis721 WGL4 BT">Swis721 WGL4 BT</li><li class="dropdown-item" data-value="Sylfaen">Sylfaen</li><li class="dropdown-item" data-value="Symbol">Symbol</li><li class="dropdown-item" data-value="THE GLOBE PERSONAL USE">THE GLOBE PERSONAL USE</li><li class="dropdown-item" data-value="TT2020 Style B">TT2020 Style B</li><li class="dropdown-item" data-value="TT2020 Style D">TT2020 Style D</li><li class="dropdown-item" data-value="TT2020 Style E">TT2020 Style E</li><li class="dropdown-item" data-value="TT2020 Style F">TT2020 Style F</li><li class="dropdown-item" data-value="TT2020 Style F (ASCII)">TT2020 Style F (ASCII)</li><li class="dropdown-item" data-value="TT2020 Style G">TT2020 Style G</li><li class="dropdown-item" data-value="TT2020 Style G (ASCII)">TT2020 Style G (ASCII)</li><li class="dropdown-item" data-value="TT2020Base">TT2020Base</li><li class="dropdown-item" data-value="Tahoma">Tahoma</li><li class="dropdown-item" data-value="Tempus Sans ITC">Tempus Sans ITC</li><li class="dropdown-item" data-value="The Ranch">The Ranch</li><li class="dropdown-item" data-value="The Ranch Roughen">The Ranch Roughen</li><li class="dropdown-item" data-value="The Ranch Script">The Ranch Script</li><li class="dropdown-item" data-value="The Ranch Sketch">The Ranch Sketch</li><li class="dropdown-item" data-value="Times New Bastard">Times New Bastard</li><li class="dropdown-item" data-value="Trebuchet MS">Trebuchet MS</li><li class="dropdown-item" data-value="Tw Cen MT">Tw Cen MT</li><li class="dropdown-item" data-value="Tw Cen MT Condensed">Tw Cen MT Condensed</li><li class="dropdown-item" data-value="Tw Cen MT Condensed Extra Bold">Tw Cen MT Condensed Extra Bold</li><li class="dropdown-item" data-value="Twemoji Mozilla">Twemoji Mozilla</li><li class="dropdown-item" data-value="Typefesse">Typefesse</li><li class="dropdown-item" data-value="TypoUpright BT">TypoUpright BT</li><li class="dropdown-item" data-value="Ultimate Class">Ultimate Class</li><li class="dropdown-item" data-value="Ultra">Ultra</li><li class="dropdown-item" data-value="VALENTINE LOVE">VALENTINE LOVE</li><li class="dropdown-item" data-value="Veronica Hamish">Veronica Hamish</li><li class="dropdown-item" data-value="Viner Hand ITC">Viner Hand ITC</li><li class="dropdown-item" data-value="Vivaldi">Vivaldi</li><li class="dropdown-item" data-value="Vladimir Script">Vladimir Script</li><li class="dropdown-item" data-value="Voltaire Frangela">Voltaire Frangela</li><li class="dropdown-item" data-value="WAFERO Personal Use">WAFERO Personal Use</li><li class="dropdown-item" data-value="Walker - Personal Use">Walker - Personal Use</li><li class="dropdown-item" data-value="Wanted Sans Std">Wanted Sans Std</li><li class="dropdown-item" data-value="Wanted Sans Std Variable">Wanted Sans Std Variable</li><li class="dropdown-item" data-value="Webdings">Webdings</li><li class="dropdown-item" data-value="Wide Latin">Wide Latin</li><li class="dropdown-item" data-value="Wingdings">Wingdings</li><li class="dropdown-item" data-value="Wingdings 2">Wingdings 2</li><li class="dropdown-item" data-value="Wingdings 3">Wingdings 3</li><li class="dropdown-item" data-value="World Conflict">World Conflict</li><li class="dropdown-item" data-value="Yu Gothic">Yu Gothic</li><li class="dropdown-item" data-value="Zebra Lounge">Zebra Lounge</li><li class="dropdown-item" data-value="Zonaix DEMO">Zonaix DEMO</li><li class="dropdown-item" data-value="a_FuturaOrto">a_FuturaOrto</li><li class="dropdown-item" data-value="a_FuturaOrtoLt">a_FuturaOrtoLt</li><li class="dropdown-item" data-value="a_FuturaOrtoSh">a_FuturaOrtoSh</li><li class="dropdown-item" data-value="a_FuturaRound">a_FuturaRound</li><li class="dropdown-item" data-value="a_FuturaRoundDemi">a_FuturaRoundDemi</li><li class="dropdown-item" data-value="a_FuturaRoundTitulSh">a_FuturaRoundTitulSh</li><li class="dropdown-item" data-value="copper">copper</li><li class="dropdown-item" data-value="slideyouran">slideyouran</li><li class="dropdown-item" data-value="zcoolwenyiti">zcoolwenyiti</li>
+            </ul>
+        </div>
+        <div id="fw_id_37" class="" style="width: 12px"></div><button id="fw_id_38" class="shared-iconbutton-2" onclick="handleClickWithArgs('setFontColor', ['red'])" title="Text Color"><i id="fw_id_39" class="material-icon-0 pythra-toolbar-font-color-btn">format_color_text</i></button><div id="fw_id_40" class="" style="width: 12px"></div><button id="fw_id_41" class="shared-iconbutton-2" onclick="handleClick('setHeading')" title="Heading 1"><i id="fw_id_42" class="material-icon-0">format_h1</i></button><div id="fw_id_43" class="" style="width: 12px"></div><button id="fw_id_44" class="shared-iconbutton-2" onclick="handleClick('setParagraph')" title="Paragraph"><i id="fw_id_45" class="material-icon-0">format_paragraph</i></button><div id="fw_id_46" class="" style="width: 12px"></div><button id="fw_id_47" class="shared-iconbutton-2 pythra-toolbar-bold" onclick="handleClick('bold')" title="Bold"><i id="fw_id_48" class="material-icon-0">format_bold</i></button><div id="fw_id_49" class="" style="width: 12px"></div><button id="fw_id_50" class="shared-iconbutton-2 pythra-toolbar-italic" onclick="handleClick('italic')" title="Italic"><i id="fw_id_51" class="material-icon-0">format_italic</i></button><div id="fw_id_52" class="" style="width: 12px"></div><button id="fw_id_53" class="shared-iconbutton-2 pythra-toolbar-underline" onclick="handleClick('underline')" title="Underline"><i id="fw_id_54" class="material-icon-0">format_underlined</i></button><div id="fw_id_55" class="" style="width: 12px"></div><button id="fw_id_56" class="shared-iconbutton-2 pythra-toolbar-strikethrough" onclick="handleClick('strikeThrough')" title="Strike Through"><i id="fw_id_57" class="material-icon-0">format_strikethrough</i></button><div id="fw_id_58" class="" style="width: 12px"></div><button id="fw_id_59" class="shared-iconbutton-3 pythra-toolbar-ul" onclick="handleClick('insertUnorderedList')" title="List Bulleted"><i id="fw_id_60" class="material-icon-0">format_list_bulleted</i></button><div id="fw_id_61" class="" style="width: 12px"></div><button id="fw_id_62" class="shared-iconbutton-3 pythra-toolbar-ol" onclick="handleClick('insertOrderedList')" title="List Numbered"><i id="fw_id_63" class="material-icon-0">format_list_numbered</i></button><div id="fw_id_64" class="shared-container-3"></div><button id="fw_id_65" class="shared-elevatedbutton-0" onclick="handleClick('insertImage')" title="Image"><div id="fw_id_66" class="shared-row-0"><i id="fw_id_67" class="material-icon-1">image</i><div id="fw_id_68" class="" style="width: 8px"></div><p id="fw_id_69" class="shared-text-2" style="font-size: 20">Image</p></div></button></div></div></div></div></div></div></div></div></div>
+    <div id="overlay-container"></div>
+
+    <!-- ADD SIMPLEBAR JS -->
+    <script src="./js/scroll-bar/simplebar.min.js"></script>
+    <!-- ADD THE NEW SLIDER JS ENGINE -->
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                window._pythra_instances = window._pythra_instances || {};
+                try {
+                    // First, DEFINE all our JS classes and functions
+                    
+                    
+                    // Then, RUN the initialization commands that were generated
+                    window._pythra_instances['fw_id_36'] = new PythraDropdown('fw_id_36', {"onChangedName": "dropdown_change_2393916317312"});
+
+                } catch (e) {
+                    console.error("Error running Pythra initializers:", e);
+                }
+            });
+        </script>
+        
+</body>
+</html>
