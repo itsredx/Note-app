@@ -63,22 +63,25 @@ class DashboardScreenState(State):
         super().__init__()
         self.navigator = navigator
 
+    def initState(self):
+        # Create and preload the note editor route
+        self.note_editor_route = PageRoute(
+            builder=lambda nav: NoteEditorScreen(
+                key=Key("note_page"), navigator=nav,
+            ),
+            name="note_editor"
+        )
+        print("🚀 Preloading NoteEditorScreen in background...")
+        self.navigator.preload(self.note_editor_route)
+
     def build(self):
-        # Example of how you would now use the navigator in an event handler:
         settings_button = ElevatedButton(
             key=Key("main_Elv_Btn"),
-            child=Text("Go to Note", key=Key("main_Elv_Btn_child"),),
-            onPressed=lambda: self.navigator.push(
-                PageRoute(
-                    builder=lambda nav: NoteEditorScreen(
-                        key=Key("note_page"), navigator=nav,
-                    )
-                )
-            ),
+            child=Text("Go to Note", key=Key("main_Elv_Btn_child")),
+            onPressed=lambda: self.navigator.push(self.note_editor_route)
         )
         return Container(
             key=Key("Build_container"),
-            # alignment=Alignment.top_center(),
             height='80vh',
             padding=EdgeInsets.all(32),
             color=Colors.surfaceVariant,
@@ -86,7 +89,7 @@ class DashboardScreenState(State):
                 key=Key("main__column"),
                 crossAxisAlignment=CrossAxisAlignment.STRETCH,
                 children=[
-                    Text("DashBoard Page", key=Key("DashBoard_Page_heading"),),
+                    Text("DashBoard Page", key=Key("DashBoard_Page_heading")),
                     SizedBox(key=Key("main_sized_box"), height=24),
                     settings_button,
                 ],

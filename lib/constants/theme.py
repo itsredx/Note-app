@@ -1,16 +1,19 @@
-# constants.theme.py
-# import darkdetect
+from pythra.theme import ThemeData
 
-class ThemeManager:
-    def __init__(self):
-        self.dark_mode = True #darkdetect.isDark()
-        self.show_font = True
 
-    def toggle(self):
-        self.dark_mode = not self.dark_mode
+class AppThemes:
+    light = ThemeData.light()
+    # We can customize the light theme further if needed
+    
+    dark = ThemeData.dark()
+    # Customize dark theme to match AppColors (manually copying values to avoid circular import)
+    dark.background = "#2c2c2c" # AppColors.appBackgroundColorDarkMode
+    dark.surface = "#2c2c2c" # AppColors.appBackgroundColorDarkMode
+    dark.onBackground = "#d3d3d3" # AppColors.iconDarkMode
+    dark.onSurface = "#d3d3d3" # AppColors.iconDarkMode
+    
+    # Map button colors to theme properties or verify usage
+    # For now, we will rely on Colors.adaptive for custom widget colors
 
-    def toggle_font(self):
-        self.show_font = not self.show_font
-
-# Create a single instance that your whole app will use
-theme = ThemeManager()
+# Prepare the initial theme
+initial_theme = AppThemes.dark # Default to dark as per original code preference

@@ -1,7 +1,7 @@
 # plugins/markdown/style.py
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
-from pythra.pythra.styles import Colors  # Import Pythra's color system
+from pythra.styles import Colors  # Import Pythra's color system
 
 
 @dataclass

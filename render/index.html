@@ -9,10 +9,56 @@
 
                 <link id="base-stylesheet" type="text/css" rel="stylesheet" href="styles.css">
 
+                <style id="theme-styles">:root {
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-on-primary: #381E72;
+    --md-sys-color-primary-container: #4F378B;
+    --md-sys-color-on-primary-container: #EADDFF;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-on-secondary: #332D41;
+    --md-sys-color-secondary-container: #4A4458;
+    --md-sys-color-on-secondary-container: #E8DEF8;
+    --md-sys-color-tertiary: #EFB8C8;
+    --md-sys-color-on-tertiary: #492532;
+    --md-sys-color-tertiary-container: #633B48;
+    --md-sys-color-on-tertiary-container: #FFD8E4;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-on-error: #601410;
+    --md-sys-color-error-container: #8C1D18;
+    --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-background: #2c2c2c;
+    --md-sys-color-on-background: #d3d3d3;
+    --md-sys-color-surface: #2c2c2c;
+    --md-sys-color-on-surface: #d3d3d3;
+    --md-sys-color-surface-variant: #49454F;
+    --md-sys-color-on-surface-variant: #CAC4D0;
+    --md-sys-color-outline: #938F99;
+    --md-sys-color-outline-variant: #49454F;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #E6E1E5;
+    --md-sys-color-inverse-on-surface: #313033;
+    --md-sys-color-inverse-primary: #6750A4;
+    --primary: var(--md-sys-color-primary);
+    --background: var(--md-sys-color-background);
+    --surface: var(--md-sys-color-surface);
+    --dynamic-c4ad9ffc: #2c2c2c;
+    --dynamic-aab20997: #d3d3d3;
+    --dynamic-e0ed6f04: #4c4c4c;
+    --dynamic-eb6844e8: #383838;
+    --dynamic-64326462: rgba(211, 211, 211, 0.5);
+    --dynamic-fcbf1ce1: #333030;
+    --dynamic-28c5bc9f: #121212;
+    --dynamic-87fb2e43: lightgrey;
+    --dynamic-68071b82: #EDEDED;
+    --dynamic-2fedc7b0: #9E9E9E;
+    --dynamic-c3a58620: #5a5a5a;
+}</style>
+
                 <style id="dynamic-styles">
 .shared-container-0 { box-sizing: border-box; width: 100vw; height: 100vh; }
 
-.shared-container-1 { box-sizing: border-box; background: #E7E0EC; padding: 32px; height: 80vh; }
+.shared-container-1 { box-sizing: border-box; background: var(--md-sys-color-surface-variant); padding: 32px; height: 80vh; }
 .shared-column-0 { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; direction: ltr; }
 
             .shared-text-0 {
@@ -87,6 +133,7 @@
 
     <!-- ADD SIMPLEBAR JS -->
     <script src="./js/scroll-bar/simplebar.min.js"></script>
+    <script src="./js/pythra_bridge.js"></script>
     <!-- ADD THE NEW SLIDER JS ENGINE -->
     
 </body>

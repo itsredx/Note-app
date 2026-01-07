@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # import colors
 from constants.colors import *
-from constants.theme import theme
+from constants.theme import initial_theme
 
 from screens.note_editor_screen import NoteEditorScreen
 from screens.dashboard_screen import DashboardScreen
@@ -86,5 +86,6 @@ if __name__ == "__main__":
     # This allows running the app directly with `python lib/main.py`
     # as well as with the CLI's `pythra run` command.
     app = Framework.instance()
+    app.set_theme(initial_theme) # Set the initial theme
     app.set_root(Main(key=Key("home_page_wrapper")))
     app.run()

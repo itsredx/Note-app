@@ -10,7 +10,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('note-app/lib'))
 
 # import colors
 from lib.constants.colors import *
-from lib.constants.theme import theme
+from lib.constants.theme import AppThemes
+from lib.screens.components.header_actions import HeaderActions
 
 from plugins.markdown.widget import MarkdownEditor
 from plugins.markdown.controller import MarkdownEditorController
@@ -97,14 +98,9 @@ class NoteEditorScreenState(State):
                 dropdownMargin=EdgeInsets.only(bottom=12),
                 fontSize=12,
                 borderWidth=0.0,
-                borderColor=Colors.transparent,
-                backgroundColor=(
-                    Colors.hex("#837b7b") if theme.dark_mode else Colors.hex("#e9ecef")
-                ),
-                dropdownColor=(
-                    Colors.hex("#837b7b") if theme.dark_mode else Colors.hex("#e9ecef")
-                ),
-                textColor=AppColors.iconDarkMode if theme.dark_mode else None,
+                backgroundColor=AppColors.dropDownColor,
+                dropdownColor=AppColors.dropDownColor,
+                textColor=AppColors.iconColor,
             ),
         )
 
@@ -119,9 +115,13 @@ class NoteEditorScreenState(State):
         super().__init__()
         self.navigator = navigator
 
-    def changeMode(self):
-        theme.toggle()
-        self.setState()
+    @property
+    def is_dark(self):
+        return Framework.instance().theme.brightness == 'dark'
+
+    # changeMode is now handled by ThemeToggleButton internally.
+    # We still keep is_dark helper if needed for other logic, but rebuilds
+    # will be triggered specifically by the child widgets.
 
     def bold(self):
         print('Bold executed')
@@ -184,13 +184,11 @@ class NoteEditorScreenState(State):
             focus_ring_width="0.0px",
             border_color=Colors.transparent,
             border_width="0.0px",
-            accent_color=(
-                Colors.hex("#333030") if theme.dark_mode else Colors.hex("#e9ecef")
-            ),
+            accent_color=Colors.adaptive(dark="#333030", light="#e9ecef"),
             grid_enabled=True,
             grid_dot_color=Colors.grey,
-            grid_background_color=(Colors.hex("#121212") if theme.dark_mode else None),
-            content_text_color=(Colors.lightgrey if theme.dark_mode else Colors.grey),
+            grid_background_color=Colors.adaptive(dark="#121212", light=Colors.transparent),
+            content_text_color=Colors.adaptive(dark=Colors.lightgrey, light=Colors.grey),
         )
 
         # 4. CRITICAL: Inject the dynamic style directly into the persistent widget instance.
@@ -216,11 +214,7 @@ class NoteEditorScreenState(State):
                                         key=Key("Header_container"),
                                         height="70px",
                                         width="100vw",
-                                        color=(
-                                            AppColors.appBackgroundColorDarkMode
-                                            if theme.dark_mode
-                                            else AppColors.appBackgroundColorLightMode
-                                        ),
+                                        color=AppColors.appBackgroundColor,
                                         padding=EdgeInsets.symmetric(horizontal=20),
                                         child=Row(
                                             mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
@@ -245,17 +239,11 @@ class NoteEditorScreenState(State):
                                                                         "back_ico_1"
                                                                     ),
                                                                 ),
-                                                                onPressed=self.changeMode,
-                                                                style=(
-                                                                    ButtonStyle(
-                                                                        backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                                        hoverColor=AppColors.buttonDarkHoverColor,
-                                                                        foregroundColor=AppColors.iconDarkMode,
-                                                                    )
-                                                                    if theme.dark_mode
-                                                                    else ButtonStyle(
-                                                                        hoverColor=AppColors.buttonLightHoverColor,
-                                                                    )
+                                                                onPressed=lambda: print("Back button pressed"),
+                                                                style=ButtonStyle(
+                                                                    backgroundColor=AppColors.buttonBackgroundColor,
+                                                                    hoverColor=AppColors.buttonHoverColor,
+                                                                    foregroundColor=AppColors.buttonForegroundColor,
                                                                 ),
                                                             ),
                                                             SizedBox(
@@ -279,13 +267,7 @@ class NoteEditorScreenState(State):
                                                                         style=TextStyle(
                                                                             fontSize=18,
                                                                             fontWeight="bold",
-                                                                            color=(
-                                                                                Colors.hex(
-                                                                                    "#EDEDED"
-                                                                                )
-                                                                                if theme.dark_mode
-                                                                                else None
-                                                                            ),
+                                                                            color=Colors.adaptive(dark="#EDEDED", light=Colors.black),
                                                                             # fontFamily='verdana',
                                                                         ),
                                                                     ),
@@ -296,13 +278,7 @@ class NoteEditorScreenState(State):
                                                                         ),
                                                                         style=TextStyle(
                                                                             fontSize=14,
-                                                                            color=(
-                                                                                Colors.hex(
-                                                                                    "#9E9E9E"
-                                                                                )
-                                                                                if theme.dark_mode
-                                                                                else Colors.grey
-                                                                            ),
+                                                                            color=Colors.adaptive(dark="#9E9E9E", light=Colors.grey),
                                                                         ),
                                                                     ),
                                                                 ],
@@ -322,128 +298,12 @@ class NoteEditorScreenState(State):
                                                         mainAxisAlignment=MainAxisAlignment.END,
                                                         crossAxisAlignment=CrossAxisAlignment.START,
                                                         children=[
-                                                            IconButton(
-                                                                key=Key("Header_btn_1"),
-                                                                icon=Icon(
-                                                                    (
-                                                                        Icons.light_mode_rounded
-                                                                        if theme.dark_mode
-                                                                        else Icons.dark_mode_rounded
-                                                                    ),
-                                                                    key=Key(
-                                                                        "Header_ico_1"
-                                                                    ),
-                                                                ),
-                                                                onPressed=self.changeMode,
-                                                                tooltip=(
-                                                                    "Light Mode"
-                                                                    if theme.dark_mode
-                                                                    else "Dark Mode"
-                                                                ),
-                                                                style=(
-                                                                    ButtonStyle(
-                                                                        backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                                        hoverColor=AppColors.buttonDarkHoverColor,
-                                                                        foregroundColor=AppColors.iconDarkMode,
-                                                                    )
-                                                                    if theme.dark_mode
-                                                                    else ButtonStyle(
-                                                                        hoverColor=AppColors.buttonLightHoverColor,
-                                                                    )
-                                                                ),
-                                                            ),
-                                                            SizedBox(
-                                                                width=12,
-                                                                key=Key(
-                                                                    "sixe_box_header_controls_1"
-                                                                ),
-                                                            ),
-                                                            IconButton(
-                                                                key=Key(
-                                                                    "save_rounded_btn"
-                                                                ),
-                                                                icon=Icon(
-                                                                    Icons.save_rounded,
-                                                                    key=Key(
-                                                                        "save_rounded_ico"
-                                                                    ),
-                                                                ),
-                                                                onPressed=self.incrementCounter,
-                                                                tooltip="Save",
-                                                                style=(
-                                                                    ButtonStyle(
-                                                                        backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                                        hoverColor=AppColors.buttonDarkHoverColor,
-                                                                        foregroundColor=AppColors.iconDarkMode,
-                                                                    )
-                                                                    if theme.dark_mode
-                                                                    else ButtonStyle(
-                                                                        hoverColor=AppColors.buttonLightHoverColor,
-                                                                    )
-                                                                ),
-                                                            ),
-                                                            SizedBox(
-                                                                width=12,
-                                                                key=Key(
-                                                                    "sixe_box_save_rounded"
-                                                                ),
-                                                            ),
-                                                            IconButton(
-                                                                key=Key("sparkle_btn"),
-                                                                icon=Image(
-                                                                    image=(
-                                                                        AssetImage(
-                                                                            "ICON-LIGHT.png"
-                                                                        )
-                                                                        if theme.dark_mode
-                                                                        else AssetImage(
-                                                                            "ICON.png"
-                                                                        )
-                                                                    ),
-                                                                    key=Key(
-                                                                        "sparkle_ico"
-                                                                    ),
-                                                                ),
-                                                                onPressed=self.incrementCounter,
-                                                                tooltip="Ai Chat",
-                                                                style=ButtonStyle(
-                                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                                ) if theme.dark_mode
-                                                                    else ButtonStyle(
-                                                                        hoverColor=AppColors.buttonLightHoverColor,
-                                                                    )
-                                                            ),
-                                                            SizedBox(
-                                                                width=12,
-                                                                key=Key(
-                                                                    "sixe_box_header_sparkle_btn"
-                                                                ),
-                                                            ),
-                                                            IconButton(
-                                                                key=Key(
-                                                                    "account_circle_rounded_btn"
-                                                                ),
-                                                                icon=Icon(
-                                                                    Icons.account_circle_rounded,
-                                                                    key=Key(
-                                                                        "account_circle_rounded_ico"
-                                                                    ),
-                                                                ),
-                                                                onPressed=self.incrementCounter,
-                                                                tooltip="User Account & Settings",
-                                                                style=(
-                                                                    ButtonStyle(
-                                                                        backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                                        hoverColor=AppColors.buttonDarkHoverColor,
-                                                                        foregroundColor=AppColors.iconDarkMode,
-                                                                    )
-                                                                    if theme.dark_mode
-                                                                    else ButtonStyle(
-                                                                        hoverColor=AppColors.buttonLightHoverColor,
-                                                                    )
-                                                                ),
-                                                            ),
+                                                            HeaderActions(
+                                                                key=Key("header_actions"),
+                                                                onSave=self.incrementCounter,
+                                                                onAiChat=self.incrementCounter,
+                                                                onAccount=self.incrementCounter,
+                                                            )
                                                         ],
                                                     ),
                                                 ),
@@ -492,41 +352,13 @@ class NoteEditorScreenState(State):
                                                 fontSize=12,
                                                 borderWidth=0.0,
                                                 borderColor=AppColors.transparent,
-                                                backgroundColor=(
-                                                    AppColors.dropDownDarkColor
-                                                    if theme.dark_mode
-                                                    else AppColors.dropDownLightColor
-                                                ),
-                                                dropdownColor=(
-                                                    AppColors.dropDownDarkColor
-                                                    if theme.dark_mode
-                                                    else AppColors.dropDownLightColor
-                                                ),
-                                                textColor=(
-                                                    AppColors.iconDarkMode
-                                                    if theme.dark_mode
-                                                    else None
-                                                ),
-                                                dropdownTextColor=(
-                                                    AppColors.iconDarkMode
-                                                    if theme.dark_mode
-                                                    else None
-                                                ),
-                                                dropdownHoverColor=(
-                                                    AppColors.dropDownMenuDarkHoverColor
-                                                    if theme.dark_mode
-                                                    else AppColors.dropDownMenuLightHoverColor
-                                                ),
-                                                hoverColor=(
-                                                    AppColors.dropDownDarkHoverColor
-                                                    if theme.dark_mode
-                                                    else None
-                                                ),
-                                                itemHoverColor=(
-                                                    AppColors.dropDownItemDarkHoverColor
-                                                    if theme.dark_mode
-                                                    else None
-                                                ),
+                                                backgroundColor=AppColors.dropDownColor,
+                                                dropdownColor=AppColors.dropDownColor,
+                                                textColor=AppColors.iconColor,
+                                                dropdownTextColor=AppColors.iconColor,
+                                                dropdownHoverColor=AppColors.dropDownMenuHoverColor,
+                                                hoverColor=AppColors.dropDownHoverColor,
+                                                itemHoverColor=AppColors.dropDownMenuHoverColor,
                                             ),
                                         ),
                                         SizedBox(
@@ -542,26 +374,19 @@ class NoteEditorScreenState(State):
                                                 ),
                                                 # color=(
                                                 #     AppColors.iconDarkMode
-                                                #     if theme.dark_mode
+                                                #     if self.is_dark
                                                 #     else AppColors.iconLightModeFormatColorTextRounded
                                                 # ),
                                                 cssClass="pythra-toolbar-font-color-btn",
                                             ),
                                             onPressed=self.setFontColor,
                                             onPressedArgs=["red"],
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Text Color",
                                         ),
@@ -578,19 +403,12 @@ class NoteEditorScreenState(State):
                                                 key=Key("format_h1_rounded_btn_ico"),
                                             ),
                                             onPressed=self.setHeading,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Heading 1",
                                         ),
@@ -607,19 +425,12 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.setParagraph,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Paragraph",
                                         ),
@@ -637,24 +448,16 @@ class NoteEditorScreenState(State):
                                             ),
                                             onPressed=lambda: self.bold(),
                                             onPressedName= 'bold_lambda',
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=(
-                                                        Colors.red
-                                                        if cursor_state.is_bold
-                                                        and theme.dark_mode
-                                                        else AppColors.buttonDarkBackgroundColor
-                                                    ),
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=(
+                                                    Colors.red
+                                                    if cursor_state.is_bold and self.is_dark
+                                                    else AppColors.buttonBackgroundColor
+                                                ),
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Bold",
                                             cssClass="pythra-toolbar-bold",
@@ -672,19 +475,12 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.italic,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Italic",
                                             cssClass="pythra-toolbar-italic",
@@ -702,19 +498,12 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.underline,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Underline",
                                             cssClass="pythra-toolbar-underline",
@@ -734,19 +523,12 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.strikeThrough,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="Strike Through",
                                             cssClass="pythra-toolbar-strikethrough",
@@ -766,19 +548,12 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.insertUnorderedList,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="List Bulleted",
                                             cssClass="pythra-toolbar-ul",
@@ -798,30 +573,19 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             onPressed=self.insertOrderedList,
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.iconDarkMode,
-                                                    activeColor=AppColors.buttonDarkActiveColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    shape=BorderRadius.circular(8.0),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                hoverColor=AppColors.buttonHoverColor,
+                                                shape=BorderRadius.circular(8.0),
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                activeColor=AppColors.buttonActiveColor,
                                             ),
                                             tooltip="List Numbered",
                                             cssClass="pythra-toolbar-ol",
                                         ),
                                         Container(
                                             key=Key("divider_container"),
-                                            color=(
-                                                AppColors.iconDarkMode
-                                                if theme.dark_mode
-                                                else AppColors.iconLightMode
-                                            ),
+                                            color=AppColors.iconColor,
                                             height=30,
                                             width=2,
                                             margin=EdgeInsets.symmetric(
@@ -839,11 +603,7 @@ class NoteEditorScreenState(State):
                                                             "image_rounded_btn_ico"
                                                         ),
                                                         size=24,
-                                                        color=(
-                                                            AppColors.iconDarkMode
-                                                            if theme.dark_mode
-                                                            else None
-                                                        ),
+                                                        color=AppColors.iconColor,
                                                     ),
                                                     SizedBox(
                                                         width=8,
@@ -862,32 +622,13 @@ class NoteEditorScreenState(State):
                                                     ),
                                                 ],
                                             ),
-                                            style=(
-                                                ButtonStyle(
-                                                    backgroundColor=AppColors.buttonDarkBackgroundColor,
-                                                    foregroundColor=(
-                                                        AppColors.iconDarkMode
-                                                        if theme.dark_mode
-                                                        else AppColors.iconLightMode
-                                                    ),
-                                                    elevation=0,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    margin=EdgeInsets.all(0),
-                                                    hoverColor=AppColors.buttonDarkHoverColor,
-                                                )
-                                                if theme.dark_mode
-                                                else ButtonStyle(
-                                                    backgroundColor=AppColors.buttonLightBackgroundColor,
-                                                    foregroundColor=(
-                                                        AppColors.iconDarkMode
-                                                        if theme.dark_mode
-                                                        else AppColors.iconLightMode
-                                                    ),
-                                                    hoverColor=AppColors.buttonLightHoverColor,
-                                                    elevation=0,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    margin=EdgeInsets.all(0),
-                                                )
+                                            style=ButtonStyle(
+                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                elevation=0,
+                                                shape=BorderRadius.circular(8.0),
+                                                margin=EdgeInsets.all(0),
+                                                hoverColor=AppColors.buttonHoverColor,
                                             ),
                                             onPressed=self.insertImage,
                                             tooltip="Image",
@@ -896,12 +637,8 @@ class NoteEditorScreenState(State):
                                 ),
                                 decoration=BoxDecoration(
                                     borderRadius=BorderRadius.all(16),
-                                    border=BorderSide(width=1, color=Colors.hex("#5a5a5a")),
-                                    color=AppColors.toolbarBackgroundDarkColor,
-                                ) if theme.dark_mode else BoxDecoration(
-                                    borderRadius=BorderRadius.all(16),
-                                    border=BorderSide(width=1, color=Colors.hex("#d3d3d3")),
-                                    color=Colors.white,
+                                    border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
+                                    color=Colors.adaptive(dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white),
                                 ),
                             ),),
                         ),
