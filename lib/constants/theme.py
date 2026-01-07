@@ -1,9 +1,9 @@
 # constants.theme.py
-import darkdetect
+# import darkdetect
 
 class ThemeManager:
     def __init__(self):
-        self.dark_mode = darkdetect.isDark()
+        self.dark_mode = True #darkdetect.isDark()
         self.show_font = True
 
     def toggle(self):
