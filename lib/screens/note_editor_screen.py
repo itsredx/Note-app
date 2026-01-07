@@ -239,7 +239,7 @@ class NoteEditorScreenState(State):
                                                                         "back_ico_1"
                                                                     ),
                                                                 ),
-                                                                onPressed=lambda: print("Back button pressed"),
+                                                                onPressed=lambda: self.get_widget().navigator.pop(),
                                                                 style=ButtonStyle(
                                                                     backgroundColor=AppColors.buttonBackgroundColor,
                                                                     hoverColor=AppColors.buttonHoverColor,
