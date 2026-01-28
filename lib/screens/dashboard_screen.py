@@ -1,6 +1,8 @@
+from lib.constants.theme import AppThemes
 from .note_editor_screen import NoteEditorScreen
 from .components.note_card import NoteCard
 from lib.constants.colors import *
+from lib.screens.components.header_actions import HeaderActions
 
 from pythra import (
     Framework,
@@ -131,6 +133,16 @@ class DashboardScreenState(State):
         self.selected_color = None
         self.setState()
 
+    @property
+    def is_dark(self):
+        return Framework.instance().theme.brightness == 'dark'
+
+    def toggle_theme(self):
+        new_theme = AppThemes.light if self.is_dark else AppThemes.dark
+        Framework.instance().set_theme(new_theme)
+        # Rebuild this row to update all icons (Sun/Moon, Sparkle, etc)
+        self.setState()
+
     def build(self):
         # Sidebar with Create Button and Color Picker
         sidebar = Container(
@@ -215,11 +227,16 @@ class DashboardScreenState(State):
                     height="100vh",
                     width="calc(100vw - 80px)", 
                     color=Colors.surface,
-                    padding=EdgeInsets.symmetric(horizontal=40, vertical=32),
+                    padding=EdgeInsets.only(left=40, right=40, top=24,bottom=32),
                     child=Column(
                         key=Key("content_column"),
                         crossAxisAlignment=CrossAxisAlignment.STRETCH,
                         children=[
+                            HeaderActions(
+                                key=Key("dashboard_header"), 
+                                onAccount=lambda: print('on account')
+                            ),
+                            SizedBox(key=Key("page_heading_sized_box"), height=24),
                             Text(
                                 "Dashboard", 
                                 key=Key("DashBoard_Page_heading"), 

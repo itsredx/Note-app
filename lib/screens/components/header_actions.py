@@ -8,7 +8,7 @@ from lib.constants.colors import AppColors
 from lib.constants.theme import AppThemes
 
 class HeaderActions(StatefulWidget):
-    def __init__(self, key: Key, onSave: callable, onAiChat: callable, onAccount: callable):
+    def __init__(self, key: Key, onSave: callable = None, onAiChat: callable = None, onAccount: callable = None):
         self.onSave = onSave
         self.onAiChat = onAiChat
         self.onAccount = onAccount
@@ -48,7 +48,7 @@ class HeaderActionsState(State):
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
                 ),
-                SizedBox(width=12, key=Key("sixe_box_header_controls_1")),
+                SizedBox(width=12, key=Key("sixe_box_header_controls_1")) if self.widget().onSave or self.widget().onAccount or self.widget().onAiChat else (),
                 IconButton(
                     key=Key("save_rounded_btn"),
                     icon=Icon(Icons.save_rounded, key=Key("save_rounded_ico")),
@@ -59,8 +59,8 @@ class HeaderActionsState(State):
                         hoverColor=AppColors.buttonHoverColor,
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
-                ),
-                SizedBox(width=12, key=Key("sixe_box_save_rounded")),
+                ) if self.widget().onSave else (),
+                SizedBox(width=12, key=Key("sixe_box_save_rounded")) if self.widget().onSave else (),
                 IconButton(
                     key=Key("sparkle_btn"),
                     icon=Image(
@@ -77,8 +77,8 @@ class HeaderActionsState(State):
                         backgroundColor=AppColors.buttonBackgroundColor,
                         hoverColor=AppColors.buttonHoverColor,
                     ),
-                ),
-                SizedBox(width=12, key=Key("sixe_box_header_sparkle_btn")),
+                ) if self.widget().onAiChat else (),
+                SizedBox(width=12, key=Key("sixe_box_header_sparkle_btn")) if self.widget().onAiChat else (),
                 IconButton(
                     key=Key("account_circle_rounded_btn"),
                     icon=Icon(
@@ -92,6 +92,6 @@ class HeaderActionsState(State):
                         hoverColor=AppColors.buttonHoverColor,
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
-                ),
+                ) if self.widget().onAccount else (),
             ],
         )
