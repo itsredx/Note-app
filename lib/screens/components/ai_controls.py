@@ -52,11 +52,14 @@ action_to_perform = {
     "action": ""
 }
 
+from PySide6.QtCore import QTimer
+
 class AiActionsControlsState(State):
     def __init__(self):
         super().__init__()
         self.mode_controller = DropdownController(selectedValue=labels[0])
         self.action_controller = DropdownController(selectedValue=action_label[0])
+        self.is_loading = False
 
     def setMode(self, new_value):
         print("Mode changed!: ", new_value)
@@ -66,13 +69,26 @@ class AiActionsControlsState(State):
         print("Action changed!: ", new_value)
         action_to_perform["action"] = new_value
 
-    def generate(self):
-        print("Generating...")
-        print(action_to_perform)
+    def _finish_generation(self):
+        self.is_loading = False
+        self.setState()
+        
         widget = self.get_widget()
-        time.sleep(3)
         if widget and widget.onGenerate:
             widget.onGenerate()
+
+    def generate(self):
+        if self.is_loading:
+            return
+
+        print("Generating...")
+        print(action_to_perform)
+        
+        self.is_loading = True
+        self.setState()
+        
+        # Simulate network request with QTimer to invoke callback on the main thread safely
+        QTimer.singleShot(2000, self._finish_generation)
 
     def _build_styled_dropdown(self, key_str, controller, items, on_changed):
         return Dropdown(
@@ -138,7 +154,7 @@ class AiActionsControlsState(State):
                                 key=Key("generate_btn_inner_row"),
                                 children=[
                                     Text(
-                                        "Generate",
+                                        "Generating..." if self.is_loading else "Generate",
                                         key=Key(
                                             "generate_btn_txt"
                                         ),
