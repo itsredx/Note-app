@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('note-app/lib'))
 from lib.constants.colors import *
 from lib.constants.theme import AppThemes
 from lib.screens.components.header_actions import HeaderActions
+from lib.screens.components.ai_controls import AiActionsControls
 
 from plugins.markdown.widget import MarkdownEditor
 from plugins.markdown.controller import MarkdownEditorController
@@ -110,7 +111,26 @@ class NoteEditorScreenState(State):
             height="calc(100vh - 70px)",
             width="100vw",
             show_grid=True,
+            overlay=AiActionsControls(
+                key=Key("ai_controls_popup"),
+                onGenerate=lambda: self.editor.hide_overlay()
+            ),
         )
+
+        # Define stable style
+        self.editor_style = EditorStyle(
+            focus_ring_color=Colors.transparent,
+            focus_ring_width="0.0px",
+            border_color=Colors.transparent,
+            border_width="0.0px",
+            accent_color=Colors.adaptive(dark="#333030", light="#e9ecef"),
+            grid_enabled=True,
+            grid_dot_color=Colors.grey,
+            grid_background_color=Colors.adaptive(dark="#121212", light=Colors.transparent),
+            content_text_color=Colors.adaptive(dark=Colors.lightgrey, light=Colors.grey),
+        )
+        # Inject style immediately
+        self.markdown_editor.style = self.editor_style
 
         super().__init__()
         self.navigator = navigator
@@ -179,21 +199,7 @@ class NoteEditorScreenState(State):
 
     def build(self) -> Widget:
         cursor_state = self.editor.cursor_state
-        editor_style = style = EditorStyle(
-            focus_ring_color=Colors.transparent,
-            focus_ring_width="0.0px",
-            border_color=Colors.transparent,
-            border_width="0.0px",
-            accent_color=Colors.adaptive(dark="#333030", light="#e9ecef"),
-            grid_enabled=True,
-            grid_dot_color=Colors.grey,
-            grid_background_color=Colors.adaptive(dark="#121212", light=Colors.transparent),
-            content_text_color=Colors.adaptive(dark=Colors.lightgrey, light=Colors.grey),
-        )
-
-        # 4. CRITICAL: Inject the dynamic style directly into the persistent widget instance.
-        #    This updates the widget's configuration without recreating it.
-        self.markdown_editor.style = editor_style
+        
         return Container(
             key=Key("home_page_Pythra_wrapper_container"),
             height="100vh",

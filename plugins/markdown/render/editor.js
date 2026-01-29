@@ -224,9 +224,9 @@ class PythraMarkdownEditor {
 
     _setupVisualFeedbackHandlers() {
         if (!this.editorElement) return;
-        this._feedbackHandler = () => { 
-            this.updateButtonStates(); 
-            this.reportCursorState(); 
+        this._feedbackHandler = () => {
+            this.updateButtonStates();
+            this.reportCursorState();
         };
         ['keyup', 'mouseup', 'focus', 'click'].forEach(eventType => {
             this.editorElement.addEventListener(eventType, this._feedbackHandler);
@@ -254,9 +254,57 @@ class PythraMarkdownEditor {
             blockFormat: document.queryCommandValue('formatBlock'), // e.g., 'h1', 'p'
         };
 
+        // --- NEW: Add selection coordinates ---
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            // Important: These coordinates are relative to the viewport.
+            // We might need to adjust them based on the window/screen context in Python,
+            // or just pass them as is if the Python UI overlay is also screen-relative (which it often is in these frameworks).
+            state.hasSelection = true;
+            state.selectionRect = {
+                top: rect.top,
+                bottom: rect.bottom,
+                left: rect.left,
+                right: rect.right,
+                width: rect.width,
+                height: rect.height
+            };
+
+            // --- NEW: Update Overlay Position via JS ---
+            if (window._pythraOverlay) {
+                const overlay = window._pythraOverlay;
+                overlay.style.display = 'block';
+                // Position above the selection
+                // We assume the overlay has position: absolute or fixed
+                // Adding scroll offset if needed, though getBoundingClientRect is viewport relative.
+                // If the Container is fixed/absolute to viewport, this is fine.
+                // Subtract overlay height (estimated or measured) to place on top
+
+                // Better approach: Let's assume the overlay wrapper is absolute 0,0 in a Stack covering the window.
+                const containerOffset = 200;
+                const overlayHeight = overlay.offsetHeight || 60; // Estimate or measure
+                const top = Math.max(0, rect.top - overlayHeight - 10) + containerOffset;
+                const left = rect.left;
+
+                overlay.style.top = `${top}px`;
+                overlay.style.left = `${left}px`;
+            }
+
+        } else {
+            state.hasSelection = false;
+            state.selectionRect = null;
+
+            // Hide overlay
+            if (window._pythraOverlay) {
+                window._pythraOverlay.style.display = 'none';
+            }
+        }
+
         // Send this entire state object to Python in a single call.
         // We reuse handleInput, but the value is now a JSON string of the state object.
-        console.log("cusorState: ", state);
+        // console.log("cusorState: ", state);
         handleInput(this.options.onStateChangeCallback, JSON.stringify(state));
         syncExternalToolbarState(state);
     }
@@ -329,6 +377,32 @@ class PythraMarkdownEditor {
     }
 }
 
+// --- NEW: JS-Controlled Overlay Logic ---
+
+class PythraSelectionOverlay {
+    constructor(elementOrId, options = {}) {
+        if (typeof elementOrId === 'string') {
+            this.container = document.getElementById(elementOrId);
+        } else {
+            this.container = elementOrId;
+        }
+
+        if (this.container) {
+            // Save to global scope for the editor to access
+            window._pythraOverlay = this.container;
+
+            // Initial style: hidden and absolute
+            this.container.style.position = 'absolute';
+            this.container.style.display = 'none';
+            this.container.style.zIndex = '1000'; // Ensure it's on top
+            this.container.style.transition = 'opacity 0.2s ease, top 0.1s ease, left 0.1s ease';
+            this.container.style.pointerEvents = 'auto'; // Make sure clicks work
+        }
+    }
+}
+
+window.PythraSelectionOverlay = PythraSelectionOverlay;
+
 window.PythraMarkdownEditor = PythraMarkdownEditor;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -353,6 +427,13 @@ function restoreEditorSelection() {
 }
 
 window.restoreEditorSelection = restoreEditorSelection;
+
+// --- NEW: Global function to hide the overlay ---
+window.hidePythraSelectionOverlay = function () {
+    if (window._pythraOverlay) {
+        window._pythraOverlay.style.display = 'none';
+    }
+};
 
 class PythraImageResizer {
     constructor(editorElement) { this.editor = editorElement; this.selectedImage = null; this.wrapper = null; this.handleClick = this.handleClick.bind(this); this.handleMouseDown = this.handleMouseDown.bind(this); this.handleMouseMove = this.handleMouseMove.bind(this); this.handleMouseUp = this.handleMouseUp.bind(this); this.editor.addEventListener('click', this.handleClick); }
@@ -391,10 +472,10 @@ function syncExternalToolbarState(cursorState) {
     for (const key in stateToClassMap) {
         const className = stateToClassMap[key];
         const isActive = cursorState[key];
-        
+
         // Find all buttons that have this class
         const buttons = document.querySelectorAll(`.${className}`);
-        
+
         buttons.forEach(button => {
             // Use classList.toggle for a clean and efficient update.
             // The second argument forces 'add' if isActive is true, and 'remove' if false.
@@ -403,14 +484,14 @@ function syncExternalToolbarState(cursorState) {
     }
 
     // --- 2. THE CORRECTED LOGIC for the font color button ---
-    
+
     // Find the icon using its new, stable class name.
     const colorButtonIcon = document.querySelector('.pythra-toolbar-font-color-btn');
-    
+
     if (colorButtonIcon) {
         // Get the color from the cursor state.
         const newColor = cursorState.fontColor;
-        
+
         if (newColor && newColor !== "inherit" && newColor !== "rgb(0, 0, 0)" && newColor !== "rgba(0, 0, 0, 0)") {
             // --- USE setProperty WITH '!important' ---
             colorButtonIcon.style.setProperty('color', newColor, 'important');

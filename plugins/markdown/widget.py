@@ -1,5 +1,5 @@
 # plugins/markdown/widget.py
-from pythra import StatefulWidget, Key
+from pythra import StatefulWidget, Key, Widget
 
 from .editor_state import MarkdownEditorState
 from .style import EditorStyle
@@ -24,6 +24,7 @@ class MarkdownEditor(StatefulWidget):
         show_grid: bool = False,
         show_controls: bool = False,
         style: EditorStyle = None,
+        overlay: Widget = None, # New optional overlay widget
     ):
 
         if not isinstance(controller, MarkdownEditorController):
@@ -36,6 +37,7 @@ class MarkdownEditor(StatefulWidget):
         self.show_grid = show_grid
         self.show_controls = show_controls
         self.style = EditorStyle()
+        self.overlay = overlay
         super().__init__(key=key)
 
     def createState(self):

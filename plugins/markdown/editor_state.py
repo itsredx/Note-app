@@ -24,6 +24,8 @@ class MarkdownEditorState(State):
         self._controls_visible = True # Default to visible
         self._toggle_controls_callback_name = None
         self._state_change_callback_name = None
+        
+        self._cached_js_init = None
        
     
     def _get_html_id_for_key(self, key: Key) -> str:
@@ -125,6 +127,13 @@ class MarkdownEditorState(State):
         framework.window.evaluate_js(window_id, js)
 
     # --- ADD THIS NEW METHOD ---
+    def run_javascript(self, js: str):
+        """Run arbitrary JavaScript in the context of this widget."""
+        if hasattr(self, '_window_id') and framework and framework.window:
+            framework.window.evaluate_js(self._window_id, js)
+        elif framework and framework.window:
+            framework.window.evaluate_js(framework.id, js)
+
     def restore_selection_and_exec(self, command: str, value: Optional[str] = None):
         if not framework or not framework.window:
             return
@@ -202,8 +211,8 @@ class MarkdownEditorState(State):
         """
         # This part updates the Python controller (which is correct)
         widget = self.get_widget()
-        # if widget and widget.controller:
-        #     widget.controller._update_cursor_state_from_js(state_json)
+        if widget and widget.controller:
+            widget.controller._update_cursor_state_from_js(state_json)
 
         # --- NEW LOGIC ---
         # Now, send a command back to JS to update the external toolbar.
@@ -260,24 +269,59 @@ class MarkdownEditorState(State):
 
         style = widget.style if widget.style else EditorStyle() # Use default style if none provided
             
-        # Container that will be initialized by our JS engine
-        return Container(
-            key=widget.key,
-            width=widget.width,
-            height=widget.height,
-            js_init={
+        if self._content is None:
+             self._content = widget.controller.get_content()
+
+        # --- FIX: Memoize js_init to prevent destruction on setState ---
+        if self._cached_js_init is None:
+            self._cached_js_init = {
                 "engine": "PythraMarkdownEditor",
                 "instance_name": f"{widget.key.value}_PythraMarkdownEditor",
                 "options": {
                     'callback': self._callback_name,
                     'instanceId': f"{widget.key.value}_PythraMarkdownEditor",
                     "showControls": widget.show_controls,
-                    "initialContent": widget.controller.get_content(),
+                    # USE STABLE CONTENT
+                    "initialContent": self._content,
                     "width": widget.width,
                     "height": widget.height,
-                    "showGrid": widget.show_grid, # Was "shoe_grid"
-                    "style": style.to_dict(),  # Pass the complete style configuration
+                    "showGrid": widget.show_grid, 
+                    "style": style.to_dict(),  
                     "onStateChangeCallback": self._state_change_callback_name,
                 },
-            },
+            }
+
+        editor_container = Container(
+            key=widget.key,
+            width=widget.width,
+            height=widget.height,
+            js_init=self._cached_js_init,
         )
+
+        if widget.overlay:
+            from pythra import Stack, Positioned
+            # Create a separate, stable container for the overlay that JS can move
+            overlay_container = Container(
+                key=Key(f"{widget.key.value}_overlay_wrapper"),
+                # Key for the JS engine to find it
+                js_init={
+                    "engine": "PythraSelectionOverlay", 
+                    "instance_name": f"{widget.key.value}_overlay",
+                     # No options needed initially; JS will just grab the element
+                     "options": {} 
+                },
+                child=widget.overlay,
+                # Start hidden or letting JS handle display
+            )
+            
+            return Stack(
+                children=[
+                    editor_container,
+                    Positioned(
+                        left="0", top="-200px",
+                        child=overlay_container
+                    )
+                ]
+            )
+
+        return editor_container

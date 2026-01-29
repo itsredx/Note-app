@@ -4,6 +4,7 @@ import json
 
 class EditorCursorState:
     """A dataclass to hold the formatting state at the cursor's position."""
+
     def __init__(self, data: Dict[str, Any]):
         print("Data: ", data)
         self.is_bold = data.get('isBold', False)
@@ -20,8 +21,12 @@ class EditorCursorState:
         self.font_color = data.get('fontColor', '') # e.g., 'rgb(255, 0, 0)'
         self.block_format = data.get('blockFormat', 'p') # e.g., 'h1', 'p'
 
+        # --- NEW: Selection State ---
+        self.has_selection = data.get('hasSelection', False)
+        self.selection_rect = data.get('selectionRect', None)
+
     def __repr__(self):
-        return f"<EditorCursorState bold={self.is_bold}, font={self.font_name}>"
+        return f"<EditorCursorState bold={self.is_bold}, font={self.font_name}, color={self.font_color}, selection={self.has_selection}>"
 
   
 
@@ -52,6 +57,15 @@ class MarkdownEditorController:
         # --- NEW: Store the cursor state ---
         self.cursor_state = EditorCursorState({})
         self.new_state_data = None
+
+    def run_javascript(self, js: str):
+        """Run arbitrary JavaScript in the editor."""
+        if self._state_ref:
+             self._state_ref.run_javascript(js)
+
+    def hide_overlay(self):
+        """Hides the AI controls overlay."""
+        self.run_javascript("window.hidePythraSelectionOverlay()")
 
     def add_listener(self, listener: Callable):
         """Subscribe to notifications from this controller."""

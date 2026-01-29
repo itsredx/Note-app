@@ -42,6 +42,7 @@ from pythra import (
 )
 
 from lib.constants.colors import *
+import time
 
 labels = ['Funny', 'Serious', 'Professional', 'Casual', 'Poetic', 'Sarcastic', 'Friendly', 'Formal', 'Informal', 'Creative', 'Witty', 'Humorous', 'Playful', 'Quirky', 'Eccentric', 'Whimsical', 'Zany', 'Silly', 'Goofy', 'Jocular', 'Comical', 'Hilarious', 'Amusing', 'Entertaining', 'Droll', 'Facetious', 'Jesting', 'Jocular', 'Jocular', 'Jocular']
 action_label = ['Summarize', 'Expand', 'Rewrite', 'Translate', 'Paraphrase', 'Rephrase']
@@ -68,6 +69,10 @@ class AiActionsControlsState(State):
     def generate(self):
         print("Generating...")
         print(action_to_perform)
+        widget = self.get_widget()
+        time.sleep(3)
+        if widget and widget.onGenerate:
+            widget.onGenerate()
 
     def _build_styled_dropdown(self, key_str, controller, items, on_changed):
         return Dropdown(
@@ -164,8 +169,9 @@ class AiActionsControlsState(State):
             )
 
 class AiActionsControls(StatefulWidget):
-    def __init__(self, key = None):
+    def __init__(self, key = None, onGenerate = None):
         super().__init__(key)
+        self.onGenerate = onGenerate
 
     def createState(self) -> AiActionsControlsState:
         return AiActionsControlsState()
