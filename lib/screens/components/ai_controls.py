@@ -39,6 +39,10 @@ from pythra import (
     DropdownTheme,
     VerticalDirection,
     Navigator,
+    LoaderStyle,
+    Loader,
+    ProgressIndicator,
+    ProgressIndicatorController,
 )
 
 from lib.constants.colors import *
@@ -88,7 +92,7 @@ class AiActionsControlsState(State):
         self.setState()
         
         # Simulate network request with QTimer to invoke callback on the main thread safely
-        QTimer.singleShot(2000, self._finish_generation)
+        QTimer.singleShot(5000, self._finish_generation)
 
     def _build_styled_dropdown(self, key_str, controller, items, on_changed):
         return Dropdown(
@@ -151,10 +155,21 @@ class AiActionsControlsState(State):
                         ElevatedButton(
                             key=Key("generate_btn"),
                             child=Row(
+                                mainAxisAlignment=MainAxisAlignment.CENTER,
+                                crossAxisAlignment=CrossAxisAlignment.CENTER,
                                 key=Key("generate_btn_inner_row"),
                                 children=[
-                                    Text(
-                                        "Generating..." if self.is_loading else "Generate",
+                                    ProgressIndicator(
+                                        key=Key("home_page_progress_indicator"),
+                                        controller=ProgressIndicatorController(
+                                            visible=True,
+                                        ),
+                                        style=LoaderStyle.LOADER_BARS_1,
+                                        loader=Loader.BARS,
+                                        primary_color=Colors.adaptive(
+                                            light=Colors.black, dark=Colors.white)
+                                    ) if self.is_loading else Text(
+                                        "Generate",
                                         key=Key(
                                             "generate_btn_txt"
                                         ),
@@ -171,6 +186,8 @@ class AiActionsControlsState(State):
                                 shape=BorderRadius.circular(8.0),
                                 margin=EdgeInsets.all(0),
                                 hoverColor=AppColors.buttonHoverColor,
+                                minimumSize=(115, 40),
+                                maximumSize=(115, 40),
                             ),
                             onPressed= self.generate,
                             tooltip="Generate",

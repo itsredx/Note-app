@@ -244,8 +244,10 @@ class MarkdownEditorState(State):
         
         # 2. Update the state's source of truth.
         widget.controller.content = html_content
+        self.set_content(widget.controller.content)
         
         # 3. Tell the framework that this state has changed and a rebuild is needed.
+        # print("Loading HTML content into editor: ", widget.controller.content)
         # self.setState()
 
     def export_to_markdown(self) -> Optional[str]:

@@ -141,6 +141,7 @@ class PythraMarkdownEditor {
             editorEl = document.createElement('div');
             editorEl.id = this.options.instanceId ? `editor_${this.options.instanceId}` : 'editor';
             editorEl.contentEditable = true;
+            editorEl.className = 'editor-inner-container';
             this.container.appendChild(editorEl);
         }
         this.editorElement = editorEl;
@@ -506,3 +507,103 @@ function syncExternalToolbarState(cursorState) {
 }
 
 window.syncExternalToolbarState = syncExternalToolbarState;
+
+/**
+ * Replace the current selection (or saved selection) with the provided HTML.
+ * - If there's an active selection, it will be replaced.
+ * - If there's no active selection but a saved selection exists (`window._pythraSavedSelection`), that will be used.
+ * - If no selection can be found, the HTML will be appended to the first `.editor-inner-container` found.
+ * After inserting, an `input` event is dispatched on the affected editor to notify change handlers.
+ * @param {string} newHtml - The HTML string to insert in place of the selection.
+ */
+function replaceEditorSelection(newHtml) {
+    if (!newHtml) return;
+
+    let selection = window.getSelection();
+    let range = null;
+
+    if (selection && selection.rangeCount > 0) {
+        range = selection.getRangeAt(0);
+    } else if (window._pythraSavedSelection) {
+        try {
+            range = window._pythraSavedSelection.cloneRange ? window._pythraSavedSelection.cloneRange() : window._pythraSavedSelection;
+        } catch (e) {
+            range = window._pythraSavedSelection;
+        }
+    }
+
+    // Helper to dispatch input on closest editor container
+    function dispatchInputFromNode(node) {
+        if (!node) return;
+        const editor = node.nodeType === 3 ? node.parentElement.closest('.editor-inner-container') : (node.closest ? node.closest('.editor-inner-container') : null);
+        if (editor) editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    }
+
+    if (!range) {
+        // Fallback: append to first editor
+        const editor = document.querySelector('.editor-inner-container[contenteditable="true"]');
+        if (editor) {
+            try {
+                const frag = document.createRange().createContextualFragment(newHtml);
+                editor.appendChild(frag);
+                dispatchInputFromNode(editor);
+            } catch (e) {
+                console.error('replaceEditorSelection fallback append error:', e);
+            }
+        } else {
+            console.warn('replaceEditorSelection: no selection and no editor found to insert into.');
+        }
+        return;
+    }
+
+    try {
+        // Normalize selection to be editable: ensure we have a live selection object
+        selection = window.getSelection();
+        if (selection.rangeCount > 0) selection.removeAllRanges();
+
+        // Delete current contents of the range
+        range.deleteContents();
+
+        // Build a document fragment from the HTML string
+        const temp = document.createElement('div');
+        temp.innerHTML = newHtml;
+        const frag = document.createDocumentFragment();
+        while (temp.firstChild) frag.appendChild(temp.firstChild);
+
+        // Insert fragment
+        range.insertNode(frag);
+
+        // Move caret after inserted content
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        const newRange = document.createRange();
+
+        // Find last inserted node to position caret
+        let lastNode = null;
+        if (frag && frag.childNodes && frag.childNodes.length > 0) {
+            lastNode = frag.childNodes[frag.childNodes.length - 1];
+        }
+
+        if (lastNode) {
+            try {
+                newRange.setStartAfter(lastNode);
+                newRange.collapse(true);
+            } catch (e) {
+                // Fallback: collapse to end of the original range
+                newRange.setStart(range.endContainer, range.endOffset);
+                newRange.collapse(true);
+            }
+        } else {
+            newRange.setStart(range.endContainer, range.endOffset);
+            newRange.collapse(true);
+        }
+        sel.addRange(newRange);
+
+        // Notify editor about input change
+        dispatchInputFromNode(newRange.startContainer || newRange.commonAncestorContainer);
+    } catch (err) {
+        console.error('replaceEditorSelection error:', err);
+    }
+}
+
+window.replaceEditorSelection = replaceEditorSelection;
