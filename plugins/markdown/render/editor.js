@@ -284,7 +284,7 @@ class PythraMarkdownEditor {
                 // Subtract overlay height (estimated or measured) to place on top
 
                 // Better approach: Let's assume the overlay wrapper is absolute 0,0 in a Stack covering the window.
-                const containerOffset = 200;
+                const containerOffset = 222;
                 const overlayHeight = overlay.offsetHeight || 60; // Estimate or measure
                 const top = Math.max(0, rect.top - overlayHeight - 10) + containerOffset;
                 const left = rect.left;
@@ -433,6 +433,7 @@ window.restoreEditorSelection = restoreEditorSelection;
 window.hidePythraSelectionOverlay = function () {
     if (window._pythraOverlay) {
         window._pythraOverlay.style.display = 'none';
+        console.log('Overlay hidden');
     }
 };
 
@@ -513,11 +514,19 @@ window.syncExternalToolbarState = syncExternalToolbarState;
  * - If there's an active selection, it will be replaced.
  * - If there's no active selection but a saved selection exists (`window._pythraSavedSelection`), that will be used.
  * - If no selection can be found, the HTML will be appended to the first `.editor-inner-container` found.
+ * 
+ * SMART INLINE HANDLING:
+ * - If replacing text within an inline context (e.g., within a <p>), and the replacement
+ *   contains only inline elements, it will be inserted cleanly without breaking the block.
+ * - If the replacement contains block elements (e.g., <h1>, <div>), they are preserved
+ *   and inserted naturally, potentially splitting the containing block if necessary.
+ * 
  * After inserting, an `input` event is dispatched on the affected editor to notify change handlers.
  * @param {string} newHtml - The HTML string to insert in place of the selection.
  */
 function replaceEditorSelection(newHtml) {
     if (!newHtml) return;
+    restoreEditorSelection();
 
     let selection = window.getSelection();
     let range = null;
@@ -537,6 +546,12 @@ function replaceEditorSelection(newHtml) {
         if (!node) return;
         const editor = node.nodeType === 3 ? node.parentElement.closest('.editor-inner-container') : (node.closest ? node.closest('.editor-inner-container') : null);
         if (editor) editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    }
+
+    // Helper to check if HTML contains block-level elements
+    function containsBlockElements(html) {
+        const blockTags = /^<(div|p|h[1-6]|ul|ol|li|blockquote|pre|table|form|fieldset|section|article|aside|header|footer|main|nav)\b/i;
+        return blockTags.test(html.trim());
     }
 
     if (!range) {
@@ -564,29 +579,49 @@ function replaceEditorSelection(newHtml) {
         // Delete current contents of the range
         range.deleteContents();
 
-        // Build a document fragment from the HTML string
-        const temp = document.createElement('div');
-        temp.innerHTML = newHtml;
-        const frag = document.createDocumentFragment();
-        while (temp.firstChild) frag.appendChild(temp.firstChild);
+        // Determine insertion strategy based on context
+        const isInlineOnlyReplacement = !containsBlockElements(newHtml);
+        const isWithinInlineContainer = range.commonAncestorContainer.nodeType === 3 ||
+            (range.commonAncestorContainer.nodeType === 1 && 
+             /^(p|span|a|em|strong|b|i|u|s|mark|code|small|sub|sup|kbd|var|samp|q|dfn|abbr|cite)$/i.test(range.commonAncestorContainer.tagName));
 
-        // Insert fragment
-        range.insertNode(frag);
+        let lastInsertedNode = null;
+
+        if (isInlineOnlyReplacement && isWithinInlineContainer) {
+            // Smart inline insertion: use insertAdjacentHTML to avoid breaking the block
+            const temp = document.createElement('div');
+            temp.innerHTML = newHtml;
+            
+            // Insert each child node at the range position
+            const nodes = Array.from(temp.childNodes);
+            nodes.forEach((node, idx) => {
+                const cloned = node.cloneNode(true);
+                range.insertNode(cloned);
+                lastInsertedNode = cloned;
+                // Move range forward so next node inserts after this one
+                range.setStartAfter(cloned);
+                range.collapse(true);
+            });
+        } else {
+            // Standard insertion for block content or when not in inline context
+            const temp = document.createElement('div');
+            temp.innerHTML = newHtml;
+            const frag = document.createDocumentFragment();
+            while (temp.firstChild) {
+                lastInsertedNode = temp.firstChild;
+                frag.appendChild(temp.firstChild);
+            }
+            range.insertNode(frag);
+        }
 
         // Move caret after inserted content
         const sel = window.getSelection();
         sel.removeAllRanges();
         const newRange = document.createRange();
 
-        // Find last inserted node to position caret
-        let lastNode = null;
-        if (frag && frag.childNodes && frag.childNodes.length > 0) {
-            lastNode = frag.childNodes[frag.childNodes.length - 1];
-        }
-
-        if (lastNode) {
+        if (lastInsertedNode) {
             try {
-                newRange.setStartAfter(lastNode);
+                newRange.setStartAfter(lastInsertedNode);
                 newRange.collapse(true);
             } catch (e) {
                 // Fallback: collapse to end of the original range

@@ -113,6 +113,7 @@ class NoteEditorScreenState(State):
             show_grid=True,
             overlay=AiActionsControls(
                 key=Key("ai_controls_popup"),
+                editor=self.editor,
                 onGenerate=lambda: self.editor.hide_overlay()
             ),
         )
@@ -152,7 +153,11 @@ class NoteEditorScreenState(State):
         self.editor.italic()
 
     def underline(self):
-        self.editor.underline()
+        # self.editor.underline()
+        self.editor.replace_selection_with_markdown(markdown_text='Underline')
+        self.setState()
+
+
 
     def strikeThrough(self):
         self.editor.strike_through()

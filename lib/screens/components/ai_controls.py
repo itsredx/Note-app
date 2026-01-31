@@ -59,27 +59,47 @@ action_to_perform = {
 from PySide6.QtCore import QTimer
 
 class AiActionsControlsState(State):
-    def __init__(self):
+    def __init__(self, editor=None):
         super().__init__()
+        self.editor = editor
         self.mode_controller = DropdownController(selectedValue=labels[0])
         self.action_controller = DropdownController(selectedValue=action_label[0])
         self.is_loading = False
+        self.action_to_perform = {
+            "model": "",
+            "action": ""
+        }
 
     def setMode(self, new_value):
         print("Mode changed!: ", new_value)
         action_to_perform["model"] = new_value
+        self.action_to_perform["model"] = new_value
 
     def setAction(self, new_value):
         print("Action changed!: ", new_value)
         action_to_perform["action"] = new_value
+        self.action_to_perform["action"] = new_value
 
     def _finish_generation(self):
         self.is_loading = False
         self.setState()
-        
         widget = self.get_widget()
+
+        if widget and widget.editor:
+            self.editor = widget.editor
+
         if widget and widget.onGenerate:
             widget.onGenerate()
+
+        
+        # Call editor's replace_selection_with_markdown with generated content
+        if self.editor:
+            # Restore the saved selection before replacing
+            # self.editor.run_javascript("restoreEditorSelection()")
+            generated_content = f"Generated: {self.action_to_perform.get('model', 'Unknown') or 'None'} mode: {self.action_to_perform.get('action', 'Unknown') or 'None'} action."
+            self.editor.replace_selection_with_markdown(generated_content)
+        
+        
 
     def generate(self):
         if self.is_loading:
@@ -92,7 +112,7 @@ class AiActionsControlsState(State):
         self.setState()
         
         # Simulate network request with QTimer to invoke callback on the main thread safely
-        QTimer.singleShot(5000, self._finish_generation)
+        QTimer.singleShot(3000, self._finish_generation)
 
     def _build_styled_dropdown(self, key_str, controller, items, on_changed):
         return Dropdown(
@@ -202,9 +222,10 @@ class AiActionsControlsState(State):
             )
 
 class AiActionsControls(StatefulWidget):
-    def __init__(self, key = None, onGenerate = None):
+    def __init__(self, key = None, onGenerate = None, editor = None):
         super().__init__(key)
         self.onGenerate = onGenerate
+        self.editor = editor
 
     def createState(self) -> AiActionsControlsState:
         return AiActionsControlsState()

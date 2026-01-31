@@ -179,6 +179,27 @@ class MarkdownEditorState(State):
         framework.window.evaluate_js(window_id, js)
         widget.controller.content = html
 
+    def replace_selection(self, html: str):
+        if not framework or not framework.window:
+            return
+
+        instance_name = f"{self.get_widget().key.value}_PythraMarkdownEditor"
+        html_js = json.dumps(html)
+
+        js = f"""
+            (function(){{
+                const editorInstance = window._pythra_instances['{instance_name}'];
+                
+                if (editorInstance && typeof window.replaceEditorSelection === 'function') {{
+                    console.log('Replacing selection with HTML content:', {html_js});
+                    window.replaceEditorSelection({html_js});
+                }}
+            }})()
+        """
+        
+        window_id = getattr(self, '_window_id', framework.id)
+        framework.window.evaluate_js(window_id, js)
+
     def get_content(self) -> str:
         widget = self.get_widget()
         if not widget:
@@ -249,6 +270,23 @@ class MarkdownEditorState(State):
         # 3. Tell the framework that this state has changed and a rebuild is needed.
         # print("Loading HTML content into editor: ", widget.controller.content)
         # self.setState()
+
+    def replace_selection_with_markdown(self, markdown_text: str):
+        """
+        Converts Markdown to HTML and replaces the editor's content.
+        """
+        widget = self.get_widget()
+        if not widget:
+            return
+        # 1. Convert the Markdown to HTML.
+        html_content = markdown.markdown(markdown_text, extensions=['fenced_code', 'tables'])
+        # 2. Replace the editor's content.
+        self.replace_selection(html_content)
+
+        # 3. Update the state's source of truth.
+        widget.controller.content = widget.controller.get_content()
+        # self.setState()
+
 
     def export_to_markdown(self) -> Optional[str]:
         """

@@ -316,6 +316,24 @@ class MarkdownEditorController:
         if self._state_ref:
             self._state_ref.load_from_markdown(markdown_text)
 
+    def replace_selection_with_markdown(self, markdown_text: str):
+        """
+        Replaces the currently selected text in the editor with content
+        converted from the provided Markdown text.
+
+        This method:
+        1. Parses the provided Markdown text
+        2. Converts it to semantic HTML with proper formatting
+        3. Replaces the current selection in the editor with the new HTML
+        4. Updates the internal editor state
+
+        Example usage:
+            editor.replace_selection_with_markdown("**Bold Text**")
+            editor.setState()  # Required to apply changes
+            """
+        if self._state_ref:
+            self._state_ref.replace_selection_with_markdown(markdown_text)
+
     def export_to_markdown(self) -> Optional[str]:
         """
         Gets the current editor content and converts it to Markdown.
