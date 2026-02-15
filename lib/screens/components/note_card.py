@@ -26,6 +26,7 @@ from pythra import (
     Positioned,
     ClipBehavior,
     GestureDetector,
+    BoxConstraints,
 )
 
 class NoteCardState(State):
@@ -71,6 +72,7 @@ class NoteCardState(State):
                         (0, 78),
                     ],
                     radius=8,
+                    aspectRatio=1,
                     key=Key(f"{self.base_key}_clip_path"),
                     child=Container(
                         key=Key(f"{self.base_key}_container"),

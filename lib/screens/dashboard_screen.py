@@ -1,4 +1,5 @@
 from lib.constants.theme import AppThemes
+from lib.screens.settings_screen import SettingsAndProfileScreen
 from .note_editor_screen import NoteEditorScreen
 from .components.note_card import NoteCard
 from lib.constants.colors import *
@@ -92,11 +93,21 @@ class DashboardScreenState(State):
             ),
             name="note_editor"
         )
+        self.settings_route = PageRoute(
+            builder=lambda nav: SettingsAndProfileScreen(
+                key=Key("settings_&_profile_page"),
+                navigator=nav
+            ),
+            name="settings_page"
+        )
         print("🚀 Preloading NoteEditorScreen in background...")
         self.navigator.preload(self.note_editor_route)
     
     def open_note(self):
         self.navigator.push(self.note_editor_route)
+
+    def open_settings(self):
+        self.navigator.push(self.settings_route)
         
     def delete_note(self):
         print("Delete note clicked")
@@ -234,7 +245,7 @@ class DashboardScreenState(State):
                         children=[
                             HeaderActions(
                                 key=Key("dashboard_header"), 
-                                onAccount=lambda: print('on account')
+                                onAccount= self.open_settings #lambda: print('on account')
                             ),
                             SizedBox(key=Key("page_heading_sized_box"), height=24),
                             Text(
@@ -254,6 +265,7 @@ class DashboardScreenState(State):
                                     mainAxisSpacing=20,
                                     crossAxisSpacing=20,
                                     childAspectRatio=1.0,
+                                    shrinkWrap=True,
                                     children=[
                                         NoteCard(
                                             key=Key(f"note_{i}"),

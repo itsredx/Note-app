@@ -48,13 +48,22 @@ from pythra import (
 from lib.constants.colors import *
 import time
 
-labels = ['Funny', 'Serious', 'Professional', 'Casual', 'Poetic', 'Sarcastic', 'Friendly', 'Formal', 'Informal', 'Creative', 'Witty', 'Humorous', 'Playful', 'Quirky', 'Eccentric', 'Whimsical', 'Zany', 'Silly', 'Goofy', 'Jocular', 'Comical', 'Hilarious', 'Amusing', 'Entertaining', 'Droll', 'Facetious', 'Jesting', 'Jocular', 'Jocular', 'Jocular']
-action_label = ['Summarize', 'Expand', 'Rewrite', 'Translate', 'Paraphrase', 'Rephrase']
-
-action_to_perform = {
-    "model": "",
-    "action": ""
-}
+labels = [
+    'Funny', 'Serious', 'Professional', 'Casual', 'Poetic', 'Sarcastic', 
+    'Friendly', 'Formal', 'Informal', 'Creative', 'Witty', 'Humorous', 
+    'Playful', 'Quirky', 'Eccentric', 'Whimsical', 'Zany', 'Silly', 
+    'Jocular', 'Comical', 'Hilarious', 'Amusing', 'Entertaining',
+    'Facetious', 'Jesting', 'Jocular', 'Jocular', 'Jocular',
+    'Goofy', 'Droll', 
+]
+action_label = [
+    'Summarize', 
+    'Expand', 
+    'Rewrite', 
+    'Translate', 
+    'Paraphrase', 
+    'Rephrase'
+]
 
 from PySide6.QtCore import QTimer
 
@@ -66,18 +75,16 @@ class AiActionsControlsState(State):
         self.action_controller = DropdownController(selectedValue=action_label[0])
         self.is_loading = False
         self.action_to_perform = {
-            "model": "",
+            "mode": "",
             "action": ""
         }
 
     def setMode(self, new_value):
         print("Mode changed!: ", new_value)
-        action_to_perform["model"] = new_value
-        self.action_to_perform["model"] = new_value
+        self.action_to_perform["mode"] = new_value
 
     def setAction(self, new_value):
         print("Action changed!: ", new_value)
-        action_to_perform["action"] = new_value
         self.action_to_perform["action"] = new_value
 
     def _finish_generation(self):
@@ -96,7 +103,7 @@ class AiActionsControlsState(State):
         if self.editor:
             # Restore the saved selection before replacing
             # self.editor.run_javascript("restoreEditorSelection()")
-            generated_content = f"Generated: {self.action_to_perform.get('model', 'Unknown') or 'None'} mode: {self.action_to_perform.get('action', 'Unknown') or 'None'} action."
+            generated_content = f"Generated: {self.action_to_perform.get('mode', 'Unknown') or 'None'} mode: {self.action_to_perform.get('action', 'Unknown') or 'None'} action."
             self.editor.replace_selection_with_markdown(generated_content)
         
         
@@ -106,7 +113,7 @@ class AiActionsControlsState(State):
             return
 
         print("Generating...")
-        print(action_to_perform)
+        print(self.action_to_perform)
         
         self.is_loading = True
         self.setState()
