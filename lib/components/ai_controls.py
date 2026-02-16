@@ -90,7 +90,7 @@ class AiActionsControlsState(State):
     def _finish_generation(self):
         self.is_loading = False
         self.setState()
-        widget = self.get_widget()
+        widget = self.widget
 
         if widget and widget.editor:
             self.editor = widget.editor

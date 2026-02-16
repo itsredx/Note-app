@@ -46,7 +46,7 @@ class MarkdownEditorState(State):
         return None
 
     def initState(self):
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
 
@@ -78,7 +78,7 @@ class MarkdownEditorState(State):
 
 
     def dispose(self):
-        widget = self.get_widget()
+        widget = self.widget
         if widget and widget.controller:
             widget.controller._detach()
         super().dispose()
@@ -90,7 +90,7 @@ class MarkdownEditorState(State):
             return
 
         # Get the unique instance name for our component
-        instance_name = f"{self.get_widget().key.value}_PythraMarkdownEditor"
+        instance_name = f"{self.widget.key.value}_PythraMarkdownEditor"
 
         # Safely escape the command and value for JS
         command_js = json.dumps(command)
@@ -138,7 +138,7 @@ class MarkdownEditorState(State):
         if not framework or not framework.window:
             return
 
-        instance_name = f"{self.get_widget().key.value}_PythraMarkdownEditor"
+        instance_name = f"{self.widget.key.value}_PythraMarkdownEditor"
         command_js = json.dumps(command)
         val_js = json.dumps(value) if value is not None else 'null'
 
@@ -161,7 +161,7 @@ class MarkdownEditorState(State):
         if not self._container_html_id or not framework or not framework.window:
             return
 
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
             
@@ -183,7 +183,7 @@ class MarkdownEditorState(State):
         if not framework or not framework.window:
             return
 
-        instance_name = f"{self.get_widget().key.value}_PythraMarkdownEditor"
+        instance_name = f"{self.widget.key.value}_PythraMarkdownEditor"
         html_js = json.dumps(html)
 
         js = f"""
@@ -201,7 +201,7 @@ class MarkdownEditorState(State):
         framework.window.evaluate_js(window_id, js)
 
     def get_content(self) -> str:
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
         return widget.controller.get_content()
@@ -216,7 +216,7 @@ class MarkdownEditorState(State):
 
     # API callback invoked from JS when content changes
     def _handle_content_change(self, new_content):
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
         try:
@@ -231,7 +231,7 @@ class MarkdownEditorState(State):
         It updates the controller and also calls the new JS function to sync external UI.
         """
         # This part updates the Python controller (which is correct)
-        widget = self.get_widget()
+        widget = self.widget
         if widget and widget.controller:
             widget.controller._update_cursor_state_from_js(state_json)
 
@@ -257,7 +257,7 @@ class MarkdownEditorState(State):
         """
         Converts Markdown to HTML using the 'markdown' library and updates the editor.
         """
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
         # 1. Convert the Markdown to HTML.
@@ -275,7 +275,7 @@ class MarkdownEditorState(State):
         """
         Converts Markdown to HTML and replaces the editor's content.
         """
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return
         # 1. Convert the Markdown to HTML.
@@ -301,7 +301,7 @@ class MarkdownEditorState(State):
         return None
 
     def build(self):
-        widget = self.get_widget()
+        widget = self.widget
         if not widget:
             return Container(width=0, height=0)
 

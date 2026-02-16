@@ -28,7 +28,7 @@ class HeaderActionsState(State):
         # Rebuild this row to update all icons (Sun/Moon, Sparkle, etc)
         self.setState()
 
-    def build(self):
+    def build(self) -> Widget:
         return Row(
             key=Key("search_ai_and_controls_header_row"),
             mainAxisAlignment=MainAxisAlignment.END,
@@ -48,19 +48,19 @@ class HeaderActionsState(State):
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
                 ),
-                SizedBox(width=12, key=Key("sixe_box_header_controls_1")) if self.widget().onSave or self.widget().onAccount or self.widget().onAiChat else (),
+                SizedBox(width=12, key=Key("sixe_box_header_controls_1")) if self.widget.onSave or self.widget.onAccount or self.widget.onAiChat else (),
                 IconButton(
                     key=Key("save_rounded_btn"),
                     icon=Icon(Icons.save_rounded, key=Key("save_rounded_ico")),
-                    onPressed=self.get_widget().onSave,
+                    onPressed=self.widget.onSave,
                     tooltip="Save",
                     style=ButtonStyle(
                         backgroundColor=AppColors.buttonBackgroundColor,
                         hoverColor=AppColors.buttonHoverColor,
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
-                ) if self.widget().onSave else (),
-                SizedBox(width=12, key=Key("sixe_box_save_rounded")) if self.widget().onSave else (),
+                ) if self.widget.onSave else (),
+                SizedBox(width=12, key=Key("sixe_box_save_rounded")) if self.widget.onSave else (),
                 IconButton(
                     key=Key("sparkle_btn"),
                     icon=Image(
@@ -71,27 +71,27 @@ class HeaderActionsState(State):
                         ),
                         key=Key("sparkle_ico"),
                     ),
-                    onPressed=self.get_widget().onAiChat,
+                    onPressed=self.widget.onAiChat,
                     tooltip="Ai Chat",
                     style=ButtonStyle(
                         backgroundColor=AppColors.buttonBackgroundColor,
                         hoverColor=AppColors.buttonHoverColor,
                     ),
-                ) if self.widget().onAiChat else (),
-                SizedBox(width=12, key=Key("sixe_box_header_sparkle_btn")) if self.widget().onAiChat else (),
+                ) if self.widget.onAiChat else (),
+                SizedBox(width=12, key=Key("sixe_box_header_sparkle_btn")) if self.widget.onAiChat else (),
                 IconButton(
                     key=Key("account_circle_rounded_btn"),
                     icon=Icon(
                         Icons.account_circle_rounded,
                         key=Key("account_circle_rounded_ico"),
                     ),
-                    onPressed=self.get_widget().onAccount,
+                    onPressed=self.widget.onAccount,
                     tooltip="User Account & Settings",
                     style=ButtonStyle(
                         backgroundColor=AppColors.buttonBackgroundColor,
                         hoverColor=AppColors.buttonHoverColor,
                         foregroundColor=AppColors.buttonForegroundColor,
                     ),
-                ) if self.widget().onAccount else (),
+                ) if self.widget.onAccount else (),
             ],
         )

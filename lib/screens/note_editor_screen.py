@@ -4,6 +4,8 @@ import sys
 import json
 from typing import Optional, Callable, List, Dict, Any
 
+from lib.screens.settings_screen import SettingsAndProfileScreen
+
 # Add the project root directory to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('note-app/lib'))))
 
@@ -11,8 +13,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('note-app/lib'))
 # import colors
 from lib.constants.colors import *
 from lib.constants.theme import AppThemes
-from lib.screens.components.header_actions import HeaderActions
-from lib.screens.components.ai_controls import AiActionsControls
+from lib.components.header_actions import HeaderActions
+from lib.components.ai_controls import AiActionsControls
 
 from plugins.markdown.widget import MarkdownEditor
 from plugins.markdown.controller import MarkdownEditorController
@@ -136,6 +138,21 @@ class NoteEditorScreenState(State):
         super().__init__()
         self.navigator = navigator
 
+    def initState(self):
+        self.note_editor_route = PageRoute(
+            builder=lambda nav: NoteEditorScreen(
+                key=Key("note_page"), navigator=nav,
+            ),
+            name="note_editor"
+        )
+        self.settings_route = PageRoute(
+            builder=lambda nav: SettingsAndProfileScreen(
+                key=Key("settings_&_profile_page"),
+                navigator=nav
+            ),
+            name="settings_page"
+        )
+
     @property
     def is_dark(self):
         return Framework.instance().theme.brightness == 'dark'
@@ -202,6 +219,9 @@ class NoteEditorScreenState(State):
         print("self.count: ", self.count)
         self.setState()
 
+    def open_settings(self):
+        self.navigator.push(self.settings_route)
+
     def build(self) -> Widget:
         cursor_state = self.editor.cursor_state
         
@@ -250,7 +270,7 @@ class NoteEditorScreenState(State):
                                                                         "back_ico_1"
                                                                     ),
                                                                 ),
-                                                                onPressed=lambda: self.get_widget().navigator.pop(),
+                                                                onPressed=lambda: self.widget.navigator.pop(),
                                                                 style=ButtonStyle(
                                                                     backgroundColor=AppColors.buttonBackgroundColor,
                                                                     hoverColor=AppColors.buttonHoverColor,
@@ -313,7 +333,7 @@ class NoteEditorScreenState(State):
                                                                 key=Key("header_actions"),
                                                                 onSave=self.incrementCounter,
                                                                 onAiChat=self.incrementCounter,
-                                                                onAccount=self.incrementCounter,
+                                                                onAccount=self.open_settings,
                                                             )
                                                         ],
                                                     ),

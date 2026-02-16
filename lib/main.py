@@ -56,7 +56,7 @@ class HomePageState(State):
                     )
                 ),
                 routes={
-                    "/settings": lambda navigator: NoteEditorScreen(
+                    "/note": lambda navigator: NoteEditorScreen(
                         key=Key("note_page"), navigator=navigator
                     ),
                 },

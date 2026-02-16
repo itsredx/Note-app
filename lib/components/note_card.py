@@ -41,14 +41,14 @@ class NoteCardState(State):
         self.on_chat = None
 
     def initState(self):
-        self.base_key = self.get_widget().key.value
-        self.title = self.get_widget().title
-        self.note = self.get_widget().note
-        self.date = self.get_widget().date
-        self.color = self.get_widget().color
-        self.on_open = self.get_widget().on_open
-        self.on_delete = self.get_widget().on_delete
-        self.on_chat = self.get_widget().on_chat
+        self.base_key = self.widget.key.value
+        self.title = self.widget.title
+        self.note = self.widget.note
+        self.date = self.widget.date
+        self.color = self.widget.color
+        self.on_open = self.widget.on_open
+        self.on_delete = self.widget.on_delete
+        self.on_chat = self.widget.on_chat
 
     def build(self) -> Widget:
         return Stack(

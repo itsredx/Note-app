@@ -1,9 +1,9 @@
 from lib.constants.theme import AppThemes
 from lib.screens.settings_screen import SettingsAndProfileScreen
 from .note_editor_screen import NoteEditorScreen
-from .components.note_card import NoteCard
+from lib.components.note_card import NoteCard
 from lib.constants.colors import *
-from lib.screens.components.header_actions import HeaderActions
+from lib.components.header_actions import HeaderActions
 
 from pythra import (
     Framework,
@@ -154,7 +154,7 @@ class DashboardScreenState(State):
         # Rebuild this row to update all icons (Sun/Moon, Sparkle, etc)
         self.setState()
 
-    def build(self):
+    def build(self) -> Widget:
         # Sidebar with Create Button and Color Picker
         sidebar = Container(
             key=Key("sidebar_container"),
