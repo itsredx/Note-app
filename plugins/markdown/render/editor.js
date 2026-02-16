@@ -331,6 +331,7 @@ class PythraMarkdownEditor {
             .pythra-image-resizer-wrapper{position:absolute;border:2px solid var(--pe-accent-color);pointer-events:none;}
             .pythra-resize-handle{position:absolute;width:10px;height:10px;background-color:var(--pe-accent-color);border:1px solid white;border-radius:50%;pointer-events:auto;}
             .pythra-editor-wrapper [contenteditable].grid-background{background-image:radial-gradient(var(--pe-grid-dot-color) var(--pe-grid-dot-size), transparent 0);background-size:var(--pe-grid-dot-spacing) var(--pe-grid-dot-spacing);background-color:var(--pe-grid-background-color)}
+            [contenteditable="true"] {user-select: text;}
         `;
         document.head.appendChild(style);
     }

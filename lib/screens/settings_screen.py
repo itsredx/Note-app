@@ -1,10 +1,10 @@
 from lib.constants.theme import AppThemes
 from lib.constants.colors import *
-from lib.components.header_actions import HeaderActions
 
+from lib.components.header_actions import HeaderActions
+from lib.components.settings_widgets import SettingsSection, SettingsTile
 from pythra import (
-    BoxConstraints,
-    Divider,
+
     Dropdown,
     DropdownController,
     DropdownTheme,
@@ -110,6 +110,44 @@ class SettingsAndProfileScreenState(State):
         self.autocorrect = t
         self.setState()
 
+    def update_open_files(self, value):
+        self.open_files.selectedValue = value
+        self.setState()
+
+    def update_open_app(self, value):
+        self.open_app.selectedValue = value
+        self.setState()
+
+    def update_t(self, value):
+        self.t = value
+        self.setState()
+
+    def update_show_recent(self, value):
+        self.show_recent = value
+        self.setState()
+
+    def update_spell_check(self, value):
+        self.spell_check = value
+        self.setState()
+
+    def update_autocorrect(self, value):
+        self.autocorrect = value
+        self.setState()
+
+    def update_ai_features(self, value):
+        self.ai_features = value
+        self.setState()
+
+    def reset_to_default(self):
+        self.open_files.selectedValue = "Tab"
+        self.open_app.selectedValue = "Continue"
+        self.t = True
+        self.show_recent = True
+        self.spell_check = True
+        self.autocorrect = True
+        self.ai_features = True
+        self.setState()
+
     def build(self) -> Widget:
         app_bar = Row(
                     key=Key("settings_column_r1"),
@@ -200,797 +238,165 @@ class SettingsAndProfileScreenState(State):
                                                 ]
                                             )
                                         ),
-                                        Container( 
-                                            # ROOT SETTINGS SECTION CONTSINER
-                                            key=Key("settings_section_root"),
-                                            child=Column(
-                                                key=Key("settings_section_root_col"),
-                                                children=[
-                                                    SizedBox(
-                                                        key=Key("settings_section_heading_sb_0"),
-                                                        height=24
-                                                    ),
-                                                    Row(
-                                                        key=Key("settings_section_heading_row"),
-                                                        children=[
-                                                            Text(
-                                                                key=Key("settings_section_heading"),
-                                                                data="Appearance",
-                                                                style=TextStyle(
-                                                                    color=Colors.onSurface,
-                                                                    fontFamily="ubuntu",
-                                                                    fontSize=24,
-                                                                    # fontWeight="bold"
-                                                                )
-                                                            )
-                                                        ]
-                                                    ),
-                                                    SizedBox(
-                                                        key=Key("settings_section_heading_sb_1"),
-                                                        height=18
-                                                    ),
-                                                    Container(
-                                                        constraints=BoxConstraints(
-                                                            minWidth=400,
+                                        SettingsSection(
+                                            key=Key("appearance_section"),
+                                            title="Appearance",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("app_theme_tile"),
+                                                    title="App Theme",
+                                                    subtitle="Set the color theme of the app",
+                                                    trailing=IconButton(
+                                                        key=Key("setting_icon_button"),
+                                                        icon=Icon(
+                                                            Icons.light_mode_rounded if self.is_dark else Icons.dark_mode_rounded,
+                                                            key=Key("setting_ico_1"),
                                                         ),
-                                                        width=800,
-                                                        decoration=BoxDecoration(
-                                                            color=AppColors.appBackgroundColor,
-                                                            borderRadius=BorderRadius.all(20),
-                                                            border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
+                                                        onPressed=self.toggle_theme,
+                                                        tooltip="Light Mode" if self.is_dark else "Dark Mode",
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            foregroundColor=AppColors.buttonForegroundColor,
                                                         ),
-                                                        key=Key("settings_card"),
-                                                        child=Column(
-                                                            key=Key("settings_card_column"),
-                                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                                            children=[
-                                                                Container(
-                                                                    key=Key("setting_option"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(
-                                                                    #         width=1,
-                                                                    #         color=Colors.onPrimaryContainer
-                                                                    #     )
-                                                                    # ),
-                                                                    child=Row(
-                                                                        key=Key("setting_option_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("setting_option_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("setting_option_title"),
-                                                                                        data="App Theme",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("setting_option_subtitle"),
-                                                                                        data="Set the color theme of the app",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            IconButton(
-                                                                                key=Key("setting_icon_button"),
-                                                                                icon=Icon(
-                                                                                    Icons.light_mode_rounded if self.is_dark else Icons.dark_mode_rounded,
-                                                                                    key=Key("setting_ico_1"),
-                                                                                ),
-                                                                                onPressed=self.toggle_theme,
-                                                                                tooltip="Light Mode" if self.is_dark else "Dark Mode",
-                                                                                style=ButtonStyle(
-                                                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                                                    hoverColor=AppColors.buttonHoverColor,
-                                                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                                                ),
-                                                                            )
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                                Divider(
-                                                                    key=Key("option_divider_st"),
-                                                                    color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")
-                                                                ),
-                                                                Container(
-                                                                    key=Key("setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("setting_option_2_title"),
-                                                                                        data="Panel Mode",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("setting_option_2_subtitle"),
-                                                                                        data="The dock extends to the screen edge",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Switch(
-                                                                                key=Key("dock_mode_or_panel_mode"),
-                                                                                value=self.t,
-                                                                                onChanged=self.tog,
-                                                                            ),
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                            ]
-                                                        )
                                                     )
-                                                ]
-                                            )
-                                        ),
-                                        Container( 
-                                            # ROOT SETTINGS SECTION CONTSINER
-                                            key=Key("opning_note_app_settings_section_root"),
-                                            child=Column(
-                                                key=Key("opning_note_app_settings_section_root_col"),
-                                                children=[
-                                                    SizedBox(
-                                                    key=Key("opning_note_app_sb_100"),
-                                                    height=24
                                                 ),
-                                                    Row(
-                                                        key=Key("opning_note_app_settings_section_heading_row"),
-                                                        children=[
-                                                            Text(
-                                                                key=Key("opning_note_app_settings_section_heading"),
-                                                                data="Openeing Note App",
-                                                                style=TextStyle(
-                                                                    color=Colors.onSurface,
-                                                                    fontFamily="ubuntu",
-                                                                    fontSize=24,
-                                                                    # fontWeight="bold"
-                                                                )
-                                                            )
-                                                        ]
-                                                    ),
-                                                    SizedBox(
-                                                        key=Key("opning_note_app_settings_section_heading_sb_1"),
-                                                        height=18
-                                                    ),
-                                                    Container(
-                                                        constraints=BoxConstraints(
-                                                            minWidth=500,
-                                                        ),
-                                                        width=800,
-                                                        decoration=BoxDecoration(
-                                                            color=AppColors.appBackgroundColor,
-                                                            borderRadius=BorderRadius.all(20),
-                                                            border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                        ),
-                                                        key=Key("opning_note_app_settings_card"),
-                                                        child=Column(
-                                                            key=Key("opning_note_app_settings_card_column"),
-                                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                                            children=[
-                                                                Container(
-                                                                    key=Key("opning_note_app_setting_option"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(
-                                                                    #         width=1,
-                                                                    #         color=Colors.onPrimaryContainer
-                                                                    #     )
-                                                                    # ),
-                                                                    child=Row(
-                                                                        key=Key("opning_note_app_setting_option_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("opning_note_app_setting_option_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("opning_note_app_setting_option_title"),
-                                                                                        data="Openeing Files",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("opning_note_app_setting_option_subtitle"),
-                                                                                        data="Choose where your files are opened",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            Dropdown(
-                                                                                key=Key("opening_files_dropdown"),
-                                                                                controller=self.open_files,
-                                                                                onChanged=lambda v: print(v),
-                                                                                items=self.open_files_options,
-                                                                                dropDirection=VerticalDirection.DOWN,
-                                                                                theme=DropdownTheme(
-                                                                                    width=200,
-                                                                                    dropDownHeight=86,
-                                                                                    dropdownMargin=EdgeInsets.only(
-                                                                                        top=14
-                                                                                    ),
-                                                                                    fontSize=12,
-                                                                                    borderWidth=0.0,
-                                                                                    borderColor=AppColors.transparent,
-                                                                                    backgroundColor=AppColors.dropDownColor,
-                                                                                    dropdownColor=AppColors.dropDownColor,
-                                                                                    textColor=AppColors.iconColor,
-                                                                                    dropdownTextColor=AppColors.iconColor,
-                                                                                    dropdownHoverColor=AppColors.dropDownMenuHoverColor,
-                                                                                    hoverColor=AppColors.dropDownHoverColor,
-                                                                                    itemHoverColor=AppColors.dropDownMenuHoverColor,
-                                                                                ),
-                                                                            )
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                                Divider(
-                                                                    key=Key("option_divider_op"),
-                                                                    color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")
-                                                                ),
-                                                                Container(
-                                                                    key=Key("opning_note_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("opning_note_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("opning_note_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("opning_note_app_setting_option_2_title"),
-                                                                                        data="When Note App starts",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("opning_note_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("opning_note_app_setting_option_2_subtitle"),
-                                                                                        data="On every app start the session should",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("opning_note_app_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Dropdown(
-                                                                                key=Key("opening_files_dropdown"),
-                                                                                controller=self.open_app,
-                                                                                onChanged=lambda v: print(v),
-                                                                                items=self.open_app_options,
-                                                                                dropDirection=VerticalDirection.DOWN,
-                                                                                theme=DropdownTheme(
-                                                                                    width=200,
-                                                                                    dropDownHeight=86,
-                                                                                    dropdownMargin=EdgeInsets.only(
-                                                                                        top=14
-                                                                                    ),
-                                                                                    fontSize=12,
-                                                                                    borderWidth=0.0,
-                                                                                    borderColor=AppColors.transparent,
-                                                                                    backgroundColor=AppColors.dropDownColor,
-                                                                                    dropdownColor=AppColors.dropDownColor,
-                                                                                    textColor=AppColors.iconColor,
-                                                                                    dropdownTextColor=AppColors.iconColor,
-                                                                                    dropdownHoverColor=AppColors.dropDownMenuHoverColor,
-                                                                                    hoverColor=AppColors.dropDownHoverColor,
-                                                                                    itemHoverColor=AppColors.dropDownMenuHoverColor,
-                                                                                ),
-                                                                            )
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                                Divider(
-                                                                    key=Key("option_divider_2"),
-                                                                    color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")
-                                                                ),
-                                                                Container(
-                                                                    key=Key("recent_files_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("recent_files_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("recent_files_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("recent_files_app_setting_option_2_title"),
-                                                                                        data="Recent Files",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("recent_files_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("recent_files_app_setting_option_2_subtitle"),
-                                                                                        data="Show recent files in the dashboard",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("recent_files_app_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Switch(
-                                                                                key=Key("show_recent_filese_switch"),
-                                                                                value=self.show_recent,
-                                                                                onChanged=self.tog_recent,
-                                                                            ),                                                                       
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                            
-                                                            ]
-                                                        )
+                                                SettingsTile(
+                                                    key=Key("panel_mode_tile"),
+                                                    title="Panel Mode",
+                                                    subtitle="The dock extends to the screen edge",
+                                                    trailing=Switch(
+                                                        key=Key("dock_mode_or_panel_mode"),
+                                                        value=self.t,
+                                                        onChanged=self.update_t,
                                                     )
-                                                ]
-                                            )
+                                                )
+                                            ]
                                         ),
-                                        Container( 
-                                            # ROOT SETTINGS SECTION CONTSINER
-                                            key=Key("spelling_section_settings_section_root"),
-                                            child=Column(
-                                                key=Key("spelling_section_settings_section_root_col"),
-                                                children=[
-                                                    SizedBox(
-                                                        key=Key("spelling_section_sb_01"),
-                                                        height=24
-                                                    ),
-                                                    Row(
-                                                        key=Key("spelling_section_settings_section_heading_row"),
-                                                        children=[
-                                                            Text(
-                                                                key=Key("spelling_section_settings_section_heading"),
-                                                                data="Selling",
-                                                                style=TextStyle(
-                                                                    color=Colors.onSurface,
-                                                                    fontFamily="ubuntu",
-                                                                    fontSize=24,
-                                                                    # fontWeight="bold"
-                                                                )
-                                                            )
-                                                        ]
-                                                    ),
-                                                    SizedBox(
-                                                        key=Key("spelling_section_settings_section_heading_sb_1"),
-                                                        height=18
-                                                    ),
-                                                    Container(
-                                                        constraints=BoxConstraints(
-                                                            minWidth=500,
+                                        SettingsSection(
+                                            key=Key("opening_note_app_section"),
+                                            title="Opening Note App",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("opening_files_tile"),
+                                                    title="Opening Files",
+                                                    subtitle="Choose where your files are opened",
+                                                    trailing=Dropdown(
+                                                        key=Key("opening_files_dropdown"),
+                                                        controller=self.open_files,
+                                                        onChanged=self.update_open_files,
+                                                        items=self.open_files_options,
+                                                        dropDirection=VerticalDirection.DOWN,
+                                                        theme=DropdownTheme(
+                                                            width=200,
+                                                            dropDownHeight=86,
+                                                            dropdownMargin=EdgeInsets.only(top=14),
+                                                            fontSize=12,
+                                                            borderWidth=0.0,
+                                                            borderColor=AppColors.transparent,
+                                                            backgroundColor=AppColors.dropDownColor,
+                                                            dropdownColor=AppColors.dropDownColor,
+                                                            textColor=AppColors.iconColor,
+                                                            dropdownTextColor=AppColors.iconColor,
+                                                            dropdownHoverColor=AppColors.dropDownMenuHoverColor,
+                                                            hoverColor=AppColors.dropDownHoverColor,
+                                                            itemHoverColor=AppColors.dropDownMenuHoverColor,
                                                         ),
-                                                        width=800,
-                                                        decoration=BoxDecoration(
-                                                            color=AppColors.appBackgroundColor,
-                                                            borderRadius=BorderRadius.all(20),
-                                                            border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                        ),
-                                                        key=Key("spelling_section_settings_card"),
-                                                        child=Column(
-                                                            key=Key("spelling_section_settings_card_column"),
-                                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                                            children=[
-                                                                Container(
-                                                                    key=Key("spelling_files_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("spelling_files_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("spelling_files_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("spelling_files_app_setting_option_2_title"),
-                                                                                        data="Spell Check",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("spelling_files_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("spelling_files_app_setting_option_2_subtitle"),
-                                                                                        data="Check files for spelling typos",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("spelling_files_app_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Switch(
-                                                                                key=Key("show_spelling_filese_switch"),
-                                                                                value=self.spell_check,
-                                                                                onChanged=self.tog_spell_check,
-                                                                            ),                                                                       
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                                Divider(
-                                                                    key=Key("option_divider_3"),
-                                                                    color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")
-                                                                ),
-                                                                Container(
-                                                                    key=Key("spelling_auto_correct_files_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("spelling_auto_correct_files_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("spelling_auto_correct_files_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("spelling_auto_correct_files_app_setting_option_2_title"),
-                                                                                        data="Autocorrect",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("spelling_auto_correct_files_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("spelling_auto_correct_files_app_setting_option_2_subtitle"),
-                                                                                        data="Typos are automatically corrected when spell check is turned on",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("spelling_auto_correct_files_app_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Switch(
-                                                                                key=Key("show_spelling_auto_correct_filese_switch"),
-                                                                                value=self.autocorrect,
-                                                                                onChanged=self.tog_autocorrect,
-                                                                            ),                                                                       
-                                                                        ]
-                                                                    )
-                                                                ),                                                                                                                
-                                                            ]
-                                                        )
                                                     )
-                                                ]
-                                            )
+                                                ),
+                                                SettingsTile(
+                                                    key=Key("when_note_app_starts_tile"),
+                                                    title="When Note App starts",
+                                                    subtitle="On every app start the session should",
+                                                    trailing=Dropdown(
+                                                        key=Key("opening_app_dropdown"),
+                                                        controller=self.open_app,
+                                                        onChanged=self.update_open_app,
+                                                        items=self.open_app_options,
+                                                        dropDirection=VerticalDirection.DOWN,
+                                                        theme=DropdownTheme(
+                                                            width=200,
+                                                            dropDownHeight=86,
+                                                            dropdownMargin=EdgeInsets.only(top=14),
+                                                            fontSize=12,
+                                                            borderWidth=0.0,
+                                                            borderColor=AppColors.transparent,
+                                                            backgroundColor=AppColors.dropDownColor,
+                                                            dropdownColor=AppColors.dropDownColor,
+                                                            textColor=AppColors.iconColor,
+                                                            dropdownTextColor=AppColors.iconColor,
+                                                            dropdownHoverColor=AppColors.dropDownMenuHoverColor,
+                                                            hoverColor=AppColors.dropDownHoverColor,
+                                                            itemHoverColor=AppColors.dropDownMenuHoverColor,
+                                                        ),
+                                                    )
+                                                ),
+                                                SettingsTile(
+                                                    key=Key("recent_files_tile"),
+                                                    title="Recent Files",
+                                                    subtitle="Show recent files in the dashboard",
+                                                    trailing=Switch(
+                                                        key=Key("show_recent_filese_switch"),
+                                                        value=self.show_recent,
+                                                        onChanged=self.update_show_recent,
+                                                    )
+                                                )
+                                            ]
                                         ),
-                                        Container( 
-                                            # ROOT SETTINGS SECTION CONTSINER
-                                            key=Key("ai_features_section_settings_section_root"),
-                                            child=Column(
-                                                key=Key("ai_features_section_settings_section_root_col"),
-                                                children=[
-                                                    SizedBox(
-                                                        key=Key("ai_features_section_sb_04"),
-                                                        height=24
+                                        SettingsSection(
+                                            key=Key("spelling_section"),
+                                            title="Spelling",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("spell_check_tile"),
+                                                    title="Spell Check",
+                                                    subtitle="Check files for spelling typos",
+                                                    trailing=Switch(
+                                                        key=Key("spell_check_switch"),
+                                                        value=self.spell_check,
+                                                        onChanged=self.update_spell_check,
                                                     ),
-                                                    Row(
-                                                        key=Key("ai_features_section_settings_section_heading_row"),
-                                                        children=[
-                                                            Text(
-                                                                key=Key("ai_features_section_settings_section_heading"),
-                                                                data="AI Features",
-                                                                style=TextStyle(
-                                                                    color=Colors.onSurface,
-                                                                    fontFamily="ubuntu",
-                                                                    fontSize=24,
-                                                                    # fontWeight="bold"
-                                                                )
-                                                            )
-                                                        ]
+                                                ),
+                                                SettingsTile(
+                                                    key=Key("autocorrect_tile"),
+                                                    title="Autocorrect",
+                                                    subtitle="Typos are automatically corrected when spell check is turned on",
+                                                    trailing=Switch(
+                                                        key=Key("autocorrect_switch"),
+                                                        value=self.autocorrect,
+                                                        onChanged=self.update_autocorrect,
                                                     ),
-                                                    SizedBox(
-                                                        key=Key("ai_features_section_settings_section_heading_sb_1"),
-                                                        height=18
-                                                    ),
-                                                    Container(
-                                                        constraints=BoxConstraints(
-                                                            minWidth=500,
-                                                        ),
-                                                        width=800,
-                                                        decoration=BoxDecoration(
-                                                            color=AppColors.appBackgroundColor,
-                                                            borderRadius=BorderRadius.all(20),
-                                                            border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                        ),
-                                                        key=Key("ai_features_section_settings_card"),
-                                                        child=Column(
-                                                            key=Key("ai_features_section_settings_card_column"),
-                                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                                            children=[
-                                                                Container(
-                                                                    key=Key("ai_features_files_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("ai_features_files_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("ai_features_files_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("ai_features_files_app_setting_option_2_title"),
-                                                                                        data="Ai Features",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("ai_features_files_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("ai_features_files_app_setting_option_2_subtitle"),
-                                                                                        data="Turn Ai Features on/off",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("ai_features_files_app_switch_sb"),
-                                                                                height=40
-                                                                            ),
-                                                                            Switch(
-                                                                                key=Key("show_ai_features_filese_switch"),
-                                                                                value=self.ai_features,
-                                                                                onChanged=self.tog_ai_features,
-                                                                            ),                                                                       
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                            ]
-                                                        )
-                                                    ),
-                                                    SizedBox(
-                                                        key=Key("ai_features_section_sb_5"),
-                                                        height=40
-                                                    ),
-                                                ]
-                                            )
+                                                ),
+                                            ]
                                         ),
-                                        Container( 
-                                            # ROOT SETTINGS SECTION CONTSINER
-                                            key=Key("about_this_app_section_settings_section_root"),
-                                            child=Column(
-                                                key=Key("about_this_app_section_settings_section_root_col"),
-                                                children=[
-                                                    Row(
-                                                        key=Key("about_this_app_section_settings_section_heading_row"),
-                                                        children=[
-                                                            Text(
-                                                                key=Key("about_this_app_section_settings_section_heading"),
-                                                                data="About This App",
-                                                                style=TextStyle(
-                                                                    color=Colors.onSurface,
-                                                                    fontFamily="ubuntu",
-                                                                    fontSize=20,
-                                                                    fontWeight="bold"
-                                                                )
-                                                            )
-                                                        ]
+                                        SettingsSection(
+                                            key=Key("ai_features_section"),
+                                            title="AI Features",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("ai_features_tile"),
+                                                    title="AI Features",
+                                                    subtitle="Turn AI Features on/off",
+                                                    trailing=Switch(
+                                                        key=Key("ai_features_switch"),
+                                                        value=self.ai_features,
+                                                        onChanged=self.update_ai_features,
                                                     ),
-                                                    SizedBox(
-                                                        key=Key("about_this_app_section_settings_section_heading_sb_1"),
-                                                        height=18
-                                                    ),
-                                                    Container(
-                                                        constraints=BoxConstraints(
-                                                            minWidth=500,
-                                                        ),
-                                                        width=800,
-                                                        decoration=BoxDecoration(
-                                                            color=AppColors.appBackgroundColor,
-                                                            borderRadius=BorderRadius.all(20),
-                                                            border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                        ),
-                                                        key=Key("about_this_app_section_settings_card"),
-                                                        child=Column(
-                                                            key=Key("about_this_app_section_settings_card_column"),
-                                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                                            children=[
-                                                                Container(
-                                                                    key=Key("about_this_app_files_app_setting_option_2"),
-                                                                    padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
-                                                                    # decoration=BoxDecoration(
-                                                                    #     border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                                                    #     )
-                                                                    child=Row(
-                                                                        key=Key("about_this_app_files_app_setting_option_2_row"),
-                                                                        mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                                                        children=[
-                                                                            Column(
-                                                                                key=Key("about_this_app_files_app_setting_option_2_column"),
-                                                                                crossAxisAlignment=CrossAxisAlignment.START,
-                                                                                children=[
-                                                                                    Text(
-                                                                                        key=Key("about_this_app_files_app_setting_option_2_title"),
-                                                                                        data="Note App",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=14,
-                                                                                            # fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("about_this_app_files_app_option_title_sb"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("about_this_app_files_app_setting_option_2_subtitle"),
-                                                                                        data="version: 0.0.1",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                        key=Key("about_this_app_files_app_option_title_sb_v"),
-                                                                                        height=4
-                                                                                    ),
-                                                                                    Text(
-                                                                                        key=Key("about_this_app_files_app_setting_option_2_subtitle_v"),
-                                                                                        data="© 2025 Ahmura Technologies. All rights reserved.",
-                                                                                        style=TextStyle(
-                                                                                            color=Colors.onSurface,
-                                                                                            fontFamily="ubuntu",
-                                                                                            fontSize=11,
-                                                                                            fontWeight='light'
-                                                                                        )
-                                                                                    ),
-                                                                                ]
-                                                                            ),
-                                                                            SizedBox(
-                                                                                key=Key("about_this_app_files_app_switch_sb"),
-                                                                                height=40
-                                                                            ),                                                                      
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                            ]
-                                                        )
-                                                    ),
-                                                    SizedBox(
-                                                        key=Key("about_this_app_section_sb_5"),
-                                                        height=40
-                                                    ),
-                                                ]
-                                            )
-                                        ),                     
+                                                ),
+                                            ]
+                                        ),
+                                        SettingsSection(
+                                            key=Key("about_app_section"),
+                                            title="About This App",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("about_app_tile"),
+                                                    title="Note App",
+                                                    subtitle="version: 0.0.1\n© 2025 Ahmura Technologies. All rights reserved.",
+                                                ),
+                                            ],
+                                            last_item=True
+                                        ),
                                     ]
                                 )
                             ),

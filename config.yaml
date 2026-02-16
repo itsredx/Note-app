@@ -1,8 +1,10 @@
 app_name: Note App
-win_width: 1280
-win_height: 720
+win_width: 1024
+win_height: 700
+min_win_width: 1024
+min_win_height: 700
 frameless: false
-maximixed: true
+maximixed: false
 fixed_size: false
 Debug: true
 render_dir: render

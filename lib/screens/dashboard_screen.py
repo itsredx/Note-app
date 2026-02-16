@@ -46,6 +46,7 @@ from pythra import (
     InputDecoration,
 )
 
+
 class DashboardScreen(StatefulWidget):
     def __init__(
         self,
@@ -265,6 +266,7 @@ class DashboardScreenState(State):
                                     mainAxisSpacing=20,
                                     crossAxisSpacing=20,
                                     childAspectRatio=1.0,
+                                    childMinWidth=231.0,
                                     shrinkWrap=True,
                                     children=[
                                         NoteCard(
