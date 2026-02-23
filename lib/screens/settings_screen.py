@@ -68,9 +68,8 @@ class SettingsAndProfileScreen(StatefulWidget):
 class SettingsAndProfileScreenState(State):
     def __init__(self, navigator: NavigatorState,):
         super().__init__()
-        self.t = True
         self.navigator = navigator
-        self.t = True
+        self.panel_state = False
         self.show_recent = True
         self.spell_check = True
         self.autocorrect = True
@@ -90,24 +89,29 @@ class SettingsAndProfileScreenState(State):
         # Rebuild this row to update all icons (Sun/Moon, Sparkle, etc)
         self.setState()
     
-    def tog(self, t):
-        self.t = t
+    def tog_panel_state(self, t):
+        self.panel_state = not self.panel_state
+        print(f"Panel state: {self.panel_state}")
         self.setState()
 
     def tog_ai_features(self, t):
-        self.ai_features = t
+        self.ai_features = not self.ai_features
+        print(f"AI features: {self.ai_features}")
         self.setState()
 
     def tog_recent(self, t):
-        self.show_recent = t
+        self.show_recent = not self.show_recent
+        print(f"Recent: {self.show_recent}")
         self.setState()
 
     def tog_spell_check(self, t):
-        self.spell_check = t
+        self.spell_check = not self.spell_check
+        print(f"Spell check: {self.spell_check}")
         self.setState()
 
     def tog_autocorrect(self, t):
-        self.autocorrect = t
+        self.autocorrect = not self.autocorrect
+        print(f"Autocorrect: {self.autocorrect}")
         self.setState()
 
     def update_open_files(self, value):
@@ -118,8 +122,8 @@ class SettingsAndProfileScreenState(State):
         self.open_app.selectedValue = value
         self.setState()
 
-    def update_t(self, value):
-        self.t = value
+    def update_panel_state(self, value):
+        self.panel_state = value
         self.setState()
 
     def update_show_recent(self, value):
@@ -141,7 +145,7 @@ class SettingsAndProfileScreenState(State):
     def reset_to_default(self):
         self.open_files.selectedValue = "Tab"
         self.open_app.selectedValue = "Continue"
-        self.t = True
+        self.panel_state = True
         self.show_recent = True
         self.spell_check = True
         self.autocorrect = True
@@ -267,8 +271,8 @@ class SettingsAndProfileScreenState(State):
                                                     subtitle="The dock extends to the screen edge",
                                                     trailing=Switch(
                                                         key=Key("dock_mode_or_panel_mode"),
-                                                        value=self.t,
-                                                        onChanged=self.update_t,
+                                                        value=self.panel_state,
+                                                        onChanged=self.tog_panel_state,
                                                     )
                                                 )
                                             ]

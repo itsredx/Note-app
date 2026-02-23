@@ -41,6 +41,11 @@ class PythraProgressIndicator {
             this.updateVisibility(data.visible);
             this.data.visible = data.visible;
         }
+        if (data.css_vars) {
+            for (const [key, value] of Object.entries(data.css_vars)) {
+                this.element.style.setProperty(key, value);
+            }
+        }
     }
 
     ensureCssLoaded(loaderName) {
@@ -75,3 +80,5 @@ class PythraProgressIndicator {
 if (typeof window !== 'undefined') {
     window.PythraProgressIndicator = PythraProgressIndicator;
 }
+
+
