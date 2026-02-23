@@ -37,13 +37,17 @@ from pythra import (
     GradientTheme,
     Image,
     AssetImage,
-    Navigator, PageRoute, NavigatorState,
+    Navigator,
+    PageRoute,
+    NavigatorState,
     GridView,
     GestureDetector,
     Padding,
     TextField,
     TextEditingController,
     InputDecoration,
+    Expandable,
+    ExpandableTheme,
 )
 
 
@@ -70,54 +74,75 @@ class DashboardScreenState(State):
         self.show_color_picker = False
         self.show_create_dialog = False
         self.selected_color = None
-        
+        self.panel_mode = False
+
         self.title_controller = TextEditingController()
         self.note_controller = TextEditingController()
 
         self.notes = [
-            {"title": "Design", "note": "Make the design looks okay...", "date": "20 Dec", "color": Colors.hex("#FFAB91")},
-            {"title": "Project", "note": "Finish the project documentation", "date": "21 Dec", "color": Colors.hex("#CE93D8")},
-            {"title": "Meeting", "note": "Sync with the team at 10am", "date": "22 Dec", "color": Colors.hex("#4DD0E1")},
+            {
+                "title": "Design",
+                "note": "Make the design looks okay...",
+                "date": "20 Dec",
+                "color": Colors.hex("#FFAB91"),
+            },
+            {
+                "title": "Project",
+                "note": "Finish the project documentation",
+                "date": "21 Dec",
+                "color": Colors.hex("#CE93D8"),
+            },
+            {
+                "title": "Meeting",
+                "note": "Sync with the team at 10am",
+                "date": "22 Dec",
+                "color": Colors.hex("#4DD0E1"),
+            },
         ]
         self.note_colors = [
-            Colors.hex("#FFAB91"), # Orange
-            Colors.hex("#CE93D8"), # Purple
-            Colors.hex("#4DD0E1"), # Cyan
-            Colors.hex("#FFF176"), # Yellow
-            Colors.hex("#80CBC4"), # Teal
+            Colors.hex("#FFAB91"),  # Orange
+            Colors.hex("#CE93D8"),  # Purple
+            Colors.hex("#4DD0E1"),  # Cyan
+            Colors.hex("#FFF176"),  # Yellow
+            Colors.hex("#80CBC4"),  # Teal
         ]
 
     def initState(self):
         self.note_editor_route = PageRoute(
             builder=lambda nav: NoteEditorScreen(
-                key=Key("note_page"), navigator=nav,
+                key=Key("note_page"),
+                navigator=nav,
             ),
-            name="note_editor"
+            name="note_editor",
         )
         self.settings_route = PageRoute(
             builder=lambda nav: SettingsAndProfileScreen(
-                key=Key("settings_&_profile_page"),
-                navigator=nav
+                key=Key("settings_&_profile_page"), navigator=nav
             ),
-            name="settings_page"
+            name="settings_page",
         )
         print("🚀 Preloading NoteEditorScreen in background...")
         self.navigator.preload(self.note_editor_route)
-    
+
     def open_note(self):
         self.navigator.push(self.note_editor_route)
 
     def open_settings(self):
         self.navigator.push(self.settings_route)
-        
+
     def delete_note(self):
         print("Delete note clicked")
-        
+
     def chat_note(self):
         print("AI Chat note clicked")
 
-    def toggle_color_picker(self):
+    def toggle_color_picker_depercated(self):
         self.show_color_picker = not self.show_color_picker
+        self.setState()
+
+    def toggle_color_picker(self, *args, **kwargs):
+        self.show_color_picker = not self.show_color_picker
+        print(f"show_color_picker: {self.show_color_picker}")
         self.setState()
 
     def initiate_create_note(self, color):
@@ -135,10 +160,14 @@ class DashboardScreenState(State):
 
     def finalize_create_note(self):
         new_note = {
-            "title": self.title_controller.text if self.title_controller.text else "New Note",
-            "note": self.note_controller.text if self.note_controller.text else "No content",
+            "title": (
+                self.title_controller.text if self.title_controller.text else "New Note"
+            ),
+            "note": (
+                self.note_controller.text if self.note_controller.text else "No content"
+            ),
             "date": "Now",
-            "color": self.selected_color if self.selected_color else Colors.white
+            "color": self.selected_color if self.selected_color else Colors.white,
         }
         self.notes.insert(0, new_note)
         self.show_create_dialog = False
@@ -147,7 +176,7 @@ class DashboardScreenState(State):
 
     @property
     def is_dark(self):
-        return Framework.instance().theme.brightness == 'dark'
+        return Framework.instance().theme.brightness == "dark"
 
     def toggle_theme(self):
         new_theme = AppThemes.light if self.is_dark else AppThemes.dark
@@ -160,72 +189,127 @@ class DashboardScreenState(State):
         sidebar = Container(
             key=Key("sidebar_container"),
             width="80px",
-            height="100vh",
-            color=Colors.surface,
-            padding=EdgeInsets.symmetric(vertical=24, horizontal=10),
-            child=Column(
-                key=Key("sidebar_column"),
-                mainAxisAlignment=MainAxisAlignment.START,
-                crossAxisAlignment=CrossAxisAlignment.CENTER,
-                children=[
-                    Container(
-                        key=Key("sidebar_title_note_container"), 
-                        padding=EdgeInsets.only(bottom=20),
-                        child=Text(
-                        "Note", 
-                        key=Key("sidebar_title_note"), 
-                        style=TextStyle(fontSize=16, fontWeight="bold", color=Colors.onSurface)
-                    ),),
-                    
-                    # Color Picker Column (Conditional)
-                    *(
-                        [
-                            Column(
+            height="70vh" if self.panel_mode else "100vh",
+            color=Colors.transparent if self.panel_mode else Colors.surface,
+            padding=EdgeInsets.symmetric(vertical=0, horizontal=4),
+            child=Container(
+                key=Key("sidebar_inner_container"),
+                height="100%",
+                padding=EdgeInsets.symmetric(vertical=24, horizontal=10),
+                color=Colors.surface if self.panel_mode else Colors.transparent,
+                decoration=BoxDecoration(
+                    borderRadius=(
+                        BorderRadius.all(16) if self.panel_mode else BorderRadius.all(0)
+                    ),
+                    border=BorderSide(
+                        width=1 if self.panel_mode else 0,
+                        color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3"),
+                    ),
+                ),
+                child=Column(
+                    key=Key("sidebar_column"),
+                    mainAxisAlignment=MainAxisAlignment.START,
+                    crossAxisAlignment=CrossAxisAlignment.CENTER,
+                    children=[
+                        Container(
+                            key=Key("sidebar_title_note_container"),
+                            padding=EdgeInsets.only(bottom=20),
+                            child=Text(
+                                "Note",
+                                key=Key("sidebar_title_note"),
+                                style=TextStyle(
+                                    fontSize=16,
+                                    fontWeight="bold",
+                                    color=Colors.onSurface,
+                                ),
+                            ),
+                        ),
+                        # Color Picker Column (Conditional)
+                        Expandable(
+                            key=Key("myExpandable"),
+                            initiallyExpanded=self.show_color_picker,
+                            onToggle=self.toggle_color_picker,
+                            theme=ExpandableTheme(
+                                showIcon=False,
+                            ),
+                            header=Container(
+                                key=Key("sidebar_title_create_note__container"),
+                                child=IconButton(
+                                    key=Key("create_note_btn"),
+                                    icon=Icon(
+                                        (
+                                            Icons.add_circle_outline_rounded
+                                            if not self.show_color_picker
+                                            else Icons.close_rounded
+                                        ),
+                                        key=Key("create_note_icon"),
+                                    ),
+                                    # onPressed=self.toggle_color_picker,
+                                    style=ButtonStyle(
+                                        backgroundColor=AppColors.buttonBackgroundColor,
+                                        hoverColor=AppColors.buttonHoverColor,
+                                        foregroundColor=AppColors.buttonForegroundColor,
+                                    ),
+                                ),
+                            ),
+                            child=Column(
                                 key=Key("color_picker_column"),
                                 children=[
                                     GestureDetector(
                                         key=Key(f"color_pick_btn_{i}"),
-                                        onTap=lambda details, c=color: self.initiate_create_note(c),
+                                        onTap=lambda details, c=color: self.initiate_create_note(
+                                            c
+                                        ),
                                         child=Container(
                                             key=Key(f"color_pick_circle_{i}"),
                                             width=30,
                                             height=30,
-                                            margin=EdgeInsets.only(bottom=10),
+                                            margin=EdgeInsets.only(top=10),
                                             decoration=BoxDecoration(
                                                 color=color,
                                                 borderRadius=BorderRadius.circular(15),
-                                                border=BorderSide(color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3"), width=1)
-                                            )
-                                        )
-                                    ) for i, color in enumerate(self.note_colors)
-                                ]
-                            )
-                        ] if self.show_color_picker else []
-                    ),
-
-                    # Toggle/Create Button
-                    Container(
-                        key=Key("create_note_btn_container"), 
-                        padding=EdgeInsets.only(bottom=20),
-                        child=IconButton(
-                            key=Key("create_note_btn"),
-                            icon=Icon(
-                                Icons.add_circle_outline_rounded if not self.show_color_picker else Icons.close_rounded,
-                                key=Key("create_note_icon"),
-                            ),
-                            onPressed=self.toggle_color_picker,
-                            style=ButtonStyle(
-                                backgroundColor=AppColors.buttonBackgroundColor,
-                                hoverColor=AppColors.buttonHoverColor,
-                                foregroundColor=AppColors.buttonForegroundColor,
+                                                border=BorderSide(
+                                                    color=Colors.adaptive(
+                                                        dark="#5a5a5a", light="#d3d3d3"
+                                                    ),
+                                                    width=1,
+                                                ),
+                                            ),
+                                        ),
+                                    )
+                                    for i, color in enumerate(self.note_colors)
+                                ],
                             ),
                         ),
-                    ),
-                ]
+                        # Toggle/Create Button
+                        # Container(
+                        #     key=Key("create_note_btn_container"),
+                        #     padding=EdgeInsets.only(bottom=20),
+                        #     child=IconButton(
+                        #         key=Key("create_note_btn"),
+                        #         icon=Icon(
+                        #             Icons.add_circle_outline_rounded if not self.show_color_picker else Icons.close_rounded,
+                        #             key=Key("create_note_icon"),
+                        #         ),
+                        #         onPressed=self.toggle_color_picker,
+                        #         style=ButtonStyle(
+                        #             backgroundColor=AppColors.buttonBackgroundColor,
+                        #             hoverColor=AppColors.buttonHoverColor,
+                        #             foregroundColor=AppColors.buttonForegroundColor,
+                        #         ),
+                        #     ),
+                        # ),
+                    ],
+                ),
             ),
             decoration=BoxDecoration(
-                border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                color=Colors.adaptive(dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white),
+                border=BorderSide(
+                    width=0 if self.panel_mode else 1,
+                    color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3"),
+                ),
+                color=Colors.adaptive(
+                    dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white
+                ),
             ),
         )
 
@@ -237,25 +321,28 @@ class DashboardScreenState(State):
                 Container(
                     key=Key("main_content_area"),
                     height="100vh",
-                    width="calc(100vw - 80px)", 
+                    width="calc(100vw - 80px)",
                     color=Colors.surface,
-                    padding=EdgeInsets.only(left=40, right=40, top=24,bottom=32),
+                    padding=EdgeInsets.only(left=40, right=40, top=24, bottom=32),
                     child=Column(
                         key=Key("content_column"),
                         crossAxisAlignment=CrossAxisAlignment.STRETCH,
                         children=[
                             HeaderActions(
-                                key=Key("dashboard_header"), 
-                                onAccount= self.open_settings #lambda: print('on account')
+                                key=Key("dashboard_header"),
+                                onAccount=self.open_settings,  # lambda: print('on account')
                             ),
                             SizedBox(key=Key("page_heading_sized_box"), height=24),
                             Text(
-                                "Dashboard", 
-                                key=Key("DashBoard_Page_heading"), 
-                                style=TextStyle(fontSize=32, fontWeight="bold", color=Colors.onSurface)
+                                "Dashboard",
+                                key=Key("DashBoard_Page_heading"),
+                                style=TextStyle(
+                                    fontSize=32,
+                                    fontWeight="bold",
+                                    color=Colors.onSurface,
+                                ),
                             ),
                             SizedBox(key=Key("main_sized_box"), height=24),
-                            
                             # Grid View
                             Container(
                                 key=Key("grid_container"),
@@ -278,14 +365,15 @@ class DashboardScreenState(State):
                                             on_open=self.open_note,
                                             on_delete=self.delete_note,
                                             on_chat=self.chat_note,
-                                        ) for i, note in enumerate(self.notes)
+                                        )
+                                        for i, note in enumerate(self.notes)
                                     ],
                                 ),
                             ),
                         ],
                     ),
-                )
-            ]
+                ),
+            ],
         )
 
         # Main Stack to hold content and potential dialog
@@ -297,7 +385,10 @@ class DashboardScreenState(State):
                 *(
                     [
                         Positioned(
-                            top=0, left=0, right=0, bottom=0,
+                            top=0,
+                            left=0,
+                            right=0,
+                            bottom=0,
                             key=Key("dialog_overlay_bg"),
                             child=Container(
                                 key=Key("dialog_scrim"),
@@ -318,25 +409,39 @@ class DashboardScreenState(State):
                                             boxShadow=[
                                                 # Simple shadow simulation if supported, otherwise just border
                                                 # BoxShadow(color=Colors.black26, blurRadius=10)
-                                            ]
+                                            ],
                                         ),
                                         child=Column(
                                             key=Key("dialog_column"),
                                             mainAxisAlignment=MainAxisAlignment.START,
                                             crossAxisAlignment=CrossAxisAlignment.STRETCH,
                                             children=[
-                                                Text("Create New Note", key=Key("dialog_title"), style=TextStyle(fontSize=20, fontWeight="bold", color=Colors.onSurface)),
-                                                SizedBox(height=20, key=Key("dialog_spacer_1")),
+                                                Text(
+                                                    "Create New Note",
+                                                    key=Key("dialog_title"),
+                                                    style=TextStyle(
+                                                        fontSize=20,
+                                                        fontWeight="bold",
+                                                        color=Colors.onSurface,
+                                                    ),
+                                                ),
+                                                SizedBox(
+                                                    height=20,
+                                                    key=Key("dialog_spacer_1"),
+                                                ),
                                                 TextField(
                                                     key=Key("title_input"),
                                                     controller=self.title_controller,
                                                     decoration=InputDecoration(
                                                         hintText="Title",
-                                                        filled=False
+                                                        filled=False,
                                                         # label="Title"
-                                                    )
+                                                    ),
                                                 ),
-                                                SizedBox(height=12, key=Key("dialog_spacer_2")),
+                                                SizedBox(
+                                                    height=12,
+                                                    key=Key("dialog_spacer_2"),
+                                                ),
                                                 TextField(
                                                     key=Key("note_input"),
                                                     controller=self.note_controller,
@@ -344,35 +449,61 @@ class DashboardScreenState(State):
                                                         hintText="Description",
                                                         filled=False,
                                                         # label="Description"
-                                                    )
+                                                    ),
                                                 ),
-                                                SizedBox(height=50, key=Key("dialog_spacer_3")),
+                                                SizedBox(
+                                                    height=50,
+                                                    key=Key("dialog_spacer_3"),
+                                                ),
                                                 Row(
                                                     key=Key("dialog_btn_row"),
                                                     mainAxisAlignment=MainAxisAlignment.END,
                                                     children=[
                                                         ElevatedButton(
                                                             key=Key("cancel_btn"),
-                                                            child=Text("Cancel", key=Key("cancel_txt")),
+                                                            child=Text(
+                                                                "Cancel",
+                                                                key=Key("cancel_txt"),
+                                                            ),
                                                             onPressed=self.cancel_create_note,
-                                                            style=ButtonStyle(backgroundColor=Colors.hex("#f47171"))
+                                                            style=ButtonStyle(
+                                                                backgroundColor=Colors.hex(
+                                                                    "#f47171"
+                                                                )
+                                                            ),
                                                         ),
-                                                        SizedBox(width=12, key=Key("dialog_btn_spacer")),
+                                                        SizedBox(
+                                                            width=12,
+                                                            key=Key(
+                                                                "dialog_btn_spacer"
+                                                            ),
+                                                        ),
                                                         ElevatedButton(
                                                             key=Key("create_btn"),
-                                                            child=Text("Create", key=Key("create_txt"), style=TextStyle(color=Colors.white)),
+                                                            child=Text(
+                                                                "Create",
+                                                                key=Key("create_txt"),
+                                                                style=TextStyle(
+                                                                    color=Colors.white
+                                                                ),
+                                                            ),
                                                             onPressed=self.finalize_create_note,
-                                                            style=ButtonStyle(backgroundColor=self.selected_color or Colors.blue)
+                                                            style=ButtonStyle(
+                                                                backgroundColor=self.selected_color
+                                                                or Colors.blue
+                                                            ),
                                                         ),
-                                                    ]
-                                                )
-                                            ]
-                                        )
-                                    )
-                                )
-                            )
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                            ),
                         )
-                    ] if self.show_create_dialog else []
-                )
-            ]
+                    ]
+                    if self.show_create_dialog
+                    else []
+                ),
+            ],
         )

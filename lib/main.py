@@ -47,6 +47,7 @@ class HomePageState(State):
             key=Key("home_page_Pythra_wrapper_container"),
             height="100vh",
             width="100vw",
+            color=Colors.surface,
             child=Navigator(
                 key=Key("app_navigator"),
                 # The builder lambda now receives the navigator state

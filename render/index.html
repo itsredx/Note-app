@@ -56,12 +56,14 @@
 }</style>
 
                 <style id="dynamic-styles">
-.shared-container-0 { box-sizing: border-box; width: 100vw; height: 100vh; }
+.shared-container-0 { box-sizing: border-box; background: var(--md-sys-color-surface); width: 100vw; height: 100vh; }
 .shared-stack-0 { position: relative; display: grid; width: fit-content; height: fit-content; justify-items: start; align-items: start; direction: ltr; overflow: hidden; }
 .shared-stack-0 > * { grid-area: 1 / 1; }
 .shared-row-0 { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; width: 100%; direction: ltr; }
 
-.shared-container-2 { box-sizing: border-box; background: var(--dynamic-c4ad9ffc); border: 1px solid var(--dynamic-c3a58620); background: var(--md-sys-color-surface); padding: 24px 10px; width: 80px; height: 100vh; }
+.shared-container-9 { box-sizing: border-box; background: var(--dynamic-c4ad9ffc); border: 1px solid var(--dynamic-c3a58620); background: var(--md-sys-color-surface); padding: 0px 4px; width: 80px; height: 100vh; }
+
+.shared-container-8 { box-sizing: border-box; border: none; border-radius: 0.0px; background: transparent; padding: 24px 10px; height: 100%; }
 .shared-column-0 { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; height: 100%; direction: ltr; }
 
 .shared-container-1 { box-sizing: border-box; padding: 0.0px 0.0px 20px; }
@@ -74,6 +76,15 @@
                 white-space: pre-wrap;
             }
             
+
+.shared-container-2 { box-sizing: border-box; }
+.shared-column-1 { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; direction: ltr; }
+.shared-gesture-0 { display: contents; }
+.shared-gesture-0 > * { cursor: pointer; }
+
+.expandable-header { box-sizing: border-box; background: transparent; width: 100%; align-items: center; cursor: pointer; display: flex; user-select: none; }
+
+.shared-container-14 { box-sizing: border-box; background: transparent; width: 100%; align-items: center; cursor: pointer; display: flex; user-select: none; }
 .shared-iconbutton-0 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: var(--dynamic-e0ed6f04); color: var(--dynamic-aab20997); cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; width: calc(24px + 16px); height: calc(24px + 16px); }
 
             .shared-iconbutton-0 > i, .shared-iconbutton-0 > img, .shared-iconbutton-0 > svg, .shared-iconbutton-0 > * {
@@ -111,8 +122,25 @@
                 }
             
 
-.shared-container-4 { box-sizing: border-box; background: var(--md-sys-color-surface); padding: 24px 40px 32px; width: calc(100vw - 80px); height: 100vh; }
-.shared-column-1 { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; direction: ltr; }
+.expandable-body { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
+
+.shared-container-13 { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
+
+.expandable-inner { box-sizing: border-box; min-height: 0px; }
+
+.shared-container-12 { box-sizing: border-box; min-height: 0px; }
+
+.shared-container-3 { box-sizing: border-box; background: #FFAB91; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+.shared-container-4 { box-sizing: border-box; background: #CE93D8; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+.shared-container-5 { box-sizing: border-box; background: #4DD0E1; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+.shared-container-6 { box-sizing: border-box; background: #FFF176; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+.shared-container-7 { box-sizing: border-box; background: #80CBC4; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+.shared-container-11 { box-sizing: border-box; background: var(--md-sys-color-surface); padding: 24px 40px 32px; width: calc(100vw - 80px); height: 100vh; }
 .shared-row-1 { display: flex; flex-direction: row; justify-content: flex-end; align-items: flex-start; width: 100%; direction: ltr; }
 
             .shared-text-1 {
@@ -124,16 +152,16 @@
             }
             
 
-.shared-container-3 { box-sizing: border-box; height: 85vh; }
+.shared-container-10 { box-sizing: border-box; height: 85vh; }
 .shared-gridview-0 { padding: (0, 0, 0, 0); width: auto; height: auto; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(231.0px, 1fr)); gap: 20px 20px;box-sizing: border-box; }
 .shared-gridview-0 > * { aspect-ratio: 1.0; overflow: hidden;min-width: 0; min-height: 0; }
 .shared-stack-1 { position: relative; display: grid; width: fit-content; height: fit-content; justify-items: start; align-items: start; direction: ltr;  }
 .shared-stack-1 > * { grid-area: 1 / 1; }
 
-.shared-container-6 { box-sizing: border-box; background: #FFAB91; padding: 12px; width: 231px; height: 231px; }
+.shared-container-16 { box-sizing: border-box; background: #FFAB91; padding: 12px; width: 231px; height: 231px; }
 .shared-column-2 { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; height: 100%; direction: ltr; }
 
-.shared-container-5 { box-sizing: border-box; width: 110px; height: 30px; }
+.shared-container-15 { box-sizing: border-box; width: 110px; height: 30px; }
 
             .shared-text-2 {
                 margin: 0; /* Reset default paragraph margin */
@@ -152,8 +180,6 @@
                 white-space: pre-wrap;
             }
             
-
-.shared-container-7 { box-sizing: border-box; }
 .shared-row-2 { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; direction: ltr; }
 
                 .material-icon-1 {
@@ -180,7 +206,7 @@
             
 .shared-row-3 { display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; direction: ltr; }
 
-.shared-container-8 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
+.shared-container-17 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
 .shared-center-0 { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;  }
 
             .shared-text-4 {
@@ -192,9 +218,9 @@
             }
             
 
-.shared-container-9 { box-sizing: border-box; background: #CE93D8; padding: 12px; width: 231px; height: 231px; }
+.shared-container-18 { box-sizing: border-box; background: #CE93D8; padding: 12px; width: 231px; height: 231px; }
 
-.shared-container-13 { box-sizing: border-box; background: #4DD0E1; padding: 12px; width: 231px; height: 231px; }</style>
+.shared-container-19 { box-sizing: border-box; background: #4DD0E1; padding: 12px; width: 231px; height: 231px; }</style>
 
                 
         <script src="qwebchannel.js"></script>
@@ -245,7 +271,7 @@
 
             </head>
 <body>
-    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class=""><div id="fw_id_3" class="shared-container-0"><div id="fw_id_4" class=""><div id="fw_id_5" class=""><div id="fw_id_6" class="shared-stack-0"><div id="fw_id_7" class="shared-row-0"><div id="fw_id_8" class="shared-container-2"><div id="fw_id_9" class="shared-column-0"><div id="fw_id_10" class="shared-container-1"><p id="fw_id_11" class="shared-text-0" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_12" class="shared-container-1"><button id="fw_id_13" class="shared-iconbutton-0" onclick="handleClick('toggle_color_picker')"><i id="fw_id_14" class="material-icon-0">add_circle_outline</i></button></div></div></div><div id="fw_id_15" class="shared-container-4"><div id="fw_id_16" class="shared-column-1"><div id="fw_id_17" class=""><div id="fw_id_18" class="shared-row-1"><button id="fw_id_19" class="shared-iconbutton-0" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_20" class="material-icon-0">light_mode</i></button><div id="fw_id_21" class="" style="width: 12px"></div><button id="fw_id_22" class="shared-iconbutton-0" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_23" class="material-icon-0">account_circle</i></button></div></div><div id="fw_id_24" class="" style="height: 24px"></div><p id="fw_id_25" class="shared-text-1" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_26" class="" style="height: 24px"></div><div id="fw_id_27" class="shared-container-3"><div id="fw_id_28" class="shared-gridview-0"><div id="fw_id_29" class=""><div id="fw_id_30" class="shared-stack-1"><div id="fw_id_31" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_32" class="shared-container-6"><div id="fw_id_33" class="shared-column-2"><div id="fw_id_34" class="shared-container-5"><p id="fw_id_35" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_36" class="" style="height: 24px"></div><p id="fw_id_37" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Make the design looks okay...</p></div></div></div><div id="fw_id_38" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_39" class="shared-container-7"><div id="fw_id_40" class="shared-row-2"><button id="fw_id_41" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_42" class="material-icon-1">delete</i></button><div id="fw_id_43" class="" style="width: 8px"></div><button id="fw_id_44" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_45" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_46" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_47" class="shared-container-7"><div id="fw_id_48" class="shared-row-3"><div id="fw_id_49" class="shared-container-8"><div id="fw_id_50" class="shared-center-0"><p id="fw_id_51" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">20 Dec</p></div></div><button id="fw_id_52" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_53" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_54" class=""><div id="fw_id_55" class="shared-stack-1"><div id="fw_id_56" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_57" class="shared-container-9"><div id="fw_id_58" class="shared-column-2"><div id="fw_id_59" class="shared-container-5"><p id="fw_id_60" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_61" class="" style="height: 24px"></div><p id="fw_id_62" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Finish the project documentation</p></div></div></div><div id="fw_id_63" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_64" class="shared-container-7"><div id="fw_id_65" class="shared-row-2"><button id="fw_id_66" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_67" class="material-icon-1">delete</i></button><div id="fw_id_68" class="" style="width: 8px"></div><button id="fw_id_69" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_70" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_71" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_72" class="shared-container-7"><div id="fw_id_73" class="shared-row-3"><div id="fw_id_74" class="shared-container-8"><div id="fw_id_75" class="shared-center-0"><p id="fw_id_76" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">21 Dec</p></div></div><button id="fw_id_77" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_78" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_79" class=""><div id="fw_id_80" class="shared-stack-1"><div id="fw_id_81" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_82" class="shared-container-13"><div id="fw_id_83" class="shared-column-2"><div id="fw_id_84" class="shared-container-5"><p id="fw_id_85" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Meeting</p></div><div id="fw_id_86" class="" style="height: 24px"></div><p id="fw_id_87" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Sync with the team at 10am</p></div></div></div><div id="fw_id_88" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_89" class="shared-container-7"><div id="fw_id_90" class="shared-row-2"><button id="fw_id_91" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_92" class="material-icon-1">delete</i></button><div id="fw_id_93" class="" style="width: 8px"></div><button id="fw_id_94" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_95" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_96" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_97" class="shared-container-7"><div id="fw_id_98" class="shared-row-3"><div id="fw_id_99" class="shared-container-8"><div id="fw_id_100" class="shared-center-0"><p id="fw_id_101" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">22 Dec</p></div></div><button id="fw_id_102" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_103" class="material-icon-1">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class=""><div id="fw_id_3" class="shared-container-0"><div id="fw_id_4" class=""><div id="fw_id_5" class=""><div id="fw_id_6" class="shared-stack-0"><div id="fw_id_7" class="shared-row-0"><div id="fw_id_8" class="shared-container-9"><div id="fw_id_9" class="shared-container-8"><div id="fw_id_10" class="shared-column-0"><div id="fw_id_11" class="shared-container-1"><p id="fw_id_12" class="shared-text-0" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_13" class=""><div id="fw_id_14" class="shared-container-2"><div id="fw_id_15" class="shared-column-1"><div id="fw_id_16" class="shared-gesture-0"><div id="fw_id_17" class="shared-container-14 expandable-header" style="cursor: pointer; user-select: none; display: flex; align-items: center"><div id="fw_id_18" class="shared-container-2"><button id="fw_id_19" class="shared-iconbutton-0"><i id="fw_id_20" class="material-icon-0">add_circle_outline</i></button></div></div></div><div id="fw_id_21" class="shared-container-13 expandable-body" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; opacity: 0; overflow: hidden"><div id="fw_id_22" class="shared-container-12 expandable-inner" style="min-height: 0px"><div id="fw_id_23" class="shared-column-0"><div id="fw_id_24" class="shared-gesture-0"><div id="fw_id_25" class="shared-container-3"></div></div><div id="fw_id_26" class="shared-gesture-0"><div id="fw_id_27" class="shared-container-4"></div></div><div id="fw_id_28" class="shared-gesture-0"><div id="fw_id_29" class="shared-container-5"></div></div><div id="fw_id_30" class="shared-gesture-0"><div id="fw_id_31" class="shared-container-6"></div></div><div id="fw_id_32" class="shared-gesture-0"><div id="fw_id_33" class="shared-container-7"></div></div></div></div></div></div></div></div></div></div></div><div id="fw_id_34" class="shared-container-11"><div id="fw_id_35" class="shared-column-1"><div id="fw_id_36" class=""><div id="fw_id_37" class="shared-row-1"><button id="fw_id_38" class="shared-iconbutton-0" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_39" class="material-icon-0">light_mode</i></button><div id="fw_id_40" class="" style="width: 12px"></div><button id="fw_id_41" class="shared-iconbutton-0" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_42" class="material-icon-0">account_circle</i></button></div></div><div id="fw_id_43" class="" style="height: 24px"></div><p id="fw_id_44" class="shared-text-1" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_45" class="" style="height: 24px"></div><div id="fw_id_46" class="shared-container-10"><div id="fw_id_47" class="shared-gridview-0"><div id="fw_id_48" class=""><div id="fw_id_49" class="shared-stack-1"><div id="fw_id_50" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_51" class="shared-container-16"><div id="fw_id_52" class="shared-column-2"><div id="fw_id_53" class="shared-container-15"><p id="fw_id_54" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_55" class="" style="height: 24px"></div><p id="fw_id_56" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Make the design looks okay...</p></div></div></div><div id="fw_id_57" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_58" class="shared-container-2"><div id="fw_id_59" class="shared-row-2"><button id="fw_id_60" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_61" class="material-icon-1">delete</i></button><div id="fw_id_62" class="" style="width: 8px"></div><button id="fw_id_63" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_64" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_65" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_66" class="shared-container-2"><div id="fw_id_67" class="shared-row-3"><div id="fw_id_68" class="shared-container-17"><div id="fw_id_69" class="shared-center-0"><p id="fw_id_70" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">20 Dec</p></div></div><button id="fw_id_71" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_72" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_73" class=""><div id="fw_id_74" class="shared-stack-1"><div id="fw_id_75" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_76" class="shared-container-18"><div id="fw_id_77" class="shared-column-2"><div id="fw_id_78" class="shared-container-15"><p id="fw_id_79" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_80" class="" style="height: 24px"></div><p id="fw_id_81" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Finish the project documentation</p></div></div></div><div id="fw_id_82" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_83" class="shared-container-2"><div id="fw_id_84" class="shared-row-2"><button id="fw_id_85" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_86" class="material-icon-1">delete</i></button><div id="fw_id_87" class="" style="width: 8px"></div><button id="fw_id_88" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_89" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_90" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_91" class="shared-container-2"><div id="fw_id_92" class="shared-row-3"><div id="fw_id_93" class="shared-container-17"><div id="fw_id_94" class="shared-center-0"><p id="fw_id_95" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">21 Dec</p></div></div><button id="fw_id_96" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_97" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_98" class=""><div id="fw_id_99" class="shared-stack-1"><div id="fw_id_100" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_101" class="shared-container-19"><div id="fw_id_102" class="shared-column-2"><div id="fw_id_103" class="shared-container-15"><p id="fw_id_104" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Meeting</p></div><div id="fw_id_105" class="" style="height: 24px"></div><p id="fw_id_106" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Sync with the team at 10am</p></div></div></div><div id="fw_id_107" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_108" class="shared-container-2"><div id="fw_id_109" class="shared-row-2"><button id="fw_id_110" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_111" class="material-icon-1">delete</i></button><div id="fw_id_112" class="" style="width: 8px"></div><button id="fw_id_113" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_114" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_115" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_116" class="shared-container-2"><div id="fw_id_117" class="shared-row-3"><div id="fw_id_118" class="shared-container-17"><div id="fw_id_119" class="shared-center-0"><p id="fw_id_120" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">22 Dec</p></div></div><button id="fw_id_121" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_122" class="material-icon-1">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
     <div id="overlay-container"></div>
 
     <!-- ADD SIMPLEBAR JS -->
@@ -258,64 +284,158 @@
                 window._pythra_instances = window._pythra_instances || {};
                 try {
                     // First, DEFINE all our JS classes and functions
-                    // --- Injected from pathGenerator.js ---
+                    // --- Injected from gesture_detector.js ---
 try {
                         
-// js/pathGenerator.js
-
-// --- Vector Math Helper Functions ---
-const vec = (p1, p2) => ({ x: p2.x - p1.x, y: p2.y - p1.y });
-const magnitude = (v) => Math.sqrt(v.x ** 2 + v.y ** 2);
-const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;
-const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;
-const round = (val) => Math.round(val * 100) / 100; // Round to 2 decimal places
-
-function generateRoundedPath(points, radius) {
-    const numPoints = points.length;
-    const cornerData = [];
-
-    console.log(`>>>>>> Generator Initiated <<<<<<`)
-
-    for (let i = 0; i < numPoints; i++) {
-        const p_prev = points[(i + numPoints - 1) % numPoints];
-        const p_curr = points[i];
-        const p_next = points[(i + 1) % numPoints];
-
-        const v1 = vec(p_curr, p_prev);
-        const v2 = vec(p_curr, p_next);
-        const v1_mag = magnitude(v1);
-        const v2_mag = magnitude(v2);
-
-        if (v1_mag === 0 || v2_mag === 0) {
-            cornerData.push({ t1: p_curr, t2: p_curr, radius: 0 });
-            continue;
+/**
+ * PythraGestureDetector: A client-side engine for a feature-rich gesture detector.
+ *
+ * It uses Pointer Events to handle mouse and touch统一. It disambiguates between
+ * taps, double taps, long presses, and panning gestures.
+ */
+class PythraGestureDetector {
+    constructor(elementId, options) {
+        this.element = document.getElementById(elementId);
+        if (!this.element) {
+            console.error(`GestureDetector element with ID #${elementId} not found.`);
+            return;
         }
 
-        const angle = Math.acos(Math.max(-1, Math.min(1, dot(v1, v2) / (v1_mag * v2_mag))));
-        let tangentDist = radius / Math.tan(angle / 2);
-        tangentDist = Math.min(tangentDist, v1_mag / 2, v2_mag / 2);
-        const clampedRadius = Math.abs(tangentDist * Math.tan(angle / 2));
+        this.options = options;
 
-        const t1 = { x: p_curr.x + (v1.x / v1_mag) * tangentDist, y: p_curr.y + (v1.y / v1_mag) * tangentDist };
-        const t2 = { x: p_curr.x + (v2.x / v2_mag) * tangentDist, y: p_curr.y + (v2.y / v2_mag) * tangentDist };
+        // --- Gesture State ---
+        this.lastTapTime = 0;
+        this.tapTimeout = null;
+        this.longPressTimeout = null;
+        this.isPanning = false;
+        this.panStartPoint = { x: 0, y: 0 };
+        this.panThreshold = 5; // Pixels to move before a pan is detected
 
-        const sweepFlag = cross(v1, v2) < 0 ? 1 : 0;
+        // --- Bind Handlers ---
+        this.handlePointerDown = this.handlePointerDown.bind(this);
+        this.handlePointerMove = this.handlePointerMove.bind(this);
+        this.handlePointerUp = this.handlePointerUp.bind(this);
+        this.fireTap = this.fireTap.bind(this);
+        this.fireLongPress = this.fireLongPress.bind(this);
 
-        cornerData.push({ t1, t2, radius: clampedRadius, sweepFlag });
+        // Attach the entry-point event listener
+        this.element.addEventListener('pointerdown', this.handlePointerDown);
     }
 
-    const pathCommands = [];
-    pathCommands.push(`M ${round(cornerData[numPoints - 1].t2.x)} ${round(cornerData[numPoints - 1].t2.y)}`);
-    for (let i = 0; i < numPoints; i++) {
-        const corner = cornerData[i];
-        pathCommands.push(`L ${round(corner.t1.x)} ${round(corner.t1.y)}`);
-        pathCommands.push(`A ${round(corner.radius)} ${round(corner.radius)} 0 0 ${corner.sweepFlag} ${round(corner.t2.x)} ${round(corner.t2.y)}`);
+    
+    handlePointerDown(event) {
+        // Only respond to the primary button (e.g., left mouse click)
+        if (event.button !== 0) return;
+
+        const currentTime = Date.now();
+
+        // --- Double Tap Detection ---
+        if (currentTime - this.lastTapTime < 300) { // 300ms window for double tap
+            clearTimeout(this.tapTimeout);
+            this.tapTimeout = null;
+            this.lastTapTime = 0;
+            if (this.options.onDoubleTapName) {
+                window.pywebview.on_gesture_event(this.options.onDoubleTapName, {});
+            }
+            return;
+        }
+        
+        this.lastTapTime = currentTime;
+        this.panStartPoint = { x: event.clientX, y: event.clientY };
+
+        // --- Long Press Detection ---
+        if (this.options.onLongPressName) {
+            this.longPressTimeout = setTimeout(() => this.fireLongPress(), 500); // 500ms for long press
+        }
+
+        // --- Single Tap Detection (will be fired later if not cancelled) ---
+        if (this.options.onTapName) {
+            this.tapTimeout = setTimeout(() => this.fireTap(), 300);
+        }
+
+        // Listen for move/up on the entire document for robust dragging
+        document.addEventListener('pointermove', this.handlePointerMove);
+        document.addEventListener('pointerup', this.handlePointerUp);
+        document.addEventListener('pointercancel', this.handlePointerUp); // Treat cancel like up
     }
-    pathCommands.push('Z');
-    console.log(pathCommands.join(' '));
-    return pathCommands.join(' ');
+
+    handlePointerMove(event) {
+        if (this.isPanning) {
+            // --- Continue Panning ---
+            const dx = event.clientX - this.panStartPoint.x;
+            const dy = event.clientY - this.panStartPoint.y;
+            if (this.options.onPanUpdateName) {
+                window.pywebview.on_gesture_event(this.options.onPanUpdateName, { dx, dy });
+            }
+        } else {
+            // --- Check if a Pan has Started ---
+            const dx = event.clientX - this.panStartPoint.x;
+            const dy = event.clientY - this.panStartPoint.y;
+            if (Math.sqrt(dx * dx + dy * dy) > this.panThreshold) {
+                this.isPanning = true;
+                // A pan gesture cancels tap and long press
+                clearTimeout(this.tapTimeout);
+                this.tapTimeout = null;
+                clearTimeout(this.longPressTimeout);
+                this.longPressTimeout = null;
+                
+                if (this.options.onPanStartName) {
+                    window.pywebview.on_gesture_event(this.options.onPanStartName, {});
+                }
+            }
+        }
+    }
+
+    handlePointerUp(event) {
+        // Clean up document-level listeners immediately
+        document.removeEventListener('pointermove', this.handlePointerMove);
+        document.removeEventListener('pointerup', this.handlePointerUp);
+        document.removeEventListener('pointercancel', this.handlePointerUp);
+
+        // Always clear a pending long press if pointer is lifted
+        clearTimeout(this.longPressTimeout);
+        this.longPressTimeout = null;
+        
+        if (this.isPanning) {
+            // --- End Panning ---
+            this.isPanning = false;
+            if (this.options.onPanEndName) {
+                window.pywebview.on_gesture_event(this.options.onPanEndName, );
+            }
+        }
+    }
+
+    fireTap() {
+        if (this.tapTimeout) { // Ensure it wasn't cancelled
+            this.tapTimeout = null;
+            if (this.options.onTapName) {
+                window.pywebview.on_gesture_event(this.options.onTapName, {});
+            }
+        }
+    }
+    
+    fireLongPress() {
+        // A long press cancels a single tap
+        clearTimeout(this.tapTimeout);
+        this.tapTimeout = null;
+        this.lastTapTime = 0; // Prevent next tap from being a double tap
+        
+        if (this.longPressTimeout) {
+            this.longPressTimeout = null;
+            if (this.options.onLongPressName) {
+                window.pywebview.on_gesture_event(this.options.onLongPressName, {});
+            }
+        }
+    }
+
+    destroy() {
+        if (!this.element) return;
+        this.element.removeEventListener('pointerdown', this.handlePointerDown);
+        this.handlePointerUp(); // Ensure document listeners are cleaned up
+        clearTimeout(this.tapTimeout);
+        clearTimeout(this.longPressTimeout);
+    }
 }
-
 
                         // Make common names available on window if defined
 
@@ -337,7 +457,7 @@ function generateRoundedPath(points, radius) {
 
                         if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
 
-                    } catch (e) { console.error('Error loading pathGenerator.js:', e); }
+                    } catch (e) { console.error('Error loading gesture_detector.js:', e); }
 
 // --- Injected from clipPathUtils.js ---
 try {
@@ -657,6 +777,87 @@ window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
                         if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
 
                     } catch (e) { console.error('Error loading clipPathUtils.js:', e); }
+
+// --- Injected from pathGenerator.js ---
+try {
+                        
+// js/pathGenerator.js
+
+// --- Vector Math Helper Functions ---
+const vec = (p1, p2) => ({ x: p2.x - p1.x, y: p2.y - p1.y });
+const magnitude = (v) => Math.sqrt(v.x ** 2 + v.y ** 2);
+const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;
+const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;
+const round = (val) => Math.round(val * 100) / 100; // Round to 2 decimal places
+
+function generateRoundedPath(points, radius) {
+    const numPoints = points.length;
+    const cornerData = [];
+
+    console.log(`>>>>>> Generator Initiated <<<<<<`)
+
+    for (let i = 0; i < numPoints; i++) {
+        const p_prev = points[(i + numPoints - 1) % numPoints];
+        const p_curr = points[i];
+        const p_next = points[(i + 1) % numPoints];
+
+        const v1 = vec(p_curr, p_prev);
+        const v2 = vec(p_curr, p_next);
+        const v1_mag = magnitude(v1);
+        const v2_mag = magnitude(v2);
+
+        if (v1_mag === 0 || v2_mag === 0) {
+            cornerData.push({ t1: p_curr, t2: p_curr, radius: 0 });
+            continue;
+        }
+
+        const angle = Math.acos(Math.max(-1, Math.min(1, dot(v1, v2) / (v1_mag * v2_mag))));
+        let tangentDist = radius / Math.tan(angle / 2);
+        tangentDist = Math.min(tangentDist, v1_mag / 2, v2_mag / 2);
+        const clampedRadius = Math.abs(tangentDist * Math.tan(angle / 2));
+
+        const t1 = { x: p_curr.x + (v1.x / v1_mag) * tangentDist, y: p_curr.y + (v1.y / v1_mag) * tangentDist };
+        const t2 = { x: p_curr.x + (v2.x / v2_mag) * tangentDist, y: p_curr.y + (v2.y / v2_mag) * tangentDist };
+
+        const sweepFlag = cross(v1, v2) < 0 ? 1 : 0;
+
+        cornerData.push({ t1, t2, radius: clampedRadius, sweepFlag });
+    }
+
+    const pathCommands = [];
+    pathCommands.push(`M ${round(cornerData[numPoints - 1].t2.x)} ${round(cornerData[numPoints - 1].t2.y)}`);
+    for (let i = 0; i < numPoints; i++) {
+        const corner = cornerData[i];
+        pathCommands.push(`L ${round(corner.t1.x)} ${round(corner.t1.y)}`);
+        pathCommands.push(`A ${round(corner.radius)} ${round(corner.radius)} 0 0 ${corner.sweepFlag} ${round(corner.t2.x)} ${round(corner.t2.y)}`);
+    }
+    pathCommands.push('Z');
+    console.log(pathCommands.join(' '));
+    return pathCommands.join(' ');
+}
+
+
+                        // Make common names available on window if defined
+
+                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
+
+                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
+
+                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
+
+                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
+
+                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
+
+                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
+
+                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
+
+                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
+
+                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
+
+                    } catch (e) { console.error('Error loading pathGenerator.js:', e); }
 
 // --- Injected Plugin 'pythra-markdown-editor': editor.js ---
 try {
@@ -1308,7 +1509,7 @@ window.replaceEditorSelection = replaceEditorSelection;
 } catch (e) { console.error('Error loading plugin pythra-markdown-editor - editor.js:', e); }
                     
                     // Then, RUN the initialization commands that were generated
-                    
+                    window._pythra_instances['fw_id_16'] = new PythraGestureDetector('fw_id_16', {"onTapName":"gd_tap_myExpandable_detector","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_24'] = new PythraGestureDetector('fw_id_24', {"onTapName":"gd_tap_color_pick_btn_0","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_26'] = new PythraGestureDetector('fw_id_26', {"onTapName":"gd_tap_color_pick_btn_1","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_28'] = new PythraGestureDetector('fw_id_28', {"onTapName":"gd_tap_color_pick_btn_2","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_30'] = new PythraGestureDetector('fw_id_30', {"onTapName":"gd_tap_color_pick_btn_3","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_32'] = new PythraGestureDetector('fw_id_32', {"onTapName":"gd_tap_color_pick_btn_4","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});
                 if (!window._pythra_instances['pythra-clip-bp-b4c41c41c4']) {
                     const pointsForGenerator_pythra_clip_bp_b4c41c41c4 = [[0,0],[58,0],[58,22],[100,22],[100,78],[78,78],[78,100],[48,100],[48,78],[0,78]].map(p => ({x: p[0], y: p[1]}));
                     const initialPathString_pythra_clip_bp_b4c41c41c4 = window.generateRoundedPath(pointsForGenerator_pythra_clip_bp_b4c41c41c4, 8);
