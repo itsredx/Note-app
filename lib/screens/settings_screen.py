@@ -1,10 +1,11 @@
+from types import prepare_class
 from lib.constants.theme import AppThemes
 from lib.constants.colors import *
-
+from lib.utils.shared_prefernce import PythraPreferences
 from lib.components.header_actions import HeaderActions
 from lib.components.settings_widgets import SettingsSection, SettingsTile
+from lib import APP_NAME, APP_VERSION, pref
 from pythra import (
-
     Dropdown,
     DropdownController,
     DropdownTheme,
@@ -19,17 +20,10 @@ from pythra import (
     VerticalDirection,
     Widget,
     Container,
-    BoxDecoration,
-    BorderSide,
     Text,
-    Alignment,
     Colors,
-    Center,
-    ElevatedButton,
     SizedBox,
-    MainAxisAlignment,
     CrossAxisAlignment,
-    ClipPath,
     EdgeInsets,
     Icon,
     IconButton,
@@ -37,19 +31,13 @@ from pythra import (
     ButtonStyle,
     BorderRadius,
     TextStyle,
-    Stack,
-    Positioned,
-    GradientTheme,
     Image,
     AssetImage,
-    Navigator, PageRoute, NavigatorState,
-    GridView,
-    GestureDetector,
-    Padding,
-    TextField,
-    TextEditingController,
-    InputDecoration,
+    NavigatorState,
     Double,
+    InputDecoration,
+    BorderSide,
+    BorderRadius,
 )
 
 
@@ -69,14 +57,18 @@ class SettingsAndProfileScreenState(State):
     def __init__(self, navigator: NavigatorState,):
         super().__init__()
         self.navigator = navigator
-        self.panel_state = False
-        self.show_recent = True
-        self.spell_check = True
-        self.autocorrect = True
-        self.ai_features = True
-        self.open_files = DropdownController(selectedValue='Tab')
+        self.panel_state = pref.get("panel_state", None) if pref.get("panel_state", None) != None else False
+        self.show_recent = pref.get("show_recent", None) if pref.get("show_recent", None) != None else True
+        self.spell_check = pref.get("spell_check", None) if pref.get("spell_check", None) != None else True
+        self.autocorrect = pref.get("autocorrect", None) if pref.get("autocorrect", None) != None else True
+        self.ai_features = pref.get("ai_features", None) if pref.get("ai_features", None) != None else True
+        self.open_files = DropdownController(
+                selectedValue= pref.get("open_files", None) if pref.get("open_files", None) != None else 'Tab'
+            )
         self.open_files_options = ['Tab', 'Window']
-        self.open_app = DropdownController(selectedValue='Continue')
+        self.open_app = DropdownController(
+                selectedValue= pref.get("open_app", None) if pref.get("open_app", None) != None else 'Continue'
+            )
         self.open_app_options = ['Continue', 'Renew']
 
     @property
@@ -86,40 +78,48 @@ class SettingsAndProfileScreenState(State):
     def toggle_theme(self):
         new_theme = AppThemes.light if self.is_dark else AppThemes.dark
         Framework.instance().set_theme(new_theme)
+        pref.set("theme", "dark") if self.is_dark else pref.set("theme", "light")        
         # Rebuild this row to update all icons (Sun/Moon, Sparkle, etc)
         self.setState()
     
     def tog_panel_state(self, t):
         self.panel_state = not self.panel_state
+        pref.set("panel_state",self.panel_state)
         print(f"Panel state: {self.panel_state}")
         self.setState()
 
     def tog_ai_features(self, t):
         self.ai_features = not self.ai_features
+        pref.set("ai_features", self.ai_features)
         print(f"AI features: {self.ai_features}")
         self.setState()
 
-    def tog_recent(self, t):
+    def tog_show_recent(self, t):
         self.show_recent = not self.show_recent
+        pref.set("show_recent", self.show_recent)
         print(f"Recent: {self.show_recent}")
         self.setState()
 
     def tog_spell_check(self, t):
         self.spell_check = not self.spell_check
+        pref.set("spell_check", self.spell_check)        
         print(f"Spell check: {self.spell_check}")
         self.setState()
 
     def tog_autocorrect(self, t):
         self.autocorrect = not self.autocorrect
+        pref.set("autocorrect", self.autocorrect)
         print(f"Autocorrect: {self.autocorrect}")
         self.setState()
 
     def update_open_files(self, value):
         self.open_files.selectedValue = value
+        pref.set("open_files", self.open_files.selectedValue)
         self.setState()
 
     def update_open_app(self, value):
         self.open_app.selectedValue = value
+        pref.set("open_app", self.open_app.selectedValue)
         self.setState()
 
     def update_panel_state(self, value):
@@ -291,16 +291,28 @@ class SettingsAndProfileScreenState(State):
                                                         onChanged=self.update_open_files,
                                                         items=self.open_files_options,
                                                         dropDirection=VerticalDirection.DOWN,
+                                                        decoration=InputDecoration(
+                                                            fillColor=AppColors.dropDownColor,
+                                                            borderRadius=BorderRadius.circular(8),
+                                                            border=BorderSide(
+                                                                color=AppColors.transparent,
+                                                                width=0,
+                                                            ),
+                                                            focusedBorder=BorderSide(
+                                                                color=AppColors.transparent,
+                                                                width=0,
+                                                            ),
+                                                        ),
                                                         theme=DropdownTheme(
                                                             width=200,
                                                             dropDownHeight=86,
                                                             dropdownMargin=EdgeInsets.only(top=14),
-                                                            fontSize=12,
-                                                            borderWidth=0.0,
-                                                            borderColor=AppColors.transparent,
-                                                            backgroundColor=AppColors.dropDownColor,
+                                                            # fontSize=12,
+                                                            # borderWidth=0.0,
+                                                            # borderColor=AppColors.transparent,
+                                                            # backgroundColor=AppColors.dropDownColor,
                                                             dropdownColor=AppColors.dropDownColor,
-                                                            textColor=AppColors.iconColor,
+                                                            # textColor=AppColors.iconColor,
                                                             dropdownTextColor=AppColors.iconColor,
                                                             dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                             hoverColor=AppColors.dropDownHoverColor,
@@ -318,16 +330,28 @@ class SettingsAndProfileScreenState(State):
                                                         onChanged=self.update_open_app,
                                                         items=self.open_app_options,
                                                         dropDirection=VerticalDirection.DOWN,
+                                                        decoration=InputDecoration(
+                                                            fillColor=AppColors.dropDownColor,
+                                                            borderRadius=BorderRadius.circular(8),
+                                                            border=BorderSide(
+                                                                color=AppColors.transparent,
+                                                                width=0,
+                                                            ),
+                                                            focusedBorder=BorderSide(
+                                                                color=AppColors.transparent,
+                                                                width=0,
+                                                            ),
+                                                        ),
                                                         theme=DropdownTheme(
                                                             width=200,
                                                             dropDownHeight=86,
                                                             dropdownMargin=EdgeInsets.only(top=14),
-                                                            fontSize=12,
-                                                            borderWidth=0.0,
-                                                            borderColor=AppColors.transparent,
-                                                            backgroundColor=AppColors.dropDownColor,
+                                                            # fontSize=12,
+                                                            # borderWidth=0.0,
+                                                            # borderColor=AppColors.transparent,
+                                                            # backgroundColor=AppColors.dropDownColor,
                                                             dropdownColor=AppColors.dropDownColor,
-                                                            textColor=AppColors.iconColor,
+                                                            # textColor=AppColors.iconColor,
                                                             dropdownTextColor=AppColors.iconColor,
                                                             dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                             hoverColor=AppColors.dropDownHoverColor,
@@ -342,7 +366,7 @@ class SettingsAndProfileScreenState(State):
                                                     trailing=Switch(
                                                         key=Key("show_recent_filese_switch"),
                                                         value=self.show_recent,
-                                                        onChanged=self.update_show_recent,
+                                                        onChanged=self.tog_show_recent,
                                                     )
                                                 )
                                             ]
@@ -358,7 +382,7 @@ class SettingsAndProfileScreenState(State):
                                                     trailing=Switch(
                                                         key=Key("spell_check_switch"),
                                                         value=self.spell_check,
-                                                        onChanged=self.update_spell_check,
+                                                        onChanged=self.tog_spell_check,
                                                     ),
                                                 ),
                                                 SettingsTile(
@@ -368,7 +392,7 @@ class SettingsAndProfileScreenState(State):
                                                     trailing=Switch(
                                                         key=Key("autocorrect_switch"),
                                                         value=self.autocorrect,
-                                                        onChanged=self.update_autocorrect,
+                                                        onChanged=self.tog_autocorrect,
                                                     ),
                                                 ),
                                             ]
@@ -384,7 +408,7 @@ class SettingsAndProfileScreenState(State):
                                                     trailing=Switch(
                                                         key=Key("ai_features_switch"),
                                                         value=self.ai_features,
-                                                        onChanged=self.update_ai_features,
+                                                        onChanged=self.tog_ai_features,
                                                     ),
                                                 ),
                                             ]
@@ -395,8 +419,8 @@ class SettingsAndProfileScreenState(State):
                                             children=[
                                                 SettingsTile(
                                                     key=Key("about_app_tile"),
-                                                    title="Note App",
-                                                    subtitle="version: 0.0.1\n© 2025 Ahmura Technologies. All rights reserved.",
+                                                    title=APP_NAME,
+                                                    subtitle=f"version: {APP_VERSION}\n© 2025 Ahmura Technologies. All rights reserved.",
                                                 ),
                                             ],
                                             last_item=True

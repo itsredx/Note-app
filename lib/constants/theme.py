@@ -1,4 +1,6 @@
 from pythra.theme import ThemeData
+from lib import pref
+
 
 
 class AppThemes:
@@ -16,4 +18,4 @@ class AppThemes:
     # For now, we will rely on Colors.adaptive for custom widget colors
 
 # Prepare the initial theme
-initial_theme = AppThemes.dark # Default to dark as per original code preference
+initial_theme = AppThemes.dark if pref.get("theme", None) == "dark" else AppThemes.light # Default to dark as per original code preference

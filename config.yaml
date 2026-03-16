@@ -1,13 +1,14 @@
 app_name: Note App
+app_version: 0.0.1
 win_width: 1024
-win_height: 700
+win_height: 710
 min_win_width: 1024
-min_win_height: 700
+min_win_height: 710
 frameless: false
 maximixed: false
 fixed_size: false
 Debug: true
 render_dir: render
 assets_dir: assets
-assets_server_port: 8004
-
+assets_server_port: 8002
+app_id: com.pythra.note-app

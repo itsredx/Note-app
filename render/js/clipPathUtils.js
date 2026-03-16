@@ -289,4 +289,3 @@ export class ResponsiveClipPath {
 
 window.ResponsiveClipPath = ResponsiveClipPath;
 window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
-

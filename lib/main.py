@@ -1,7 +1,6 @@
 # main.py
 import os
 import sys
-import json
 from typing import Optional, Callable, List, Dict, Any
 
 # Add the project root directory to Python path
@@ -13,6 +12,8 @@ from constants.theme import initial_theme
 
 from screens.note_editor_screen import NoteEditorScreen
 from screens.dashboard_screen import DashboardScreen
+
+from utils import shared_prefernce
 
 
 # Welcome to your new Pythra App!
@@ -27,6 +28,11 @@ from pythra import (
     PageRoute,
 )
 
+
+pref = shared_prefernce.PythraPreferences()
+if pref.get("theme", None) == None:
+    print("---- Perf theme is not set ----")
+    pref.set("theme", "light")
 
 class HomePageState(State):
     def __init__(self):

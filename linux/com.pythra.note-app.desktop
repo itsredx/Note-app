@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Note App
+Comment=A PyThra desktop application
+Exec=com.pythra.note-app
+Icon=com.pythra.note-app
+Terminal=false
+Categories=Utility;
+StartupWMClass=com.pythra.note-app

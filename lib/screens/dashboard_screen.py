@@ -4,6 +4,8 @@ from .note_editor_screen import NoteEditorScreen
 from lib.components.note_card import NoteCard
 from lib.constants.colors import *
 from lib.components.header_actions import HeaderActions
+from lib.utils.shared_prefernce import PythraPreferences
+from lib import pref
 
 from pythra import (
     Framework,
@@ -71,10 +73,15 @@ class DashboardScreenState(State):
     ):
         super().__init__()
         self.navigator = navigator
+        print("==== Dashboard Initializing (__init__) ====")
         self.show_color_picker = False
         self.show_create_dialog = False
         self.selected_color = None
-        self.panel_mode = False
+        self.panel_mode = (
+            pref.get("panel_state", None)
+            if pref.get("panel_state", None) != None
+            else False
+        )
 
         self.title_controller = TextEditingController()
         self.note_controller = TextEditingController()
@@ -115,6 +122,7 @@ class DashboardScreenState(State):
             ),
             name="note_editor",
         )
+        print("==== Dashboard Initializing ====")
         self.settings_route = PageRoute(
             builder=lambda nav: SettingsAndProfileScreen(
                 key=Key("settings_&_profile_page"), navigator=nav
@@ -189,20 +197,24 @@ class DashboardScreenState(State):
         sidebar = Container(
             key=Key("sidebar_container"),
             width="80px",
-            height="70vh" if self.panel_mode else "100vh",
-            color=Colors.transparent if self.panel_mode else Colors.surface,
-            padding=EdgeInsets.symmetric(vertical=0, horizontal=4),
+            height="100vh" if not self.panel_mode else "100vh",
+            color=Colors.surface if not self.panel_mode else Colors.surface,
+            padding=EdgeInsets.symmetric(
+                vertical=120 if not self.panel_mode else 0, horizontal=4
+            ),
             child=Container(
                 key=Key("sidebar_inner_container"),
                 height="100%",
                 padding=EdgeInsets.symmetric(vertical=24, horizontal=10),
-                color=Colors.surface if self.panel_mode else Colors.transparent,
+                color=Colors.surface if not self.panel_mode else Colors.transparent,
                 decoration=BoxDecoration(
                     borderRadius=(
-                        BorderRadius.all(16) if self.panel_mode else BorderRadius.all(0)
+                        BorderRadius.all(16)
+                        if not self.panel_mode
+                        else BorderRadius.all(0)
                     ),
                     border=BorderSide(
-                        width=1 if self.panel_mode else 0,
+                        width=1 if not self.panel_mode else 0,
                         color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3"),
                     ),
                 ),
@@ -304,12 +316,12 @@ class DashboardScreenState(State):
             ),
             decoration=BoxDecoration(
                 border=BorderSide(
-                    width=0 if self.panel_mode else 1,
+                    width=0 if not self.panel_mode else 1,
                     color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3"),
                 ),
-                color=Colors.adaptive(
-                    dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white
-                ),
+                # color=Colors.adaptive(
+                #     dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white
+                # ),
             ),
         )
 
@@ -328,9 +340,15 @@ class DashboardScreenState(State):
                         key=Key("content_column"),
                         crossAxisAlignment=CrossAxisAlignment.STRETCH,
                         children=[
-                            HeaderActions(
-                                key=Key("dashboard_header"),
-                                onAccount=self.open_settings,  # lambda: print('on account')
+                            Row(
+                                key=Key("content_column_s_inner_row"),
+                                mainAxisAlignment=MainAxisAlignment.END,
+                                children=[
+                                    HeaderActions(
+                                        key=Key("dashboard_header"),
+                                        onAccount=self.open_settings,  # lambda: print('on account')
+                                    ),
+                                ],
                             ),
                             SizedBox(key=Key("page_heading_sized_box"), height=24),
                             Text(
@@ -394,18 +412,20 @@ class DashboardScreenState(State):
                                 key=Key("dialog_scrim"),
                                 height="100vh",
                                 width="100vw",
+                                zAxisIndex=4999,
+                                cssPosition='fixed',
                                 color=Colors.rgba(0, 0, 0, 0.5),
                                 child=Center(
                                     key=Key("dialog_center"),
                                     child=Container(
                                         key=Key("dialog_box"),
-                                        width=400,
+                                        width=500,
                                         # height=300,
-                                        zAxisIndex=2000,
-                                        padding=EdgeInsets.all(24),
+                                        zAxisIndex=5000,
+                                        padding=EdgeInsets.all(45),
                                         decoration=BoxDecoration(
                                             color=Colors.surface,
-                                            borderRadius=BorderRadius.all(16),
+                                            borderRadius=BorderRadius.all(24),
                                             boxShadow=[
                                                 # Simple shadow simulation if supported, otherwise just border
                                                 # BoxShadow(color=Colors.black26, blurRadius=10)
@@ -434,25 +454,53 @@ class DashboardScreenState(State):
                                                     controller=self.title_controller,
                                                     decoration=InputDecoration(
                                                         hintText="Title",
+                                                        fillColor=Colors.surfaceVariant,
+                                                        labelColor=Colors.onSurfaceVariant,
+                                                        focusColor=Colors.primary,
+                                                        contentPadding=EdgeInsets.symmetric(
+                                                            horizontal=24,
+                                                            vertical=16,
+                                                        ),
+                                                        labelStyle=TextStyle(
+                                                            fontSize=18,
+                                                            fontFamily="Arial",
+                                                        ),
+                                                        hintStyle=TextStyle(
+                                                            fontSize=14,
+                                                        ),
                                                         filled=False,
                                                         # label="Title"
                                                     ),
                                                 ),
                                                 SizedBox(
                                                     height=12,
-                                                    key=Key("dialog_spacer_2"),
+                                                    key=Key("dialog_txt_spacer_2"),
                                                 ),
                                                 TextField(
                                                     key=Key("note_input"),
                                                     controller=self.note_controller,
                                                     decoration=InputDecoration(
                                                         hintText="Description",
+                                                        fillColor=Colors.surfaceVariant,
+                                                        labelColor=Colors.onSurfaceVariant,
+                                                        focusColor=Colors.primary,
+                                                        contentPadding=EdgeInsets.symmetric(
+                                                            horizontal=24,
+                                                            vertical=16,
+                                                        ),
+                                                        labelStyle=TextStyle(
+                                                            fontSize=18,
+                                                            fontFamily="Arial",
+                                                        ),
+                                                        hintStyle=TextStyle(
+                                                            fontSize=14,
+                                                        ),
                                                         filled=False,
                                                         # label="Description"
                                                     ),
                                                 ),
                                                 SizedBox(
-                                                    height=50,
+                                                    height=30,
                                                     key=Key("dialog_spacer_3"),
                                                 ),
                                                 Row(
@@ -469,11 +517,15 @@ class DashboardScreenState(State):
                                                             style=ButtonStyle(
                                                                 backgroundColor=Colors.hex(
                                                                     "#f47171"
-                                                                )
+                                                                ),
+                                                                padding=EdgeInsets.symmetric(horizontal=16, vertical=8),
+                                                                margin=EdgeInsets.all(0),
+                                                                minimumSize=(80, 40),
+                                                                maximumSize=(80, 40),
                                                             ),
                                                         ),
                                                         SizedBox(
-                                                            width=12,
+                                                            width=8,
                                                             key=Key(
                                                                 "dialog_btn_spacer"
                                                             ),
@@ -490,7 +542,11 @@ class DashboardScreenState(State):
                                                             onPressed=self.finalize_create_note,
                                                             style=ButtonStyle(
                                                                 backgroundColor=self.selected_color
-                                                                or Colors.blue
+                                                                or Colors.blue,
+                                                                padding=EdgeInsets.symmetric(horizontal=16, vertical=8),
+                                                                margin=EdgeInsets.all(0),
+                                                                minimumSize=(80, 40),
+                                                                maximumSize=(80, 40),
                                                             ),
                                                         ),
                                                     ],

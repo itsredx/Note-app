@@ -4,10 +4,11 @@ import sys
 import json
 from typing import Optional, Callable, List, Dict, Any
 
+from lib.components.chat_card import ChatCard
 from lib.screens.settings_screen import SettingsAndProfileScreen
 
 # Add the project root directory to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath('note-app/lib'))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath("note-app/lib"))))
 
 
 # import colors
@@ -61,7 +62,10 @@ from pythra import (
     DropdownController,
     DropdownTheme,
     VerticalDirection,
-    Navigator, PageRoute, NavigatorState,
+    Navigator,
+    PageRoute,
+    NavigatorState,
+    InputDecoration,
 )
 
 formatted_fonts_json = get_system_fonts_as_json()
@@ -82,6 +86,7 @@ show_font = True
 class NoteEditorScreenState(State):
     def __init__(self, navigator: NavigatorState):
         self.count = 0
+        self.chatOpen = False
         self.editor = MarkdownEditorController(
             initial_content="<h1>Welcome from Controller!</h1><p>Start writing your document here...</p>"
         )
@@ -95,16 +100,35 @@ class NoteEditorScreenState(State):
             items=labels,
             onChanged=self.changeFont,
             dropDirection=VerticalDirection.UP,
+            decoration=InputDecoration(
+                fillColor=AppColors.dropDownColor,
+                borderRadius=BorderRadius.circular(8),
+                border=BorderSide(
+                    color=AppColors.transparent,
+                    width=0,
+                ),
+                focusedBorder=BorderSide(
+                    color=AppColors.transparent,
+                    width=0,
+                ),
+            ),
             theme=DropdownTheme(
                 width=330,
                 dropDownHeight=500,
                 dropdownMargin=EdgeInsets.only(bottom=12),
-                fontSize=12,
-                borderWidth=0.0,
-                backgroundColor=AppColors.dropDownColor,
+                # fontSize=12,
+                # borderWidth=0.0,
+                # backgroundColor=AppColors.dropDownColor,
                 dropdownColor=AppColors.dropDownColor,
-                textColor=AppColors.iconColor,
+                # textColor=AppColors.iconColor,
             ),
+        )
+
+        self.header_action = HeaderActions(
+            key=Key("header_actions"),
+            onSave=self.incrementCounter,
+            onAiChatContext=self.editor,
+            onAccount=self.open_settings,
         )
 
         self.markdown_editor = MarkdownEditor(
@@ -116,7 +140,8 @@ class NoteEditorScreenState(State):
             overlay=AiActionsControls(
                 key=Key("ai_controls_popup"),
                 editor=self.editor,
-                onGenerate=lambda: self.editor.hide_overlay()
+                onGenerate=lambda: self.editor.hide_overlay(),
+                chatOpen=self.header_action
             ),
         )
 
@@ -129,11 +154,18 @@ class NoteEditorScreenState(State):
             accent_color=Colors.adaptive(dark="#333030", light="#e9ecef"),
             grid_enabled=True,
             grid_dot_color=Colors.grey,
-            grid_background_color=Colors.adaptive(dark="#121212", light=Colors.transparent),
-            content_text_color=Colors.adaptive(dark=Colors.lightgrey, light=Colors.grey),
+            grid_background_color=Colors.adaptive(
+                dark="#121212", light=Colors.transparent
+            ),
+            content_text_color=Colors.adaptive(
+                dark=Colors.lightgrey, light=Colors.grey
+            ),
         )
         # Inject style immediately
         self.markdown_editor.style = self.editor_style
+
+        
+        
 
         super().__init__()
         self.navigator = navigator
@@ -141,28 +173,38 @@ class NoteEditorScreenState(State):
     def initState(self):
         self.note_editor_route = PageRoute(
             builder=lambda nav: NoteEditorScreen(
-                key=Key("note_page"), navigator=nav,
+                key=Key("note_page"),
+                navigator=nav,
             ),
-            name="note_editor"
+            name="note_editor",
         )
         self.settings_route = PageRoute(
             builder=lambda nav: SettingsAndProfileScreen(
-                key=Key("settings_&_profile_page"),
-                navigator=nav
+                key=Key("settings_&_profile_page"), navigator=nav
             ),
-            name="settings_page"
+            name="settings_page",
         )
+
+    def syncState(self):
+        print("[ Note Editor ]: initializing...")
+        self.header_action = HeaderActions(
+            key=Key("header_actions"),
+            onSave=self.incrementCounter,
+            onAiChatContext=self.editor,
+            onAccount=self.open_settings,
+        )
+        self.setState()
 
     @property
     def is_dark(self):
-        return Framework.instance().theme.brightness == 'dark'
+        return Framework.instance().theme.brightness == "dark"
 
     # changeMode is now handled by ThemeToggleButton internally.
     # We still keep is_dark helper if needed for other logic, but rebuilds
     # will be triggered specifically by the child widgets.
 
     def bold(self):
-        print('Bold executed')
+        print("Bold executed")
         self.editor.bold()
         # self.setState()
 
@@ -171,10 +213,8 @@ class NoteEditorScreenState(State):
 
     def underline(self):
         # self.editor.underline()
-        self.editor.replace_selection_with_markdown(markdown_text='Underline')
+        self.editor.replace_selection_with_markdown(markdown_text="Underline")
         self.setState()
-
-
 
     def strikeThrough(self):
         self.editor.strike_through()
@@ -222,13 +262,16 @@ class NoteEditorScreenState(State):
     def open_settings(self):
         self.navigator.push(self.settings_route)
 
+
     def build(self) -> Widget:
         cursor_state = self.editor.cursor_state
         
+
         return Container(
             key=Key("home_page_Pythra_wrapper_container"),
             height="100vh",
             width="100vw",
+            color=Colors.adaptive(dark="#121212", light=Colors.transparent),
             child=Center(
                 key=Key("home_page_Pythra_center"),
                 child=Stack(
@@ -241,109 +284,143 @@ class NoteEditorScreenState(State):
                             width="100vw",
                             child=Column(
                                 children=[
-                                    Container(
-                                        key=Key("Header_container"),
-                                        height="70px",
-                                        width="100vw",
-                                        color=AppColors.appBackgroundColor,
-                                        padding=EdgeInsets.symmetric(horizontal=20),
-                                        child=Row(
-                                            mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                                            crossAxisAlignment=CrossAxisAlignment.STRETCH,
-                                            key=Key("Header_row"),
-                                            children=[
-                                                Container(
-                                                    key=Key(
-                                                        "file_name_and_details_header"
-                                                    ),
-                                                    padding=EdgeInsets.only(top=20),
-                                                    child=Row(
-                                                        key=Key(
-                                                            "file_name_and_details_and_back_button_header_row"
-                                                        ),
-                                                        children=[
-                                                            IconButton(
-                                                                key=Key("back_btn_1"),
-                                                                icon=Icon(
-                                                                    Icons.arrow_back_rounded,
-                                                                    key=Key(
-                                                                        "back_ico_1"
-                                                                    ),
-                                                                ),
-                                                                onPressed=lambda: self.widget.navigator.pop(),
-                                                                style=ButtonStyle(
-                                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                                    hoverColor=AppColors.buttonHoverColor,
-                                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                                ),
+                                    Stack(
+                                        key=Key("header_stack"),
+                                        children=[
+                                            Container(
+                                                key=Key("Header_container"),
+                                                height="70px",
+                                                width="100vw",
+                                                color=AppColors.appBackgroundColor,
+                                                padding=EdgeInsets.symmetric(
+                                                    horizontal=20
+                                                ),
+                                                child=Row(
+                                                    mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
+                                                    crossAxisAlignment=CrossAxisAlignment.STRETCH,
+                                                    key=Key("Header_row"),
+                                                    children=[
+                                                        Container(
+                                                            key=Key(
+                                                                "file_name_and_details_header"
                                                             ),
-                                                            SizedBox(
-                                                                width=16,
-                                                                key=Key(
-                                                                    "sixe_box_back_controls_1"
-                                                                ),
+                                                            padding=EdgeInsets.only(
+                                                                top=20
                                                             ),
-                                                            Column(
+                                                            child=Row(
                                                                 key=Key(
-                                                                    "file_name_and_details_header_column"
+                                                                    "file_name_and_details_and_back_button_header_row"
                                                                 ),
-                                                                mainAxisAlignment=MainAxisAlignment.START,
-                                                                crossAxisAlignment=CrossAxisAlignment.START,
                                                                 children=[
-                                                                    Text(
-                                                                        "Welcome",
+                                                                    IconButton(
                                                                         key=Key(
-                                                                            "file_name"
+                                                                            "back_btn_1"
                                                                         ),
-                                                                        style=TextStyle(
-                                                                            fontSize=18,
-                                                                            fontWeight="bold",
-                                                                            color=Colors.adaptive(dark="#EDEDED", light=Colors.black),
-                                                                            # fontFamily='verdana',
+                                                                        icon=Icon(
+                                                                            Icons.arrow_back_rounded,
+                                                                            key=Key(
+                                                                                "back_ico_1"
+                                                                            ),
+                                                                        ),
+                                                                        onPressed=lambda: self.widget.navigator.pop(),
+                                                                        style=ButtonStyle(
+                                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                                            hoverColor=AppColors.buttonHoverColor,
+                                                                            foregroundColor=AppColors.buttonForegroundColor,
                                                                         ),
                                                                     ),
-                                                                    Text(
-                                                                        "first file",
+                                                                    SizedBox(
+                                                                        width=16,
                                                                         key=Key(
-                                                                            "file_detail"
+                                                                            "sixe_box_back_controls_1"
                                                                         ),
-                                                                        style=TextStyle(
-                                                                            fontSize=14,
-                                                                            color=Colors.adaptive(dark="#9E9E9E", light=Colors.grey),
+                                                                    ),
+                                                                    Column(
+                                                                        key=Key(
+                                                                            "file_name_and_details_header_column"
                                                                         ),
+                                                                        mainAxisAlignment=MainAxisAlignment.START,
+                                                                        crossAxisAlignment=CrossAxisAlignment.START,
+                                                                        children=[
+                                                                            Text(
+                                                                                "Welcome",
+                                                                                key=Key(
+                                                                                    "file_name"
+                                                                                ),
+                                                                                style=TextStyle(
+                                                                                    fontSize=18,
+                                                                                    fontWeight="bold",
+                                                                                    color=Colors.adaptive(
+                                                                                        dark="#EDEDED",
+                                                                                        light=Colors.black,
+                                                                                    ),
+                                                                                    # fontFamily='verdana',
+                                                                                ),
+                                                                            ),
+                                                                            Text(
+                                                                                "first file",
+                                                                                key=Key(
+                                                                                    "file_detail"
+                                                                                ),
+                                                                                style=TextStyle(
+                                                                                    fontSize=14,
+                                                                                    color=Colors.adaptive(
+                                                                                        dark="#9E9E9E",
+                                                                                        light=Colors.grey,
+                                                                                    ),
+                                                                                ),
+                                                                            ),
+                                                                        ],
                                                                     ),
                                                                 ],
                                                             ),
-                                                        ],
-                                                    ),
-                                                ),
-                                                Container(
-                                                    key=Key(
-                                                        "search_ai_and_controls_header"
-                                                    ),
-                                                    padding=EdgeInsets.only(top=20),
-                                                    child=Row(
-                                                        key=Key(
-                                                            "search_ai_and_controls_header_row"
                                                         ),
-                                                        mainAxisAlignment=MainAxisAlignment.END,
-                                                        crossAxisAlignment=CrossAxisAlignment.START,
-                                                        children=[
-                                                            HeaderActions(
-                                                                key=Key("header_actions"),
-                                                                onSave=self.incrementCounter,
-                                                                onAiChat=self.incrementCounter,
-                                                                onAccount=self.open_settings,
-                                                            )
-                                                        ],
-                                                    ),
+                                                        Container(
+                                                            key=Key(
+                                                                "search_ai_and_controls_header"
+                                                            ),
+                                                            padding=EdgeInsets.only(
+                                                                top=20
+                                                            ),
+                                                            child=Row(
+                                                                key=Key(
+                                                                    "search_ai_and_controls_header_row"
+                                                                ),
+                                                                mainAxisAlignment=MainAxisAlignment.END,
+                                                                crossAxisAlignment=CrossAxisAlignment.START,
+                                                                children=[
+                                                                    self.header_action
+                                                                ],
+                                                            ),
+                                                        ),
+                                                    ],
                                                 ),
-                                            ],
-                                        ),
+                                            ),
+                                        ],
                                     ),
                                     self.markdown_editor,
                                 ]
                             ),
+                        ),
+                        (
+                            Positioned(
+                                key=Key(f"my_header_posit"),
+                                height="610px",
+                                width="610px",
+                                top="16px",
+                                right="4px",
+                                child=Container(
+                                    height=610,
+                                    width=610,
+                                    color=Colors.transparent,
+                                    child=ChatCard(
+                                        key=Key("my_chat_card_0xff"),
+                                        context=self.editor,
+                                    ),
+                                ),
+                            )
+                            if self.chatOpen
+                            else ()
                         ),
                         Positioned(
                             height=40,
@@ -351,9 +428,7 @@ class NoteEditorScreenState(State):
                             bottom="18px",
                             key=Key("home_page_Pythra_decrement_btn_Positioned"),
                             child=Center(
-                                key=Key(
-                                    "home_page_Pythra_Center_Positioned_Container"
-                                ),
+                                key=Key("home_page_Pythra_Center_Positioned_Container"),
                                 child=Container(
                                     key=Key(
                                         "home_page_Pythra_decrement_btn_Positioned_Container"
@@ -374,18 +449,30 @@ class NoteEditorScreenState(State):
                                                 items=labels,
                                                 onChanged=self.changeFont,
                                                 dropDirection=VerticalDirection.UP,
+                                                decoration=InputDecoration(
+                                                    fillColor=AppColors.dropDownColor,
+                                                    borderRadius=BorderRadius.circular(8),
+                                                    border=BorderSide(
+                                                        color=AppColors.transparent,
+                                                        width=0,
+                                                    ),
+                                                    focusedBorder=BorderSide(
+                                                        color=AppColors.transparent,
+                                                        width=0,
+                                                    ),
+                                                ),
                                                 theme=DropdownTheme(
                                                     width=330,
                                                     dropDownHeight=500,
                                                     dropdownMargin=EdgeInsets.only(
                                                         bottom=12
                                                     ),
-                                                    fontSize=12,
-                                                    borderWidth=0.0,
-                                                    borderColor=AppColors.transparent,
-                                                    backgroundColor=AppColors.dropDownColor,
+                                                    # fontSize=12,
+                                                    # borderWidth=0.0,
+                                                    # borderColor=AppColors.transparent,
+                                                    # backgroundColor=AppColors.dropDownColor,
                                                     dropdownColor=AppColors.dropDownColor,
-                                                    textColor=AppColors.iconColor,
+                                                    # textColor=AppColors.iconColor,
                                                     dropdownTextColor=AppColors.iconColor,
                                                     dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                     hoverColor=AppColors.dropDownHoverColor,
@@ -397,7 +484,9 @@ class NoteEditorScreenState(State):
                                                 key=Key("sixe_box_header_dropdown"),
                                             ),
                                             IconButton(
-                                                key=Key("format_color_text_rounded_btn"),
+                                                key=Key(
+                                                    "format_color_text_rounded_btn"
+                                                ),
                                                 icon=Icon(
                                                     Icons.format_color_text_rounded,  # format_color_text_rounded
                                                     key=Key(
@@ -431,7 +520,9 @@ class NoteEditorScreenState(State):
                                                 key=Key("format_h1_rounded_btn"),
                                                 icon=Icon(
                                                     Icons.format_h1_rounded,
-                                                    key=Key("format_h1_rounded_btn_ico"),
+                                                    key=Key(
+                                                        "format_h1_rounded_btn_ico"
+                                                    ),
                                                 ),
                                                 onPressed=self.setHeading,
                                                 style=ButtonStyle(
@@ -475,14 +566,17 @@ class NoteEditorScreenState(State):
                                                 key=Key("format_bold_rounded_btn"),
                                                 icon=Icon(
                                                     Icons.format_bold_rounded,
-                                                    key=Key("format_bold_rounded_btn_ico"),
+                                                    key=Key(
+                                                        "format_bold_rounded_btn_ico"
+                                                    ),
                                                 ),
                                                 onPressed=lambda: self.bold(),
-                                                onPressedName= 'bold_lambda',
+                                                onPressedName="bold_lambda",
                                                 style=ButtonStyle(
                                                     backgroundColor=(
                                                         Colors.red
-                                                        if cursor_state.is_bold and self.is_dark
+                                                        if cursor_state.is_bold
+                                                        and self.is_dark
                                                         else AppColors.buttonBackgroundColor
                                                     ),
                                                     hoverColor=AppColors.buttonHoverColor,
@@ -518,10 +612,14 @@ class NoteEditorScreenState(State):
                                             ),
                                             SizedBox(
                                                 width=12,
-                                                key=Key("format_italic_rounded_size_box"),
+                                                key=Key(
+                                                    "format_italic_rounded_size_box"
+                                                ),
                                             ),
                                             IconButton(
-                                                key=Key("format_underlined_rounded_btn"),
+                                                key=Key(
+                                                    "format_underlined_rounded_btn"
+                                                ),
                                                 icon=Icon(
                                                     Icons.format_underlined_rounded,
                                                     key=Key(
@@ -546,7 +644,9 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             IconButton(
-                                                key=Key("format_strikethrough_rounded_btn"),
+                                                key=Key(
+                                                    "format_strikethrough_rounded_btn"
+                                                ),
                                                 icon=Icon(
                                                     Icons.format_strikethrough_rounded,
                                                     key=Key(
@@ -571,7 +671,9 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             IconButton(
-                                                key=Key("format_list_bulleted_rounded_btn"),
+                                                key=Key(
+                                                    "format_list_bulleted_rounded_btn"
+                                                ),
                                                 icon=Icon(
                                                     Icons.format_list_bulleted_rounded,
                                                     key=Key(
@@ -596,7 +698,9 @@ class NoteEditorScreenState(State):
                                                 ),
                                             ),
                                             IconButton(
-                                                key=Key("format_list_numbered_rounded_btn"),
+                                                key=Key(
+                                                    "format_list_numbered_rounded_btn"
+                                                ),
                                                 icon=Icon(
                                                     Icons.format_list_numbered_rounded,
                                                     key=Key(
@@ -626,7 +730,9 @@ class NoteEditorScreenState(State):
                                             ElevatedButton(
                                                 key=Key("image_rounded_btn"),
                                                 child=Row(
-                                                    key=Key("image_rounded_btn_inner_row"),
+                                                    key=Key(
+                                                        "image_rounded_btn_inner_row"
+                                                    ),
                                                     children=[
                                                         Icon(
                                                             Icons.image_rounded,
@@ -668,8 +774,16 @@ class NoteEditorScreenState(State):
                                     ),
                                     decoration=BoxDecoration(
                                         borderRadius=BorderRadius.all(16),
-                                        border=BorderSide(width=1, color=Colors.adaptive(dark="#5a5a5a", light="#d3d3d3")),
-                                        color=Colors.adaptive(dark=AppColors.toolbarBackgroundDarkColor, light=Colors.white),
+                                        border=BorderSide(
+                                            width=1,
+                                            color=Colors.adaptive(
+                                                dark="#5a5a5a", light="#d3d3d3"
+                                            ),
+                                        ),
+                                        color=Colors.adaptive(
+                                            dark=AppColors.toolbarBackgroundDarkColor,
+                                            light=Colors.white,
+                                        ),
                                     ),
                                 ),
                             ),

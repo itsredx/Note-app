@@ -43,6 +43,7 @@ from pythra import (
     Loader,
     ProgressIndicator,
     ProgressIndicatorController,
+    InputDecoration,
 )
 
 from lib.constants.colors import *
@@ -78,6 +79,7 @@ class AiActionsControlsState(State):
             "mode": "",
             "action": ""
         }
+        self.selectionContext = None # TODO Implement selection context
 
     def setMode(self, new_value):
         print("Mode changed!: ", new_value)
@@ -121,6 +123,24 @@ class AiActionsControlsState(State):
         # Simulate network request with QTimer to invoke callback on the main thread safely
         QTimer.singleShot(3000, self._finish_generation)
 
+    def get_selection_context(self):
+        widget = self.widget
+
+        if widget and widget.editor:
+            self.editor = widget.editor
+
+        if self.editor:
+            self.selectionContext = self.editor.export_to_markdown() # TODO Implement selection context
+
+    def openChatWithContext(self):
+        widget = self.widget
+        self.get_selection_context()
+        if widget and widget.chatOpen:
+            widget.chatOpen.get_state().open_chat_with_selection_context(context=self.selectionContext)
+
+        if widget and widget.onGenerate:
+            widget.onGenerate()
+
     def _build_styled_dropdown(self, key_str, controller, items, on_changed):
         return Dropdown(
             controller=controller,
@@ -128,18 +148,30 @@ class AiActionsControlsState(State):
             items=items,
             onChanged=on_changed,
             dropDirection=VerticalDirection.DOWN,
+            decoration=InputDecoration(
+                fillColor=AppColors.dropDownColor,
+                borderRadius=BorderRadius.circular(8),
+                border=BorderSide(
+                    color=AppColors.transparent,
+                    width=0,
+                ),
+                focusedBorder=BorderSide(
+                    color=AppColors.transparent,
+                    width=0,
+                ),
+            ),
             theme=DropdownTheme(
                 width=200,
                 dropDownHeight=250,
                 dropdownMargin=EdgeInsets.only(
                     top=14
                 ),
-                fontSize=12,
-                borderWidth=0.0,
-                borderColor=AppColors.transparent,
-                backgroundColor=AppColors.dropDownColor,
+                # fontSize=12,
+                # borderWidth=0.0,
+                # borderColor=AppColors.transparent,
+                # backgroundColor=AppColors.dropDownColor,
                 dropdownColor=AppColors.dropDownColor,
-                textColor=AppColors.iconColor,
+                # textColor=AppColors.iconColor,
                 dropdownTextColor=AppColors.iconColor,
                 dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                 hoverColor=AppColors.dropDownHoverColor,
@@ -219,6 +251,14 @@ class AiActionsControlsState(State):
                             onPressed= self.generate,
                             tooltip="Generate",
                         ),
+                        SizedBox(width=12, key=Key("stars_rounded_icon_padding")),
+                        IconButton(
+                            key=Key("stars_rounded_icon_button"),
+                            icon=Icon(icon=Icons.wand_stars_rounded, key=Key("stars_rounded_icon"), color=Colors.primary),
+                            style=ButtonStyle(backgroundColor=Colors.transparent),
+                            tooltip="Open chat with selection as context",
+                            onPressed=self.openChatWithContext,
+                        )
                     ],
                 ),
                 decoration=BoxDecoration(
@@ -229,10 +269,11 @@ class AiActionsControlsState(State):
             )
 
 class AiActionsControls(StatefulWidget):
-    def __init__(self, key = None, onGenerate = None, editor = None):
+    def __init__(self, key = None, onGenerate = None, editor = None, chatOpen = None):
         super().__init__(key)
         self.onGenerate = onGenerate
         self.editor = editor
+        self.chatOpen = chatOpen
 
     def createState(self) -> AiActionsControlsState:
         return AiActionsControlsState()
