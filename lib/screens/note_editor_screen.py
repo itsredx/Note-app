@@ -59,6 +59,7 @@ from pythra import (
     DerivedDropdownController,
     DerivedDropdownTheme,
     Dropdown,
+    DropdownMenuItem,
     DropdownController,
     DropdownTheme,
     VerticalDirection,
@@ -69,16 +70,26 @@ from pythra import (
 )
 
 formatted_fonts_json = get_system_fonts_as_json()
-# print(json.loads(formatted_fonts_json))
 fonts = json.loads(formatted_fonts_json)
 labels = []
-for font in fonts:
+font_dropdown_items = []
+for i, font in enumerate(fonts):
     labels.append(font["label"])
-    if font["label"] == "Verdana":
-        print("val: ", font["val"])
-    # print(f"label: {labels.sort()}")
-    # print(f"Font-> label: {font['label']} val: {font['val']}")
-
+    font_dropdown_items.append(
+        DropdownMenuItem(
+            key=Key(f"font_menu_item_{i}"),
+            value=font["label"],
+            label=font["label"],
+            child=Text(
+                font["label"],
+                key=Key(f"font_menu_item_txt_{i}"),
+                style=TextStyle(
+                    fontFamily=font["val"],
+                    fontSize=14,
+                )
+            )
+        )
+    )
 
 show_font = True
 
@@ -97,7 +108,7 @@ class NoteEditorScreenState(State):
         self.dropdown = Dropdown(
             controller=self.d_controller,
             key=Key("my_dropdown"),
-            items=labels,
+            items=font_dropdown_items,
             onChanged=self.changeFont,
             dropDirection=VerticalDirection.UP,
             decoration=InputDecoration(
@@ -434,7 +445,7 @@ class NoteEditorScreenState(State):
                                             Dropdown(
                                                 controller=self.d_controller,
                                                 key=Key("my_dropdown"),
-                                                items=labels,
+                                                items=font_dropdown_items,
                                                 onChanged=self.changeFont,
                                                 dropDirection=VerticalDirection.UP,
                                                 decoration=InputDecoration(
@@ -460,8 +471,9 @@ class NoteEditorScreenState(State):
                                                     # borderColor=AppColors.transparent,
                                                     # backgroundColor=AppColors.dropDownColor,
                                                     dropdownColor=AppColors.dropDownColor,
+                                                    selectedItemColor=AppColors.buttonActiveColor,
                                                     # textColor=AppColors.iconColor,
-                                                    dropdownTextColor=AppColors.iconColor,
+                                                    dropdownTextColor=AppColors.buttonForegroundColor,
                                                     dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                     hoverColor=AppColors.dropDownHoverColor,
                                                     itemHoverColor=AppColors.dropDownMenuHoverColor,
@@ -561,12 +573,7 @@ class NoteEditorScreenState(State):
                                                 onPressed=lambda: self.bold(),
                                                 onPressedName="bold_lambda",
                                                 style=ButtonStyle(
-                                                    backgroundColor=(
-                                                        Colors.red
-                                                        if cursor_state.is_bold
-                                                        and self.is_dark
-                                                        else AppColors.buttonBackgroundColor
-                                                    ),
+                                                    backgroundColor=AppColors.buttonBackgroundColor,
                                                     hoverColor=AppColors.buttonHoverColor,
                                                     shape=BorderRadius.circular(8.0),
                                                     foregroundColor=AppColors.buttonForegroundColor,
