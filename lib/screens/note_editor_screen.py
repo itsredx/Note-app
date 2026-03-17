@@ -69,27 +69,9 @@ from pythra import (
     InputDecoration,
 )
 
-formatted_fonts_json = get_system_fonts_as_json()
-fonts = json.loads(formatted_fonts_json)
-labels = []
-font_dropdown_items = []
-for i, font in enumerate(fonts):
-    labels.append(font["label"])
-    font_dropdown_items.append(
-        DropdownMenuItem(
-            key=Key(f"font_menu_item_{i}"),
-            value=font["label"],
-            label=font["label"],
-            child=Text(
-                font["label"],
-                key=Key(f"font_menu_item_txt_{i}"),
-                style=TextStyle(
-                    fontFamily=font["val"],
-                    fontSize=14,
-                )
-            )
-        )
-    )
+print("Loading fonts...")
+SYSTEM_FONTS = json.loads(get_system_fonts_as_json())
+print(f"Loaded {len(SYSTEM_FONTS)} fonts.")
 
 show_font = True
 
@@ -101,37 +83,47 @@ class NoteEditorScreenState(State):
         self.editor = MarkdownEditorController(
             initial_content="<h1>Welcome from Controller!</h1><p>Start writing your document here...</p>"
         )
-        self.d_controller = DropdownController(selectedValue=labels[0])
+        self.d_controller = DropdownController(selectedValue=SYSTEM_FONTS[0]["val"] if SYSTEM_FONTS else "Arial")
         # self.dropdown_controller = DerivedDropdownController(value='Agency FB',items=labels)
         # self.dropdown_theme = DerivedDropdownTheme(width=200)
 
         self.dropdown = Dropdown(
             controller=self.d_controller,
             key=Key("my_dropdown"),
-            items=font_dropdown_items,
+            items=[
+                DropdownMenuItem(
+                    key=Key(f"font_item_{idx}"),
+                    value=f["val"],
+                    label=f["label"],
+                    child=Text(f["label"], style=TextStyle(fontFamily=f["val"], fontSize=18), key=Key(f"font_text_{idx}"))
+                )
+                for idx, f in enumerate(SYSTEM_FONTS)
+            ],
             onChanged=self.changeFont,
             dropDirection=VerticalDirection.UP,
             decoration=InputDecoration(
-                fillColor=AppColors.dropDownColor,
-                borderRadius=BorderRadius.circular(8),
-                border=BorderSide(
-                    color=AppColors.transparent,
-                    width=0,
-                ),
-                focusedBorder=BorderSide(
-                    color=AppColors.transparent,
-                    width=0,
-                ),
+                label="Standard Dropdown",
+                hintText="Select an option...",
+                fillColor=Colors.surfaceVariant,
+                labelColor=Colors.onSurfaceVariant,
+                focusColor=Colors.primary,
+                borderRadius=BorderRadius.all(12),
+                border=BorderSide(width=2, color=Colors.outline),
+                focusedBorder=BorderSide(width=2, color=Colors.primary),
+                labelStyle=TextStyle(fontSize=18, fontFamily="Arial"),
+                hintStyle=TextStyle(fontSize=14),
+                filled=False,
             ),
             theme=DropdownTheme(
-                width=330,
-                dropDownHeight=500,
-                dropdownMargin=EdgeInsets.only(bottom=12),
-                # fontSize=12,
-                # borderWidth=0.0,
-                # backgroundColor=AppColors.dropDownColor,
-                dropdownColor=AppColors.dropDownColor,
-                # textColor=AppColors.iconColor,
+                dropdownMargin=EdgeInsets.only(top=12),
+                elevation=12,
+                hoverColor=Colors.rgba(
+                    100, 255, 100, 0.2
+                ),  # Testing hover theme overriding
+                menuPadding=EdgeInsets.symmetric(vertical=8),
+                itemMargin=EdgeInsets.symmetric(vertical=4, horizontal=4),
+                selectedItemShape=BorderRadius.all(8),
+                selectedItemColor=Colors.rgba(0, 100, 255, 0.1),
             ),
         )
 
@@ -152,7 +144,7 @@ class NoteEditorScreenState(State):
                 key=Key("ai_controls_popup"),
                 editor=self.editor,
                 onGenerate=lambda: self.editor.hide_overlay(),
-                chatOpen=self.header_action
+                chatOpen=self.header_action,
             ),
         )
 
@@ -173,7 +165,7 @@ class NoteEditorScreenState(State):
             ),
         )
         # Inject style immediately
-        self.markdown_editor.style = self.editor_style 
+        self.markdown_editor.style = self.editor_style
 
         super().__init__()
         self.navigator = navigator
@@ -192,7 +184,6 @@ class NoteEditorScreenState(State):
             ),
             name="settings_page",
         )
-
 
     @property
     def is_dark(self):
@@ -239,9 +230,7 @@ class NoteEditorScreenState(State):
 
     def changeFont(self, new_value):
         print("Font changed!: ", new_value)
-        for font in fonts:
-            if font["label"] == new_value:
-                self.setFont(font["val"])
+        self.setFont(new_value)
 
     def insertImage(
         self, url: str = "c:\\Users\\SMILETECH COMPUTERS\\Documents\\food.png"
@@ -261,10 +250,8 @@ class NoteEditorScreenState(State):
     def open_settings(self):
         self.navigator.push(self.settings_route)
 
-
     def build(self) -> Widget:
         cursor_state = self.editor.cursor_state
-        
 
         return Container(
             key=Key("home_page_Pythra_wrapper_container"),
@@ -441,44 +428,54 @@ class NoteEditorScreenState(State):
                                             "home_page_Pythra_decrement_btn_Positioned_Container_Row"
                                         ),
                                         children=[
-                                            # self.dropdown,
-                                            Dropdown(
-                                                controller=self.d_controller,
-                                                key=Key("my_dropdown"),
-                                                items=font_dropdown_items,
-                                                onChanged=self.changeFont,
-                                                dropDirection=VerticalDirection.UP,
-                                                decoration=InputDecoration(
-                                                    fillColor=AppColors.dropDownColor,
-                                                    borderRadius=BorderRadius.circular(8),
-                                                    border=BorderSide(
-                                                        color=AppColors.transparent,
-                                                        width=0,
-                                                    ),
-                                                    focusedBorder=BorderSide(
-                                                        color=AppColors.transparent,
-                                                        width=0,
-                                                    ),
-                                                ),
-                                                theme=DropdownTheme(
-                                                    width=330,
-                                                    dropDownHeight=500,
-                                                    dropdownMargin=EdgeInsets.only(
-                                                        bottom=12
-                                                    ),
-                                                    # fontSize=12,
-                                                    # borderWidth=0.0,
-                                                    # borderColor=AppColors.transparent,
-                                                    # backgroundColor=AppColors.dropDownColor,
-                                                    dropdownColor=AppColors.dropDownColor,
-                                                    selectedItemColor=AppColors.buttonActiveColor,
-                                                    # textColor=AppColors.iconColor,
-                                                    dropdownTextColor=AppColors.buttonForegroundColor,
-                                                    dropdownHoverColor=AppColors.dropDownMenuHoverColor,
-                                                    hoverColor=AppColors.dropDownHoverColor,
-                                                    itemHoverColor=AppColors.dropDownMenuHoverColor,
-                                                ),
-                                            ),
+                                            self.dropdown,
+                                            # Dropdown(
+                                            #     controller=self.d_controller,
+                                            #     key=Key("my_font_dropdown"),
+                                            #     items=font_dropdown_items,
+                                            #     onChanged=self.changeFont,
+                                            #     dropDirection=VerticalDirection.UP,
+                                            #     decoration=InputDecoration(
+                                            #         label="Standard Dropdown",
+                                            #         hintText="Select an option...",
+                                            #         fillColor=Colors.surfaceVariant,
+                                            #         labelColor=Colors.onSurfaceVariant,
+                                            #         focusColor=Colors.primary,
+                                            #         borderRadius=BorderRadius.all(12),
+                                            #         border=BorderSide(
+                                            #             width=2, color=Colors.outline
+                                            #         ),
+                                            #         focusedBorder=BorderSide(
+                                            #             width=2, color=Colors.primary
+                                            #         ),
+                                            #         labelStyle=TextStyle(
+                                            #             fontSize=18, fontFamily="Arial"
+                                            #         ),
+                                            #         hintStyle=TextStyle(fontSize=14),
+                                            #         filled=False,
+                                            #     ),
+                                            #     theme=DropdownTheme(
+                                            #         dropdownMargin=EdgeInsets.only(
+                                            #             top=12
+                                            #         ),
+                                            #         elevation=12,
+                                            #         hoverColor=Colors.rgba(
+                                            #             100, 255, 100, 0.2
+                                            #         ),  # Testing hover theme overriding
+                                            #         menuPadding=EdgeInsets.symmetric(
+                                            #             vertical=8
+                                            #         ),
+                                            #         itemMargin=EdgeInsets.symmetric(
+                                            #             vertical=4, horizontal=4
+                                            #         ),
+                                            #         selectedItemShape=BorderRadius.all(
+                                            #             8
+                                            #         ),
+                                            #         selectedItemColor=Colors.rgba(
+                                            #             0, 100, 255, 0.1
+                                            #         ),
+                                            #     ),
+                                            # ),
                                             SizedBox(
                                                 width=(12),
                                                 key=Key("sixe_box_header_dropdown"),

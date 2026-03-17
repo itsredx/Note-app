@@ -19,6 +19,16 @@ export class PythraDropdown {
         this.menu = this.container.querySelector('.dropdown-menu');
         this.items = this.menu.querySelectorAll('.dropdown-item');
 
+        // Apply initial selected style
+        const initialValue = this.options.selectedValue;
+        if (initialValue !== undefined && initialValue !== null) {
+            this.items.forEach(item => {
+                if (item.dataset.value === String(initialValue)) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
         // Bind 'this' to maintain context in event handlers
         this.toggleMenu = this.toggleMenu.bind(this);
         this.handleItemClick = this.handleItemClick.bind(this);
@@ -33,6 +43,12 @@ export class PythraDropdown {
 
     toggleMenu(event) {
         event.stopPropagation(); // Prevent click from bubbling to the document
+        
+        // Prevent opening if entire Dropdown is disabled
+        if (this.container.classList.contains('disabled') || this.container.dataset.disabled === "true") {
+            return;
+        }
+
         const isCurrentlyOpen = this.container.classList.toggle('open');
         console.log("Value container Clicked");
         
@@ -46,20 +62,33 @@ export class PythraDropdown {
     }
 
     handleItemClick(event) {
-        const selectedValue = event.currentTarget.dataset.value;
-        const selectedLabel = event.currentTarget.textContent;
+        // Find the actual dropdown item in case the user clicked a deeply nested child Widget
+        const itemElement = event.currentTarget.closest('.dropdown-item') || event.currentTarget;
+        
+        // Prevent action if item represents a disabled DropdownMenuItem
+        if (itemElement.classList.contains('disabled') || itemElement.dataset.disabled === "true") {
+            event.stopPropagation();
+            return;
+        }
+
+        const selectedValue = itemElement.dataset.value;
+        const selectedLabel = itemElement.dataset.label || itemElement.textContent;
 
         console.log("Dropdown option Clicked");
         
         // 1. Update the display value immediately for instant feedback
         this.valueContainer.querySelector('span').textContent = selectedLabel;
+
+        // 2. Update visual selection class
+        this.items.forEach(item => item.classList.remove('selected'));
+        itemElement.classList.add('selected');
         
-        // 2. Send the selected *value* back to the Python backend
+        // 3. Send the selected *value* back to the Python backend
         if (window.pywebview && this.options.onChangedName) {
             window.pywebview.on_input_changed(this.options.onChangedName, selectedValue);
         }
         
-        // 3. Close the menu
+        // 4. Close the menu
         this.closeMenu();
     }
     
