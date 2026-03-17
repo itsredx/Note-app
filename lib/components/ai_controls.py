@@ -254,7 +254,7 @@ class AiActionsControlsState(State):
                         SizedBox(width=12, key=Key("stars_rounded_icon_padding")),
                         IconButton(
                             key=Key("stars_rounded_icon_button"),
-                            icon=Icon(icon=Icons.wand_stars_rounded, key=Key("stars_rounded_icon"), color=Colors.primary),
+                            icon=Icon(icon=Icons.auto_awesome_rounded, key=Key("stars_rounded_icon"), color=Colors.primary),
                             style=ButtonStyle(backgroundColor=Colors.transparent),
                             tooltip="Open chat with selection as context",
                             onPressed=self.openChatWithContext,

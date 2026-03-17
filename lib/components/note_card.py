@@ -133,7 +133,7 @@ class NoteCardState(State):
                                 IconButton(
                                     key=Key(f"{self.base_key}_chat_btn"),
                                     icon=Icon(
-                                        Icons.chat, # Using chat for AI chat
+                                        Icons.auto_awesome_rounded, # Using chat for AI chat
                                         key=Key(f"{self.base_key}_chat_icon"),
                                     ),
                                     onPressed=self.on_chat,
@@ -184,9 +184,9 @@ class NoteCardState(State):
                                     ),
                                     onPressed=self.on_open,
                                     style=ButtonStyle(
-                                        backgroundColor=AppColors.buttonBackgroundColor,
-                                        hoverColor=AppColors.buttonHoverColor,
-                                        foregroundColor=AppColors.buttonForegroundColor,
+                                        backgroundColor=self.color,
+                                        hoverColor=self.color,
+                                        foregroundColor=Colors.hex("#2c2c2c"),
                                     ),
                                 ),
                             ],

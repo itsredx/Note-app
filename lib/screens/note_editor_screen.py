@@ -162,10 +162,7 @@ class NoteEditorScreenState(State):
             ),
         )
         # Inject style immediately
-        self.markdown_editor.style = self.editor_style
-
-        
-        
+        self.markdown_editor.style = self.editor_style 
 
         super().__init__()
         self.navigator = navigator
@@ -185,15 +182,6 @@ class NoteEditorScreenState(State):
             name="settings_page",
         )
 
-    def syncState(self):
-        print("[ Note Editor ]: initializing...")
-        self.header_action = HeaderActions(
-            key=Key("header_actions"),
-            onSave=self.incrementCounter,
-            onAiChatContext=self.editor,
-            onAccount=self.open_settings,
-        )
-        self.setState()
 
     @property
     def is_dark(self):

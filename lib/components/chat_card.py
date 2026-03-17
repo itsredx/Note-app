@@ -173,7 +173,7 @@ class ChatCardState(State):
                                 height=550,
                                 width=398,
                                 # color=Colors.aqua,
-                                padding=EdgeInsets.only(left=8, right=8, top=8),
+                                padding=EdgeInsets.only(left=16, right=16, top=8),
                                 child=Column(
                                     key=Key(f"{self.base_key}_chat_container_column"),
                                     children=[
@@ -204,9 +204,9 @@ class ChatCardState(State):
                                             key=Key(
                                                 f"{self.base_key}_chat_container_msg_context"
                                             ),
-                                            padding=EdgeInsets.only(left=8, right=8),
+                                            # padding=EdgeInsets.only(left=8, right=8),
                                             width="100%",
-                                            height=410,
+                                            height=400,
                                             # color=Colors.pink,
                                             child=SingleChildScrollView(
                                                 key=Key(
@@ -329,6 +329,7 @@ class ChatCardState(State):
                                                                                                         ),
                                                                                                         style=TextStyle(
                                                                                                             fontSize=14,
+                                                                                                            fontFamily="Ubuntu mono",
                                                                                                             color=Colors.onBackground,
                                                                                                         ),
                                                                                                     ),
@@ -514,7 +515,7 @@ class ChatCardState(State):
                                                                             data=f"Hello {i}"
                                                                             * 10,
                                                                             style=TextStyle(
-                                                                                fontSize=16,
+                                                                                fontSize=14,
                                                                                 color=Colors.onBackground,
                                                                             ),
                                                                         )
@@ -539,83 +540,69 @@ class ChatCardState(State):
                                             ),
                                             height=4,
                                         ),
-                                        Row(
-                                            key=Key(f"{self.base_key}_input_row"),
-                                            children=[
-                                                TextField(
+                                        TextField(
+                                            key=Key(
+                                                f"{self.base_key}_chat_container_text_field"
+                                            ),
+                                            controller=self.text_controller,
+                                            trailing=IconButton(
+                                                icon=Icon(
+                                                    Icons.send_rounded,
                                                     key=Key(
-                                                        f"{self.base_key}_chat_container_text_field"
-                                                    ),
-                                                    controller=self.text_controller,
-                                                    decoration=InputDecoration(
-                                                        hintText="Ask anything...",
-                                                        fillColor=Colors.surfaceVariant,
-                                                        labelColor=Colors.onSurfaceVariant,
-                                                        focusColor=Colors.primary,
-                                                        # borderRadius=BorderRadius.all(
-                                                        #     28
-                                                        # ),
-                                                        # border=BorderSide(
-                                                        #     width=2,
-                                                        #     color=Colors.transparent,
-                                                        # ),
-                                                        # focusedBorder=BorderSide(
-                                                        #     width=2,
-                                                        #     color=Colors.transparent,
-                                                        # ),
-                                                        contentPadding=EdgeInsets.symmetric(
-                                                            horizontal=24,
-                                                            vertical=16,
-                                                        ),
-                                                        labelStyle=TextStyle(
-                                                            fontSize=18,
-                                                            fontFamily="Arial",
-                                                        ),
-                                                        hintStyle=TextStyle(
-                                                            fontSize=14,
-                                                            # color=Colors.red,
-                                                        ),
-                                                        filled=False,
+                                                        f"{self.base_key}_icon_senf_bt_ico"
                                                     ),
                                                 ),
-                                                SizedBox(
-                                                    key=Key(
-                                                        f"{self.base_key}_input_row_spacer"
-                                                    ),
-                                                    width=12,
+                                                key=Key(
+                                                    f"{self.base_key}_icon_senf_bt"
                                                 ),
-                                                Container(
-                                                    key=Key(
-                                                        f"{self.base_key}_send_wrapper"
-                                                    ),
-                                                    height=40,
-                                                    width=40,
-                                                    child=IconButton(
-                                                        icon=Icon(
-                                                            Icons.send_rounded,
-                                                            key=Key(
-                                                                f"{self.base_key}_icon_senf_bt_ico"
-                                                            ),
-                                                        ),
-                                                        key=Key(
-                                                            f"{self.base_key}_icon_senf_bt"
-                                                        ),
-                                                        onPressed=self.send,
-                                                    ),
+                                                onPressed=self.send,
+                                                style=ButtonStyle(
+                                                    backgroundColor=Colors.primary,
+                                                    foregroundColor=Colors.onPrimary,
+                                                    hoverColor=Colors.hex("#9688b9"),
+                                                    
+                                                )
+                                            ),
+                                            decoration=InputDecoration(
+                                                hintText="Ask anything...",
+                                                fillColor=Colors.surfaceVariant,
+                                                labelColor=Colors.onSurfaceVariant,
+                                                focusColor=Colors.primary,
+                                                borderRadius=BorderRadius.all(28),
+                                                border=BorderSide(
+                                                    width=2,
+                                                    color=Colors.transparent,
                                                 ),
-                                            ],
+                                                focusedBorder=BorderSide(
+                                                    width=2,
+                                                    color=Colors.transparent,
+                                                ),
+                                                contentPadding=EdgeInsets.symmetric(
+                                                    horizontal=24,
+                                                    vertical=16,
+                                                ),
+                                                labelStyle=TextStyle(
+                                                    fontSize=18,
+                                                    fontFamily="Arial",
+                                                ),
+                                                hintStyle=TextStyle(
+                                                    fontSize=14,
+                                                    # color=Colors.red,
+                                                ),
+                                                filled=True,
+                                            ),
                                         ),
                                         SizedBox(
                                             key=Key(
                                                 f"{self.base_key}_chat_container_text_field_margin_be_careful"
                                             ),
-                                            height=4,
+                                            height=8,
                                         ),
                                         Text(
                                             key=Key(f"{self.base_key}_be_careful"),
                                             data="Becareful Ai can make mistakes.",
                                             style=TextStyle(
-                                                fontSize=8,
+                                                fontSize=10,
                                                 color=Colors.onBackground,
                                             ),
                                         ),
@@ -623,7 +610,7 @@ class ChatCardState(State):
                                             key=Key(
                                                 f"{self.base_key}_chat_container_text_field_margin_be_careful_end"
                                             ),
-                                            height=4,
+                                            height=8,
                                         ),
                                     ],
                                 ),

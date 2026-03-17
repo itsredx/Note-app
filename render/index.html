@@ -125,13 +125,13 @@
                 }
             
 
-.expandable-body { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
-
 .shared-container-13 { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
 
-.shared-container-12 { box-sizing: border-box; min-height: 0px; }
+.expandable-body { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
 
 .expandable-inner { box-sizing: border-box; min-height: 0px; }
+
+.shared-container-12 { box-sizing: border-box; min-height: 0px; }
 
 .shared-container-3 { box-sizing: border-box; background: #FFAB91; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
 
@@ -220,10 +220,58 @@
                 white-space: pre-wrap;
             }
             
+.shared-iconbutton-1 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #FFAB91; color: #2c2c2c; cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-1 > i, .shared-iconbutton-1 > img, .shared-iconbutton-1 > svg, .shared-iconbutton-1 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-1:hover { background-color: #FFAB91; }
+.shared-iconbutton-1:active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-1.active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-1.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+@keyframes ripple_shared-iconbutton-1 { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0.2; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+.shared-iconbutton-1::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; padding-top: 100%; background-color: currentColor; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+.shared-iconbutton-1:active::after { animation: ripple_shared-iconbutton-1 0.6s ease-out; }
 
 .shared-container-18 { box-sizing: border-box; background: #CE93D8; padding: 12px; width: 231px; height: 231px; }
+.shared-iconbutton-2 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #CE93D8; color: #2c2c2c; cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
 
-.shared-container-19 { box-sizing: border-box; background: #4DD0E1; padding: 12px; width: 231px; height: 231px; }</style>
+            .shared-iconbutton-2 > i, .shared-iconbutton-2 > img, .shared-iconbutton-2 > svg, .shared-iconbutton-2 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-2:hover { background-color: #CE93D8; }
+.shared-iconbutton-2:active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-2.active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-2.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+@keyframes ripple_shared-iconbutton-2 { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0.2; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+.shared-iconbutton-2::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; padding-top: 100%; background-color: currentColor; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+.shared-iconbutton-2:active::after { animation: ripple_shared-iconbutton-2 0.6s ease-out; }
+
+.shared-container-19 { box-sizing: border-box; background: #4DD0E1; padding: 12px; width: 231px; height: 231px; }
+.shared-iconbutton-3 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #4DD0E1; color: #2c2c2c; cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
+
+            .shared-iconbutton-3 > i, .shared-iconbutton-3 > img, .shared-iconbutton-3 > svg, .shared-iconbutton-3 > * {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                display: block;
+                object-fit: contain;
+            }
+.shared-iconbutton-3:hover { background-color: #4DD0E1; }
+.shared-iconbutton-3:active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-3.active { background-color: rgba(44, 44, 44, 0.12); }
+.shared-iconbutton-3.disabled { color: rgba(0, 0, 0, 0.38); background-color: transparent; cursor: default; pointer-events: none; }
+@keyframes ripple_shared-iconbutton-3 { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0.2; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+.shared-iconbutton-3::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; padding-top: 100%; background-color: currentColor; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+.shared-iconbutton-3:active::after { animation: ripple_shared-iconbutton-3 0.6s ease-out; }</style>
 
                 
         <script src="qwebchannel.js"></script>
@@ -274,7 +322,7 @@
 
             </head>
 <body>
-    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class=""><div id="fw_id_3" class="shared-container-0"><div id="fw_id_4" class=""><div id="fw_id_5" class=""><div id="fw_id_6" class="shared-stack-0"><div id="fw_id_7" class="shared-row-1"><div id="fw_id_8" class="shared-container-9"><div id="fw_id_9" class="shared-container-8"><div id="fw_id_10" class="shared-column-0"><div id="fw_id_11" class="shared-container-1"><p id="fw_id_12" class="shared-text-0" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_13" class=""><div id="fw_id_14" class="shared-container-2"><div id="fw_id_15" class="shared-column-1"><div id="fw_id_16" class="shared-gesture-0"><div id="fw_id_17" class="shared-container-14 expandable-header" style="cursor: pointer; user-select: none; display: flex; align-items: center"><div id="fw_id_18" class="shared-container-2"><button id="fw_id_19" class="shared-iconbutton-0"><i id="fw_id_20" class="material-icon-0">add_circle_outline</i></button></div></div></div><div id="fw_id_21" class="shared-container-13 expandable-body" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; opacity: 0; overflow: hidden"><div id="fw_id_22" class="shared-container-12 expandable-inner" style="min-height: 0px"><div id="fw_id_23" class="shared-column-0"><div id="fw_id_24" class="shared-gesture-0"><div id="fw_id_25" class="shared-container-3"></div></div><div id="fw_id_26" class="shared-gesture-0"><div id="fw_id_27" class="shared-container-4"></div></div><div id="fw_id_28" class="shared-gesture-0"><div id="fw_id_29" class="shared-container-5"></div></div><div id="fw_id_30" class="shared-gesture-0"><div id="fw_id_31" class="shared-container-6"></div></div><div id="fw_id_32" class="shared-gesture-0"><div id="fw_id_33" class="shared-container-7"></div></div></div></div></div></div></div></div></div></div></div><div id="fw_id_34" class="shared-container-11"><div id="fw_id_35" class="shared-column-1"><div id="fw_id_36" class="shared-row-0"><div id="fw_id_37" class=""><div id="fw_id_38" class="shared-stack-0"><div id="fw_id_39" class="shared-row-2"><button id="fw_id_40" class="shared-iconbutton-0" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_41" class="material-icon-0">light_mode</i></button><div id="fw_id_42" class="" style="width: 12px"></div><button id="fw_id_43" class="shared-iconbutton-0" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_44" class="material-icon-0">account_circle</i></button></div></div></div></div><div id="fw_id_45" class="" style="height: 24px"></div><p id="fw_id_46" class="shared-text-1" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_47" class="" style="height: 24px"></div><div id="fw_id_48" class="shared-container-10"><div id="fw_id_49" class="shared-gridview-0"><div id="fw_id_50" class=""><div id="fw_id_51" class="shared-stack-1"><div id="fw_id_52" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_53" class="shared-container-16"><div id="fw_id_54" class="shared-column-2"><div id="fw_id_55" class="shared-container-15"><p id="fw_id_56" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_57" class="" style="height: 24px"></div><p id="fw_id_58" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Make the design looks okay...</p></div></div></div><div id="fw_id_59" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_60" class="shared-container-2"><div id="fw_id_61" class="shared-row-0"><button id="fw_id_62" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_63" class="material-icon-1">delete</i></button><div id="fw_id_64" class="" style="width: 8px"></div><button id="fw_id_65" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_66" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_67" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_68" class="shared-container-2"><div id="fw_id_69" class="shared-row-3"><div id="fw_id_70" class="shared-container-17"><div id="fw_id_71" class="shared-center-0"><p id="fw_id_72" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">20 Dec</p></div></div><button id="fw_id_73" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_74" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_75" class=""><div id="fw_id_76" class="shared-stack-1"><div id="fw_id_77" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_78" class="shared-container-18"><div id="fw_id_79" class="shared-column-2"><div id="fw_id_80" class="shared-container-15"><p id="fw_id_81" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_82" class="" style="height: 24px"></div><p id="fw_id_83" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Finish the project documentation</p></div></div></div><div id="fw_id_84" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_85" class="shared-container-2"><div id="fw_id_86" class="shared-row-0"><button id="fw_id_87" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_88" class="material-icon-1">delete</i></button><div id="fw_id_89" class="" style="width: 8px"></div><button id="fw_id_90" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_91" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_92" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_93" class="shared-container-2"><div id="fw_id_94" class="shared-row-3"><div id="fw_id_95" class="shared-container-17"><div id="fw_id_96" class="shared-center-0"><p id="fw_id_97" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">21 Dec</p></div></div><button id="fw_id_98" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_99" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_100" class=""><div id="fw_id_101" class="shared-stack-1"><div id="fw_id_102" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_103" class="shared-container-19"><div id="fw_id_104" class="shared-column-2"><div id="fw_id_105" class="shared-container-15"><p id="fw_id_106" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Meeting</p></div><div id="fw_id_107" class="" style="height: 24px"></div><p id="fw_id_108" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Sync with the team at 10am</p></div></div></div><div id="fw_id_109" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_110" class="shared-container-2"><div id="fw_id_111" class="shared-row-0"><button id="fw_id_112" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_113" class="material-icon-1">delete</i></button><div id="fw_id_114" class="" style="width: 8px"></div><button id="fw_id_115" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_116" class="material-icon-1">chat</i></button></div></div></div><div id="fw_id_117" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_118" class="shared-container-2"><div id="fw_id_119" class="shared-row-3"><div id="fw_id_120" class="shared-container-17"><div id="fw_id_121" class="shared-center-0"><p id="fw_id_122" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">22 Dec</p></div></div><button id="fw_id_123" class="shared-iconbutton-0" onclick="handleClick('open_note')"><i id="fw_id_124" class="material-icon-1">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+    <div id="root-container"><div id="fw_id_1" class=""><div id="fw_id_2" class=""><div id="fw_id_3" class="shared-container-0"><div id="fw_id_4" class=""><div id="fw_id_5" class=""><div id="fw_id_6" class="shared-stack-0"><div id="fw_id_7" class="shared-row-1"><div id="fw_id_8" class="shared-container-9"><div id="fw_id_9" class="shared-container-8"><div id="fw_id_10" class="shared-column-0"><div id="fw_id_11" class="shared-container-1"><p id="fw_id_12" class="shared-text-0" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_13" class=""><div id="fw_id_14" class="shared-container-2"><div id="fw_id_15" class="shared-column-1"><div id="fw_id_16" class="shared-gesture-0"><div id="fw_id_17" class="shared-container-14 expandable-header" style="cursor: pointer; user-select: none; display: flex; align-items: center"><div id="fw_id_18" class="shared-container-2"><button id="fw_id_19" class="shared-iconbutton-0"><i id="fw_id_20" class="material-icon-0">add_circle_outline</i></button></div></div></div><div id="fw_id_21" class="shared-container-13 expandable-body" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; opacity: 0; overflow: hidden"><div id="fw_id_22" class="shared-container-12 expandable-inner" style="min-height: 0px"><div id="fw_id_23" class="shared-column-0"><div id="fw_id_24" class="shared-gesture-0"><div id="fw_id_25" class="shared-container-3"></div></div><div id="fw_id_26" class="shared-gesture-0"><div id="fw_id_27" class="shared-container-4"></div></div><div id="fw_id_28" class="shared-gesture-0"><div id="fw_id_29" class="shared-container-5"></div></div><div id="fw_id_30" class="shared-gesture-0"><div id="fw_id_31" class="shared-container-6"></div></div><div id="fw_id_32" class="shared-gesture-0"><div id="fw_id_33" class="shared-container-7"></div></div></div></div></div></div></div></div></div></div></div><div id="fw_id_34" class="shared-container-11"><div id="fw_id_35" class="shared-column-1"><div id="fw_id_36" class="shared-row-0"><div id="fw_id_37" class=""><div id="fw_id_38" class="shared-stack-0"><div id="fw_id_39" class="shared-row-2"><button id="fw_id_40" class="shared-iconbutton-0" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_41" class="material-icon-0">light_mode</i></button><div id="fw_id_42" class="" style="width: 12px"></div><button id="fw_id_43" class="shared-iconbutton-0" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_44" class="material-icon-0">account_circle</i></button></div></div></div></div><div id="fw_id_45" class="" style="height: 24px"></div><p id="fw_id_46" class="shared-text-1" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_47" class="" style="height: 24px"></div><div id="fw_id_48" class="shared-container-10"><div id="fw_id_49" class="shared-gridview-0"><div id="fw_id_50" class=""><div id="fw_id_51" class="shared-stack-1"><div id="fw_id_52" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_53" class="shared-container-16"><div id="fw_id_54" class="shared-column-2"><div id="fw_id_55" class="shared-container-15"><p id="fw_id_56" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_57" class="" style="height: 24px"></div><p id="fw_id_58" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Make the design looks okay...</p></div></div></div><div id="fw_id_59" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_60" class="shared-container-2"><div id="fw_id_61" class="shared-row-0"><button id="fw_id_62" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_63" class="material-icon-1">delete</i></button><div id="fw_id_64" class="" style="width: 8px"></div><button id="fw_id_65" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_66" class="material-icon-0">auto_awesome</i></button></div></div></div><div id="fw_id_67" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_68" class="shared-container-2"><div id="fw_id_69" class="shared-row-3"><div id="fw_id_70" class="shared-container-17"><div id="fw_id_71" class="shared-center-0"><p id="fw_id_72" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">20 Dec</p></div></div><button id="fw_id_73" class="shared-iconbutton-1" onclick="handleClick('open_note')"><i id="fw_id_74" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_75" class=""><div id="fw_id_76" class="shared-stack-1"><div id="fw_id_77" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_78" class="shared-container-18"><div id="fw_id_79" class="shared-column-2"><div id="fw_id_80" class="shared-container-15"><p id="fw_id_81" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_82" class="" style="height: 24px"></div><p id="fw_id_83" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Finish the project documentation</p></div></div></div><div id="fw_id_84" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_85" class="shared-container-2"><div id="fw_id_86" class="shared-row-0"><button id="fw_id_87" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_88" class="material-icon-1">delete</i></button><div id="fw_id_89" class="" style="width: 8px"></div><button id="fw_id_90" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_91" class="material-icon-0">auto_awesome</i></button></div></div></div><div id="fw_id_92" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_93" class="shared-container-2"><div id="fw_id_94" class="shared-row-3"><div id="fw_id_95" class="shared-container-17"><div id="fw_id_96" class="shared-center-0"><p id="fw_id_97" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">21 Dec</p></div></div><button id="fw_id_98" class="shared-iconbutton-2" onclick="handleClick('open_note')"><i id="fw_id_99" class="material-icon-1">open_in_new</i></button></div></div></div></div></div><div id="fw_id_100" class=""><div id="fw_id_101" class="shared-stack-1"><div id="fw_id_102" class="pythra-clip-bp-b4c41c41c4" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_103" class="shared-container-19"><div id="fw_id_104" class="shared-column-2"><div id="fw_id_105" class="shared-container-15"><p id="fw_id_106" class="shared-text-2" style="font-family: ubuntu; font-size: 24">Meeting</p></div><div id="fw_id_107" class="" style="height: 24px"></div><p id="fw_id_108" class="shared-text-3" style="font-family: ubuntu; font-size: 16">Sync with the team at 10am</p></div></div></div><div id="fw_id_109" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_110" class="shared-container-2"><div id="fw_id_111" class="shared-row-0"><button id="fw_id_112" class="shared-iconbutton-0" onclick="handleClick('delete_note')"><i id="fw_id_113" class="material-icon-1">delete</i></button><div id="fw_id_114" class="" style="width: 8px"></div><button id="fw_id_115" class="shared-iconbutton-0" onclick="handleClick('chat_note')"><i id="fw_id_116" class="material-icon-0">auto_awesome</i></button></div></div></div><div id="fw_id_117" class="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_118" class="shared-container-2"><div id="fw_id_119" class="shared-row-3"><div id="fw_id_120" class="shared-container-17"><div id="fw_id_121" class="shared-center-0"><p id="fw_id_122" class="shared-text-4" style="color: var(--dynamic-aab20997); font-family: ubuntu mono; font-size: 12">22 Dec</p></div></div><button id="fw_id_123" class="shared-iconbutton-3" onclick="handleClick('open_note')"><i id="fw_id_124" class="material-icon-1">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
     <div id="overlay-container"></div>
 
     <!-- ADD SIMPLEBAR JS -->
@@ -287,92 +335,7 @@
                 window._pythra_instances = window._pythra_instances || {};
                 try {
                     // First, DEFINE all our JS classes and functions
-                    // --- Injected from pathGenerator.js ---
-try {
-                        
-// js/pathGenerator.js
-
-// --- Vector Math Helper Functions ---
-const vec = (p1, p2) => ({ x: p2.x - p1.x, y: p2.y - p1.y });
-const magnitude = (v) => Math.sqrt(v.x ** 2 + v.y ** 2);
-const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;
-const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;
-const round = (val) => Math.round(val * 100) / 100; // Round to 2 decimal places
-
-function generateRoundedPath(points, radius) {
-    const numPoints = points.length;
-    const cornerData = [];
-
-    console.log(`>>>>>> Generator Initiated <<<<<<`)
-
-    for (let i = 0; i < numPoints; i++) {
-        const p_prev = points[(i + numPoints - 1) % numPoints];
-        const p_curr = points[i];
-        const p_next = points[(i + 1) % numPoints];
-
-        const v1 = vec(p_curr, p_prev);
-        const v2 = vec(p_curr, p_next);
-        const v1_mag = magnitude(v1);
-        const v2_mag = magnitude(v2);
-
-        if (v1_mag === 0 || v2_mag === 0) {
-            cornerData.push({ t1: p_curr, t2: p_curr, radius: 0 });
-            continue;
-        }
-
-        const angle = Math.acos(Math.max(-1, Math.min(1, dot(v1, v2) / (v1_mag * v2_mag))));
-        let tangentDist = radius / Math.tan(angle / 2);
-        tangentDist = Math.min(tangentDist, v1_mag / 2, v2_mag / 2);
-        const clampedRadius = Math.abs(tangentDist * Math.tan(angle / 2));
-
-        const t1 = { x: p_curr.x + (v1.x / v1_mag) * tangentDist, y: p_curr.y + (v1.y / v1_mag) * tangentDist };
-        const t2 = { x: p_curr.x + (v2.x / v2_mag) * tangentDist, y: p_curr.y + (v2.y / v2_mag) * tangentDist };
-
-        const sweepFlag = cross(v1, v2) < 0 ? 1 : 0;
-
-        cornerData.push({ t1, t2, radius: clampedRadius, sweepFlag });
-    }
-
-    const pathCommands = [];
-    pathCommands.push(`M ${round(cornerData[numPoints - 1].t2.x)} ${round(cornerData[numPoints - 1].t2.y)}`);
-    for (let i = 0; i < numPoints; i++) {
-        const corner = cornerData[i];
-        pathCommands.push(`L ${round(corner.t1.x)} ${round(corner.t1.y)}`);
-        pathCommands.push(`A ${round(corner.radius)} ${round(corner.radius)} 0 0 ${corner.sweepFlag} ${round(corner.t2.x)} ${round(corner.t2.y)}`);
-    }
-    pathCommands.push('Z');
-    console.log(pathCommands.join(' '));
-    return pathCommands.join(' ');
-}
-
-window.generateRoundedPath = generateRoundedPath;
-
-
-                        // Make common names available on window if defined
-
-                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
-
-                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
-
-                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
-
-                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
-
-                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
-
-                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
-
-                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
-
-                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
-
-                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
-
-                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
-
-                    } catch (e) { console.error('Error loading pathGenerator.js:', e); }
-
-// --- Injected from clipPathUtils.js ---
+                    // --- Injected from clipPathUtils.js ---
 try {
                         
 // clipPathUtils.js
@@ -868,6 +831,91 @@ class PythraGestureDetector {
                         if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
 
                     } catch (e) { console.error('Error loading gesture_detector.js:', e); }
+
+// --- Injected from pathGenerator.js ---
+try {
+                        
+// js/pathGenerator.js
+
+// --- Vector Math Helper Functions ---
+const vec = (p1, p2) => ({ x: p2.x - p1.x, y: p2.y - p1.y });
+const magnitude = (v) => Math.sqrt(v.x ** 2 + v.y ** 2);
+const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;
+const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;
+const round = (val) => Math.round(val * 100) / 100; // Round to 2 decimal places
+
+function generateRoundedPath(points, radius) {
+    const numPoints = points.length;
+    const cornerData = [];
+
+    console.log(`>>>>>> Generator Initiated <<<<<<`)
+
+    for (let i = 0; i < numPoints; i++) {
+        const p_prev = points[(i + numPoints - 1) % numPoints];
+        const p_curr = points[i];
+        const p_next = points[(i + 1) % numPoints];
+
+        const v1 = vec(p_curr, p_prev);
+        const v2 = vec(p_curr, p_next);
+        const v1_mag = magnitude(v1);
+        const v2_mag = magnitude(v2);
+
+        if (v1_mag === 0 || v2_mag === 0) {
+            cornerData.push({ t1: p_curr, t2: p_curr, radius: 0 });
+            continue;
+        }
+
+        const angle = Math.acos(Math.max(-1, Math.min(1, dot(v1, v2) / (v1_mag * v2_mag))));
+        let tangentDist = radius / Math.tan(angle / 2);
+        tangentDist = Math.min(tangentDist, v1_mag / 2, v2_mag / 2);
+        const clampedRadius = Math.abs(tangentDist * Math.tan(angle / 2));
+
+        const t1 = { x: p_curr.x + (v1.x / v1_mag) * tangentDist, y: p_curr.y + (v1.y / v1_mag) * tangentDist };
+        const t2 = { x: p_curr.x + (v2.x / v2_mag) * tangentDist, y: p_curr.y + (v2.y / v2_mag) * tangentDist };
+
+        const sweepFlag = cross(v1, v2) < 0 ? 1 : 0;
+
+        cornerData.push({ t1, t2, radius: clampedRadius, sweepFlag });
+    }
+
+    const pathCommands = [];
+    pathCommands.push(`M ${round(cornerData[numPoints - 1].t2.x)} ${round(cornerData[numPoints - 1].t2.y)}`);
+    for (let i = 0; i < numPoints; i++) {
+        const corner = cornerData[i];
+        pathCommands.push(`L ${round(corner.t1.x)} ${round(corner.t1.y)}`);
+        pathCommands.push(`A ${round(corner.radius)} ${round(corner.radius)} 0 0 ${corner.sweepFlag} ${round(corner.t2.x)} ${round(corner.t2.y)}`);
+    }
+    pathCommands.push('Z');
+    console.log(pathCommands.join(' '));
+    return pathCommands.join(' ');
+}
+
+window.generateRoundedPath = generateRoundedPath;
+
+
+                        // Make common names available on window if defined
+
+                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
+
+                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
+
+                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
+
+                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
+
+                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
+
+                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
+
+                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
+
+                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
+
+                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
+
+                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
+
+                    } catch (e) { console.error('Error loading pathGenerator.js:', e); }
 
 // --- Injected Plugin 'pythra-markdown-editor': editor.js ---
 try {

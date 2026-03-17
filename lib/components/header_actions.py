@@ -146,14 +146,19 @@ class HeaderActionsState(State):
                                         color=AppColors.buttonForegroundColor,
                                     )
                                     if self.chatOpen
-                                    else Image(
-                                        image=(
-                                            AssetImage("ICON-LIGHT.png")
-                                            if pref.get("theme", None) == "dark"
-                                            else AssetImage("ICON.png")
-                                        ),
+                                    else Icon(
                                         key=Key("sparkle_ico"),
+                                        icon=Icons.auto_awesome_rounded,
+                                        color=AppColors.buttonForegroundColor,
                                     )
+                                    # Image(
+                                    #     image=(
+                                    #         AssetImage("ICON-LIGHT.png")
+                                    #         if pref.get("theme", None) == "dark"
+                                    #         else AssetImage("ICON.png")
+                                    #     ),
+                                    #     key=Key("sparkle_ico"),
+                                    # )
                                 ),
                                 onPressed=self.open_chat,
                                 tooltip="Ai Chat",
