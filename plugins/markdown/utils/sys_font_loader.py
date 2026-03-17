@@ -23,12 +23,30 @@ def get_system_fonts_as_json():
     
     # 2. Get all unique font family names from the system.
     # We use a set to automatically handle duplicates.
-    try:
-        font_paths = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
-        font_names = sorted({font_manager.FontProperties(fname=fname).get_name() for fname in font_paths})
-    except Exception as e:
-        print(f"Warning: Could not get system fonts. Falling back to defaults. Error: {e}")
-        font_names = []
+    import sys
+    import subprocess
+    font_names = set()
+
+    if sys.platform.startswith('linux'):
+        try:
+            output = subprocess.check_output(['fc-list', ':', 'family'], universal_newlines=True)
+            for line in output.split('\n'):
+                if line.strip():
+                    for family in line.split(','):
+                        font_names.add(family.strip())
+        except Exception as e:
+            print(f"Warning: Could not get linux fonts using fc-list. Error: {e}")
+
+    # Fallback/default for Windows, Mac, or failed Linux
+    if not font_names:
+        try:
+            font_paths = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+            font_names = {font_manager.FontProperties(fname=fname).get_name() for fname in font_paths}
+        except Exception as e:
+            print(f"Warning: Could not get system fonts. Falling back to defaults. Error: {e}")
+            font_names = set()
+
+    font_names = sorted(font_names)
 
     # 3. Combine the lists.
     # Start with our defaults, then add unique system fonts that aren't already in the default list.
