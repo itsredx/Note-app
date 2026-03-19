@@ -2,7 +2,9 @@
 import os
 import sys
 import json
+import time
 from typing import Optional, Callable, List, Dict, Any
+from PySide6.QtCore import QTimer
 
 from lib.components.chat_card import ChatCard
 from lib.screens.settings_screen import SettingsAndProfileScreen
@@ -25,11 +27,15 @@ from plugins.markdown.utils.sys_font_loader import get_system_fonts_as_json
 # Welcome to your new Pythra App!
 from pythra import (
     Framework,
+    ListTile,
     StatefulWidget,
     State,
     Column,
     Row,
     Key,
+    VirtualDropdown,
+    VirtualDropdownController,
+    VirtualDropdownTheme,
     Widget,
     Container,
     BoxDecoration,
@@ -55,9 +61,9 @@ from pythra import (
     GradientTheme,
     Image,
     AssetImage,
-    DerivedDropdown,
-    DerivedDropdownController,
-    DerivedDropdownTheme,
+    VirtualDropdown,
+    VirtualDropdownController,
+    VirtualDropdownTheme,
     Dropdown,
     DropdownMenuItem,
     DropdownController,
@@ -69,63 +75,65 @@ from pythra import (
     InputDecoration,
 )
 
-print("Loading fonts...")
-SYSTEM_FONTS = json.loads(get_system_fonts_as_json())
-print(f"Loaded {len(SYSTEM_FONTS)} fonts.")
+DEFAULT_FONTS = [
+    {
+        "label": "System Default",
+        "val": '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    },
+    {"label": "Arial", "val": "Arial, sans-serif"},
+    {"label": "Verdana", "val": "Verdana, sans-serif"},
+    {"label": "Times New Roman", "val": "'Times New Roman', serif"},
+    {"label": "Georgia", "val": "Georgia, serif"},
+    {"label": "Courier New", "val": "'Courier New', monospace"},
+]
+
+print("Initializing with default fonts...")
+SYSTEM_FONTS = DEFAULT_FONTS
 
 show_font = True
+FONTS_LOADED = False
+
+
+def load_system_fonts(callback=None):
+    global SYSTEM_FONTS, FONTS_LOADED
+    if FONTS_LOADED:
+        print("PythraMagic: Fonts already loaded, skipping.")
+        # if callback:
+        #     callback()
+        return
+
+    print("PythraMagic: Loading system fonts...")
+    try:
+        from plugins.markdown.utils.sys_font_loader import get_system_fonts_as_json
+
+        full_fonts = json.loads(get_system_fonts_as_json())
+        if full_fonts:
+            SYSTEM_FONTS = full_fonts
+            FONTS_LOADED = True
+            print(f"PythraMagic: Loaded {len(SYSTEM_FONTS)} system fonts.")
+            # if callback:
+            #     callback()
+    except Exception as e:
+        print(f"PythraMagic Error loading fonts: {e}")
 
 
 class NoteEditorScreenState(State):
     def __init__(self, navigator: NavigatorState):
         self.count = 0
+        parent_key = Key("note_editor_screen")
+        self.parent_key = parent_key.value
         self.chatOpen = False
         self.editor = MarkdownEditorController(
             initial_content="<h1>Welcome from Controller!</h1><p>Start writing your document here...</p>"
         )
-        self.d_controller = DropdownController(selectedValue=SYSTEM_FONTS[0]["val"] if SYSTEM_FONTS else "Arial")
-        # self.dropdown_controller = DerivedDropdownController(value='Agency FB',items=labels)
-        # self.dropdown_theme = DerivedDropdownTheme(width=200)
-
-        self.dropdown = Dropdown(
-            controller=self.d_controller,
-            key=Key("my_dropdown"),
-            items=[
-                DropdownMenuItem(
-                    key=Key(f"font_item_{idx}"),
-                    value=f["val"],
-                    label=f["label"],
-                    child=Text(f["label"], style=TextStyle(fontFamily=f["val"], fontSize=18), key=Key(f"font_text_{idx}"))
-                )
-                for idx, f in enumerate(SYSTEM_FONTS)
-            ],
-            onChanged=self.changeFont,
-            dropDirection=VerticalDirection.UP,
-            decoration=InputDecoration(
-                label="Standard Dropdown",
-                hintText="Select an option...",
-                fillColor=Colors.surfaceVariant,
-                labelColor=Colors.onSurfaceVariant,
-                focusColor=Colors.primary,
-                borderRadius=BorderRadius.all(12),
-                border=BorderSide(width=2, color=Colors.outline),
-                focusedBorder=BorderSide(width=2, color=Colors.primary),
-                labelStyle=TextStyle(fontSize=18, fontFamily="Arial"),
-                hintStyle=TextStyle(fontSize=14),
-                filled=False,
-            ),
-            theme=DropdownTheme(
-                dropdownMargin=EdgeInsets.only(top=12),
-                elevation=12,
-                hoverColor=Colors.rgba(
-                    100, 255, 100, 0.2
-                ),  # Testing hover theme overriding
-                menuPadding=EdgeInsets.symmetric(vertical=8),
-                itemMargin=EdgeInsets.symmetric(vertical=4, horizontal=4),
-                selectedItemShape=BorderRadius.all(8),
-                selectedItemColor=Colors.rgba(0, 100, 255, 0.1),
-            ),
+        self.d_controller = DropdownController(
+            selectedValue=SYSTEM_FONTS[0]["val"] if SYSTEM_FONTS else "Arial"
         )
+        self.dropdown_controller = VirtualDropdownController(
+            value="Arial",
+            items=[f["label"] for idx, f in enumerate(SYSTEM_FONTS)],
+        )
+        # self.dropdown_theme = VirtualDropdownTheme(width=200)
 
         self.header_action = HeaderActions(
             key=Key("header_actions"),
@@ -167,10 +175,91 @@ class NoteEditorScreenState(State):
         # Inject style immediately
         self.markdown_editor.style = self.editor_style
 
+        self.dropdown = VirtualDropdown(
+                controller=self.dropdown_controller,
+                key=Key("my_font_dropdown"),
+                itemBuilder=self.vlist_item_builder,
+                margin=EdgeInsets.only(top=-20),
+                # items=[
+                #     DropdownMenuItem(
+                #         key=Key(f"font_item_{idx}"),
+                #         value=f["val"],
+                #         label=f["label"],
+                #         child=Text(
+                #             f["label"],
+                #             style=TextStyle(
+                #                 fontFamily=f["val"],
+                #                 fontSize=14,
+                #             ),
+                #             key=Key(f"font_text_{idx}"),
+                #             overflow="ellipsis",
+                #         ),
+                #         tooltip=f["label"],
+                #     )
+                #     for idx, f in enumerate(
+                #         SYSTEM_FONTS
+                #     )
+                # ],
+                onChanged=self.changeFont,
+                dropDirection=VerticalDirection.UP,
+                theme=VirtualDropdownTheme(
+                    inputDecoration=InputDecoration(
+                        label="Fonts",
+                        hintText="Select an option...",
+                        fillColor=AppColors.dropDownColor,
+                        labelColor=Colors.onSurfaceVariant,
+                        focusColor=Colors.primary,
+                        borderRadius=BorderRadius.all(12),
+                        border=BorderSide(
+                            width=2,
+                            color=Colors.outline,
+                        ),
+                        focusedBorder=BorderSide(
+                            width=2,
+                            color=Colors.primary,
+                        ),
+                        labelStyle=TextStyle(
+                            fontSize=18,
+                            fontFamily="Arial",
+                        ),
+                        hintStyle=TextStyle(fontSize=14),
+                        filled=False,
+                    ),
+                    # dropdownMargin=EdgeInsets.only(
+                    #     top=-8
+                    # ),
+                    width=300,
+                    # dropDownHeight=400,
+                    # elevation=12,
+                    # dropdownColor=Colors.adaptive(
+                    #     dark=AppColors.toolbarBackgroundDarkColor,
+                    #     light=Colors.white,
+                    # ),
+                    # dropdownHoverColor=Colors.adaptive(
+                    #     dark=AppColors.toolbarBackgroundDarkColor,
+                    #     light=Colors.white,
+                    # ),
+                    dropdownTextColor=AppColors.buttonForegroundColor,
+                    # hoverColor=AppColors.dropDownHoverColor,
+                    # itemHoverColor=AppColors.dropDownMenuHoverColor,
+                    # menuPadding=EdgeInsets.symmetric(
+                    #     vertical=8
+                    # ),
+                    # itemMargin=EdgeInsets.symmetric(
+                    #     vertical=4, horizontal=4
+                    # ),
+                    selectedItemShape=BorderRadius.all(8),
+                    selectedItemColor=AppColors.buttonBackgroundColor,
+                    # selectedItemTextColor=AppColors.buttonForegroundColor,
+                ),
+            )
+        
+
         super().__init__()
         self.navigator = navigator
 
     def initState(self):
+        # print("NoteEditorScreenState: initState")
         self.note_editor_route = PageRoute(
             builder=lambda nav: NoteEditorScreen(
                 key=Key("note_page"),
@@ -184,6 +273,11 @@ class NoteEditorScreenState(State):
             ),
             name="settings_page",
         )
+
+    #     QTimer.singleShot(100, self._load_fonts)
+
+    # def _load_fonts(self):
+    #     load_system_fonts(callback=self.setState)
 
     @property
     def is_dark(self):
@@ -249,6 +343,55 @@ class NoteEditorScreenState(State):
 
     def open_settings(self):
         self.navigator.push(self.settings_route)
+
+    def select_item(self, item):
+        print("Selected item: ", item)
+        selected_font = item[0] if isinstance(item, list) else item
+        self.dropdown_controller.value = selected_font
+        self.setFont(
+            SYSTEM_FONTS[self.dropdown_controller.items.index(selected_font)]["val"]
+        )
+        self.dropdown.get_state().toggle_dropdown()
+        # self.setState()
+
+    def vlist_item_builder(self, item: int) -> Widget:
+        return Container(
+            height=32,
+            margin=EdgeInsets.symmetric(horizontal=0, vertical=8),
+            padding=EdgeInsets.symmetric(horizontal=12, vertical=8),
+            color=(
+                AppColors.buttonActiveColor
+                if self.dropdown_controller.items[item]
+                == self.dropdown_controller.value
+                else Colors.transparent
+            ),
+            width="100%",
+            decoration=BoxDecoration(
+                borderRadius=BorderRadius.circular(4),
+            ),
+            key=Key(f"dropdown_item_{item}_padding_{self.parent_key}"),
+            child=ListTile(
+                key=Key(f"dropdown_item_{item}_{self.parent_key}"),
+                title=Text(
+                    self.dropdown_controller.items[item],
+                    key=Key(f"dropdown_item_title_{item}_{self.parent_key}"),
+                    style=TextStyle(
+                        color=AppColors.buttonForegroundColor,
+                        fontFamily=SYSTEM_FONTS[item]["val"],
+                        fontSize=14,
+                    ),
+                    overflow="ellipsis",
+                ),
+                tooltip=self.dropdown_controller.items[item],
+                onTap=self.select_item,
+                onTapName=f"item_tap_callback_{self.parent_key}_{item}",
+                onTapArg=[self.dropdown_controller.items[item]],
+                selected=self.dropdown_controller.items[item]
+                == self.dropdown_controller.value,
+                selectedTileColor=Colors.primary,
+                contentPadding=EdgeInsets.symmetric(horizontal=12, vertical=8),
+            ),
+        )
 
     def build(self) -> Widget:
         cursor_state = self.editor.cursor_state
@@ -429,53 +572,6 @@ class NoteEditorScreenState(State):
                                         ),
                                         children=[
                                             self.dropdown,
-                                            # Dropdown(
-                                            #     controller=self.d_controller,
-                                            #     key=Key("my_font_dropdown"),
-                                            #     items=font_dropdown_items,
-                                            #     onChanged=self.changeFont,
-                                            #     dropDirection=VerticalDirection.UP,
-                                            #     decoration=InputDecoration(
-                                            #         label="Standard Dropdown",
-                                            #         hintText="Select an option...",
-                                            #         fillColor=Colors.surfaceVariant,
-                                            #         labelColor=Colors.onSurfaceVariant,
-                                            #         focusColor=Colors.primary,
-                                            #         borderRadius=BorderRadius.all(12),
-                                            #         border=BorderSide(
-                                            #             width=2, color=Colors.outline
-                                            #         ),
-                                            #         focusedBorder=BorderSide(
-                                            #             width=2, color=Colors.primary
-                                            #         ),
-                                            #         labelStyle=TextStyle(
-                                            #             fontSize=18, fontFamily="Arial"
-                                            #         ),
-                                            #         hintStyle=TextStyle(fontSize=14),
-                                            #         filled=False,
-                                            #     ),
-                                            #     theme=DropdownTheme(
-                                            #         dropdownMargin=EdgeInsets.only(
-                                            #             top=12
-                                            #         ),
-                                            #         elevation=12,
-                                            #         hoverColor=Colors.rgba(
-                                            #             100, 255, 100, 0.2
-                                            #         ),  # Testing hover theme overriding
-                                            #         menuPadding=EdgeInsets.symmetric(
-                                            #             vertical=8
-                                            #         ),
-                                            #         itemMargin=EdgeInsets.symmetric(
-                                            #             vertical=4, horizontal=4
-                                            #         ),
-                                            #         selectedItemShape=BorderRadius.all(
-                                            #             8
-                                            #         ),
-                                            #         selectedItemColor=Colors.rgba(
-                                            #             0, 100, 255, 0.1
-                                            #         ),
-                                            #     ),
-                                            # ),
                                             SizedBox(
                                                 width=(12),
                                                 key=Key("sixe_box_header_dropdown"),

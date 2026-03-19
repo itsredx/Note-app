@@ -1,11 +1,12 @@
 from lib.constants.theme import AppThemes
 from lib.screens.settings_screen import SettingsAndProfileScreen
-from .note_editor_screen import NoteEditorScreen
+from .note_editor_screen import NoteEditorScreen, load_system_fonts
 from lib.components.note_card import NoteCard
 from lib.constants.colors import *
 from lib.components.header_actions import HeaderActions
 from lib.utils.shared_prefernce import PythraPreferences
 from lib import pref
+from PySide6.QtCore import QTimer
 
 from pythra import (
     Framework,
@@ -73,7 +74,7 @@ class DashboardScreenState(State):
     ):
         super().__init__()
         self.navigator = navigator
-        print("==== Dashboard Initializing (__init__) ====")
+        # print("==== Dashboard Initializing (__init__) ====")
         self.show_color_picker = False
         self.show_create_dialog = False
         self.selected_color = None
@@ -115,6 +116,7 @@ class DashboardScreenState(State):
         ]
 
     def initState(self):
+        load_system_fonts()
         self.note_editor_route = PageRoute(
             builder=lambda nav: NoteEditorScreen(
                 key=Key("note_page"),
@@ -122,15 +124,17 @@ class DashboardScreenState(State):
             ),
             name="note_editor",
         )
-        print("==== Dashboard Initializing ====")
+        # print("==== Dashboard Initializing ====")
         self.settings_route = PageRoute(
             builder=lambda nav: SettingsAndProfileScreen(
                 key=Key("settings_&_profile_page"), navigator=nav
             ),
             name="settings_page",
         )
+
         print("🚀 Preloading NoteEditorScreen in background...")
         self.navigator.preload(self.note_editor_route)
+        
 
     def open_note(self):
         self.navigator.push(self.note_editor_route)
