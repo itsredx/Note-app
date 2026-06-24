@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any
 import markdown
 from markdownify import markdownify as md
 
-from pythra import State, Container, Key, Framework
+from pythra import State, Container, Key, Framework, Center, Stack, Positioned
 
 from .controller import MarkdownEditorController
 from .style import EditorStyle
@@ -76,6 +76,11 @@ class MarkdownEditorState(State):
         else:
             print('Warning: framework.api not available; callback registration delayed')
 
+
+    def didUpdateWidget(self, oldWidget, new_widget):
+        if oldWidget.controller.get_content() != new_widget.controller.get_content():
+            self._content = None
+            self._cached_js_init = None
 
     def dispose(self):
         widget = self.widget
@@ -321,6 +326,8 @@ class MarkdownEditorState(State):
                     'callback': self._callback_name,
                     'instanceId': f"{widget.key.value}_PythraMarkdownEditor",
                     "showControls": widget.show_controls,
+                    "spellcheck": widget.spellcheck,
+                    "autocorrect": widget.autocorrect,
                     # USE STABLE CONTENT
                     "initialContent": self._content,
                     "width": widget.width,
@@ -338,30 +345,42 @@ class MarkdownEditorState(State):
             js_init=self._cached_js_init,
         )
 
+        children = [editor_container]
+
         if widget.overlay:
-            from pythra import Stack, Positioned
-            # Create a separate, stable container for the overlay that JS can move
             overlay_container = Container(
                 key=Key(f"{widget.key.value}_overlay_wrapper"),
-                # Key for the JS engine to find it
                 js_init={
                     "engine": "PythraSelectionOverlay", 
                     "instance_name": f"{widget.key.value}_overlay",
-                     # No options needed initially; JS will just grab the element
                      "options": {} 
                 },
                 child=widget.overlay,
-                # Start hidden or letting JS handle display
             )
-            
-            return Stack(
-                children=[
-                    editor_container,
-                    Positioned(
-                        left="0", top="-200px",
-                        child=overlay_container
-                    )
-                ]
+            children.append(
+                Positioned(left="0", top="-200px", child=overlay_container)
             )
+
+        if widget.heading_selector:
+            heading_selector_container = Container(
+                key=Key(f"{widget.key.value}_heading_selector_wrapper"),
+                js_init={
+                    "engine": "PythraHeadingSelector",
+                    "instance_name": f"{widget.key.value}_heading_selector",
+                    "options": {}
+                },
+                child=widget.heading_selector,
+            )
+            children.append(
+                Positioned(
+                    width="100%",
+                    left="0",
+                    bottom="76px",
+                    child=Center(child=heading_selector_container)
+                )
+            )
+
+        if len(children) > 1:
+            return Stack(children=children)
 
         return editor_container

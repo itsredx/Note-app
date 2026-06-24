@@ -5,5 +5,6 @@ Comment=A PyThra desktop application
 Exec=com.pythra.note-app
 Icon=com.pythra.note-app
 Terminal=false
+Path=/home/red-x/projects/desktop/Note-app/lib
 Categories=Utility;
 StartupWMClass=com.pythra.note-app

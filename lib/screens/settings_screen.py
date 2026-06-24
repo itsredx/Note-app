@@ -165,7 +165,7 @@ class SettingsAndProfileScreenState(State):
                                     "settings_back_ico_1"
                                 ),
                             ),
-                            onPressed=lambda: self.widget.navigator.pop(),
+                            onPressed=lambda: self.navigator.pop(),
                             style=ButtonStyle(
                                 backgroundColor=Colors.transparent,
                                 hoverColor=AppColors.buttonHoverColor,
@@ -313,6 +313,7 @@ class SettingsAndProfileScreenState(State):
                                                             # backgroundColor=AppColors.dropDownColor,
                                                             dropdownColor=AppColors.dropDownColor,
                                                             # textColor=AppColors.iconColor,
+                                                            selectedItemColor=AppColors.dropDownItemColor,
                                                             dropdownTextColor=AppColors.iconColor,
                                                             dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                             hoverColor=AppColors.dropDownHoverColor,

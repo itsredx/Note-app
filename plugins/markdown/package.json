@@ -33,6 +33,6 @@
     "js_modules": {
         "PythraMarkdownEditor": "editor.js"
     },
-    "css_files": ["styles.css"],
     "tags": ["editor", "markdown", "wysiwyg"]
 }
+

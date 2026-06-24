@@ -44,6 +44,17 @@ from pythra import (
     Divider,
 )
 
+from plugins.markdown_render.widget import MarkdownRender
+from plugins.markdown_render.style import RendererStyle
+from plugins.markdown_render.controller import MarkdownRendererController
+
+
+MarkdownRender(
+    key=Key("markdown_render_chat"),
+    controller=MarkdownRendererController(),
+    style=RendererStyle()
+)
+
 
 class ChatCardState(State):
     def __init__(self):
@@ -272,15 +283,16 @@ class ChatCardState(State):
                                                                                 ),
                                                                                 crossAxisAlignment=CrossAxisAlignment.START,
                                                                                 children=[
-                                                                                    Text(
+                                                                                    MarkdownRender(
                                                                                         key=Key(
-                                                                                            f"{self.base_key}_chat_container_mesg_{i}_txt"
+                                                                                            f"{self.base_key}_chat_container_mesg_{i}_markdown_render"
                                                                                         ),
-                                                                                        data=f"Here is a funnier take on your introduction:",
-                                                                                        style=TextStyle(
-                                                                                            fontSize=14,
-                                                                                            color=Colors.onBackground,
-                                                                                        ),
+                                                                                        markdownText=f"Here is a funnier take on your introduction:",
+                                                                                        style=RendererStyle(
+                                                                                            fontSize='14px',
+                                                                                            fontColor=Colors.onBackground,
+                                                                                            padding='0px'
+                                                                                        )
                                                                                     ),
                                                                                     Container(
                                                                                         key=Key(
@@ -328,7 +340,7 @@ class ChatCardState(State):
                                                                                                             f"{self.base_key}_chat_container_mesg_{i}_cont_inner_col_txt_ai_sug_txt"
                                                                                                         ),
                                                                                                         style=TextStyle(
-                                                                                                            fontSize=14,
+                                                                                                            fontSize='14px',
                                                                                                             fontFamily="Ubuntu mono",
                                                                                                             color=Colors.onBackground,
                                                                                                         ),
@@ -380,16 +392,18 @@ class ChatCardState(State):
                                                                                                                 )
                                                                                                             ),
                                                                                                         ),
-                                                                                                        child=Text(
-                                                                                                            data='"Ai Suggestions..."',
+                                                                                                        child=MarkdownRender(
                                                                                                             key=Key(
-                                                                                                                f"{self.base_key}_chat_container_mesg_{i}_cont_inner_col_txt_ai_sug_txt_content"
+                                                                                                                f"{self.base_key}_chat_container_mesg_{i}_cont_inner_col_txt_ai_sug_txt_content_markdown_render"
                                                                                                             ),
-                                                                                                            style=TextStyle(
-                                                                                                                fontSize=12,
+                                                                                                            markdownText=f'# Ai Suggestions...\nHello',
+                                                                                                            style=RendererStyle(
+                                                                                                                fontSize='12px',
                                                                                                                 fontStyle="italic",
-                                                                                                                color=Colors.onBackground,
-                                                                                                            ),
+                                                                                                                fontColor=Colors.onBackground,
+                                                                                                                padding='0px',
+                                                                                                                contentMargin='0em',
+                                                                                                            )
                                                                                                         ),
                                                                                                     ),
                                                                                                 ),
@@ -560,8 +574,7 @@ class ChatCardState(State):
                                                     backgroundColor=Colors.primary,
                                                     foregroundColor=Colors.onPrimary,
                                                     hoverColor=Colors.hex("#9688b9"),
-                                                    
-                                                )
+                                                ),
                                             ),
                                             decoration=InputDecoration(
                                                 hintText="Ask anything...",

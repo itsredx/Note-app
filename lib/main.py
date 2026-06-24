@@ -1,12 +1,9 @@
 # main.py
 import os
 import sys
-from typing import Optional, Callable, List, Dict, Any
 
-# Add the project root directory to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# import colors
 from constants.colors import *
 from constants.theme import initial_theme
 
@@ -16,7 +13,6 @@ from screens.dashboard_screen import DashboardScreen
 from utils import shared_prefernce
 
 
-# Welcome to your new Pythra App!
 from pythra import (
     Framework,
     StatefulWidget,
@@ -24,15 +20,15 @@ from pythra import (
     Key,
     Widget,
     Container,
-    Navigator, 
+    Navigator,
     PageRoute,
 )
 
-
 pref = shared_prefernce.PythraPreferences()
-if pref.get("theme", None) == None:
+if pref.get("theme", None) is None:
     print("---- Perf theme is not set ----")
     pref.set("theme", "light")
+
 
 class HomePageState(State):
     def __init__(self):
@@ -56,7 +52,6 @@ class HomePageState(State):
             color=Colors.surface,
             child=Navigator(
                 key=Key("app_navigator"),
-                # The builder lambda now receives the navigator state
                 initialRoute=PageRoute(
                     builder=lambda navigator: DashboardScreen(
                         navigator=navigator, key=Key("my_app_root")
@@ -78,7 +73,7 @@ class HomePage(StatefulWidget):
 
 class MainState(State):
     def __init__(self):
-        self.home_page = HomePage(key=Key("home_page"),)
+        self.home_page = HomePage(key=Key("home_page"))
 
     def build(self):
         return self.home_page
@@ -90,9 +85,7 @@ class Main(StatefulWidget):
 
 
 if __name__ == "__main__":
-    # This allows running the app directly with `python lib/main.py`
-    # as well as with the CLI's `pythra run` command.
     app = Framework.instance()
-    app.set_theme(initial_theme) # Set the initial theme
+    app.set_theme(initial_theme)
     app.set_root(Main(key=Key("home_page_wrapper")))
     app.run()

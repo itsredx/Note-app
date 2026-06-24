@@ -7,6 +7,8 @@ from typing import Optional, Callable, List, Dict, Any
 from PySide6.QtCore import QTimer
 
 from lib.components.chat_card import ChatCard
+from lib.components.tab_navigation_card import TabNavigationCard
+from lib.components.heading import HeadingSelector
 from lib.screens.settings_screen import SettingsAndProfileScreen
 
 # Add the project root directory to Python path
@@ -18,6 +20,10 @@ from lib.constants.colors import *
 from lib.constants.theme import AppThemes
 from lib.components.header_actions import HeaderActions
 from lib.components.ai_controls import AiActionsControls
+from lib.backend.repository import NoteRepository
+from lib.state.tab_state import tab_state
+from lib.utils.file_picker import FilePicker, ColorPicker
+from lib import pref
 
 from plugins.markdown.widget import MarkdownEditor
 from plugins.markdown.controller import MarkdownEditorController
@@ -73,6 +79,7 @@ from pythra import (
     PageRoute,
     NavigatorState,
     InputDecoration,
+    MainAxisSize,
 )
 
 DEFAULT_FONTS = [
@@ -118,14 +125,21 @@ def load_system_fonts(callback=None):
 
 
 class NoteEditorScreenState(State):
-    def __init__(self, navigator: NavigatorState):
+    def __init__(self, navigator: NavigatorState, note_id: str = ""):
         self.count = 0
         parent_key = Key("note_editor_screen")
         self.parent_key = parent_key.value
         self.chatOpen = False
-        self.editor = MarkdownEditorController(
-            initial_content="<h1>Welcome from Controller!</h1><p>Start writing your document here...</p>"
-        )
+        self.note_id = note_id
+
+        initial_content = "<h1>Welcome from Controller!</h1><p>Start writing your document here...</p>"
+        if note_id:
+            repo = NoteRepository()
+            note = repo.get_note(note_id)
+            if note and note.content:
+                initial_content = note.content
+
+        self.editor = MarkdownEditorController(initial_content=initial_content)
         self.d_controller = DropdownController(
             selectedValue=SYSTEM_FONTS[0]["val"] if SYSTEM_FONTS else "Arial"
         )
@@ -137,23 +151,35 @@ class NoteEditorScreenState(State):
 
         self.header_action = HeaderActions(
             key=Key("header_actions"),
-            onSave=self.incrementCounter,
+            onSave=self.save_note,
             onAiChatContext=self.editor,
             onAccount=self.open_settings,
         )
 
+        editor_key = f"markdow_editor_{note_id}" if note_id else "markdow_editor_new"
+        self.heading_selector_widget = HeadingSelector(
+            key=Key("heading_selector_widget"),
+            on_heading_selected=self._on_heading_selected,
+        )
+        _sp = pref.get("spell_check", True)
+        _ac = pref.get("autocorrect", True)
+        if not _sp or not _ac:
+            print(f"WARNING: spell_check={_sp!r}, autocorrect={_ac!r} — check settings screen")
         self.markdown_editor = MarkdownEditor(
-            key=Key("markdow_editor_widget"),
+            key=Key(editor_key),
             controller=self.editor,
             height="calc(100vh - 70px)",
             width="100vw",
             show_grid=True,
+            spellcheck=_sp,
+            autocorrect=_ac,
             overlay=AiActionsControls(
                 key=Key("ai_controls_popup"),
                 editor=self.editor,
                 onGenerate=lambda: self.editor.hide_overlay(),
                 chatOpen=self.header_action,
             ),
+            heading_selector=self.heading_selector_widget,
         )
 
         # Define stable style
@@ -176,87 +202,99 @@ class NoteEditorScreenState(State):
         self.markdown_editor.style = self.editor_style
 
         self.dropdown = VirtualDropdown(
-                controller=self.dropdown_controller,
-                key=Key("my_font_dropdown"),
-                itemBuilder=self.vlist_item_builder,
-                margin=EdgeInsets.only(top=-20),
-                # items=[
-                #     DropdownMenuItem(
-                #         key=Key(f"font_item_{idx}"),
-                #         value=f["val"],
-                #         label=f["label"],
-                #         child=Text(
-                #             f["label"],
-                #             style=TextStyle(
-                #                 fontFamily=f["val"],
-                #                 fontSize=14,
-                #             ),
-                #             key=Key(f"font_text_{idx}"),
-                #             overflow="ellipsis",
-                #         ),
-                #         tooltip=f["label"],
-                #     )
-                #     for idx, f in enumerate(
-                #         SYSTEM_FONTS
-                #     )
-                # ],
-                onChanged=self.changeFont,
-                dropDirection=VerticalDirection.UP,
-                theme=VirtualDropdownTheme(
-                    inputDecoration=InputDecoration(
-                        label="Fonts",
-                        hintText="Select an option...",
-                        fillColor=AppColors.dropDownColor,
-                        labelColor=Colors.onSurfaceVariant,
-                        focusColor=Colors.primary,
-                        borderRadius=BorderRadius.all(12),
-                        border=BorderSide(
-                            width=2,
-                            color=Colors.outline,
-                        ),
-                        focusedBorder=BorderSide(
-                            width=2,
-                            color=Colors.primary,
-                        ),
-                        labelStyle=TextStyle(
-                            fontSize=18,
-                            fontFamily="Arial",
-                        ),
-                        hintStyle=TextStyle(fontSize=14),
-                        filled=False,
+            controller=self.dropdown_controller,
+            key=Key("my_font_dropdown"),
+            itemBuilder=self.vlist_item_builder,
+            margin=EdgeInsets.only(top=-20),
+            # items=[
+            #     DropdownMenuItem(
+            #         key=Key(f"font_item_{idx}"),
+            #         value=f["val"],
+            #         label=f["label"],
+            #         child=Text(
+            #             f["label"],
+            #             style=TextStyle(
+            #                 fontFamily=f["val"],
+            #                 fontSize=14,
+            #             ),
+            #             key=Key(f"font_text_{idx}"),
+            #             overflow="ellipsis",
+            #         ),
+            #         tooltip=f["label"],
+            #     )
+            #     for idx, f in enumerate(
+            #         SYSTEM_FONTS
+            #     )
+            # ],
+            onChanged=self.changeFont,
+            dropDirection=VerticalDirection.UP,
+            theme=VirtualDropdownTheme(
+                inputDecoration=InputDecoration(
+                    label="Fonts",
+                    hintText="Select an option...",
+                    fillColor=AppColors.dropDownColor,
+                    labelColor=Colors.onSurfaceVariant,
+                    focusColor=Colors.primary,
+                    borderRadius=BorderRadius.all(12),
+                    border=BorderSide(
+                        width=2,
+                        color=Colors.transparent,
                     ),
-                    # dropdownMargin=EdgeInsets.only(
-                    #     top=-8
-                    # ),
-                    width=300,
-                    # dropDownHeight=400,
-                    # elevation=12,
-                    # dropdownColor=Colors.adaptive(
-                    #     dark=AppColors.toolbarBackgroundDarkColor,
-                    #     light=Colors.white,
-                    # ),
-                    # dropdownHoverColor=Colors.adaptive(
-                    #     dark=AppColors.toolbarBackgroundDarkColor,
-                    #     light=Colors.white,
-                    # ),
-                    dropdownTextColor=AppColors.buttonForegroundColor,
-                    # hoverColor=AppColors.dropDownHoverColor,
-                    # itemHoverColor=AppColors.dropDownMenuHoverColor,
-                    # menuPadding=EdgeInsets.symmetric(
-                    #     vertical=8
-                    # ),
-                    # itemMargin=EdgeInsets.symmetric(
-                    #     vertical=4, horizontal=4
-                    # ),
-                    selectedItemShape=BorderRadius.all(8),
-                    selectedItemColor=AppColors.buttonBackgroundColor,
-                    # selectedItemTextColor=AppColors.buttonForegroundColor,
+                    focusedBorder=BorderSide(
+                        width=2,
+                        color=Colors.primary,
+                    ),
+                    labelStyle=TextStyle(
+                        fontSize=18,
+                        fontFamily="Arial",
+                    ),
+                    hintStyle=TextStyle(fontSize=14),
+                    filled=False,
                 ),
-            )
-        
+                # dropdownMargin=EdgeInsets.only(
+                #     top=-8
+                # ),
+                width=300,
+                # dropDownHeight=400,
+                # elevation=12,
+                # dropdownColor=Colors.adaptive(
+                #     dark=AppColors.toolbarBackgroundDarkColor,
+                #     light=Colors.white,
+                # ),
+                # dropdownHoverColor=Colors.adaptive(
+                #     dark=AppColors.toolbarBackgroundDarkColor,
+                #     light=Colors.white,
+                # ),
+                dropdownTextColor=AppColors.buttonForegroundColor,
+                # hoverColor=AppColors.dropDownHoverColor,
+                # itemHoverColor=AppColors.dropDownMenuHoverColor,
+                # menuPadding=EdgeInsets.symmetric(
+                #     vertical=8
+                # ),
+                # itemMargin=EdgeInsets.symmetric(
+                #     vertical=4, horizontal=4
+                # ),
+                selectedItemShape=BorderRadius.all(8),
+                selectedItemColor=AppColors.buttonBackgroundColor,
+                # selectedItemTextColor=AppColors.buttonForegroundColor,
+            ),
+        )
 
         super().__init__()
         self.navigator = navigator
+
+    def didUpdateWidget(self, oldWidget, new_widget):
+        self.note_id = new_widget.note_id
+        if self.note_id:
+            repo = NoteRepository()
+            note = repo.get_note(self.note_id)
+            if note and note.content:
+                self.editor.content = note.content
+                md_state = self.markdown_editor.get_state()
+                if md_state:
+                    md_state._dirty = True
+                    md_state._content = None
+                    md_state._cached_js_init = None
 
     def initState(self):
         # print("NoteEditorScreenState: initState")
@@ -296,9 +334,7 @@ class NoteEditorScreenState(State):
         self.editor.italic()
 
     def underline(self):
-        # self.editor.underline()
-        self.editor.replace_selection_with_markdown(markdown_text="Underline")
-        self.setState()
+        self.editor.underline()
 
     def strikeThrough(self):
         self.editor.strike_through()
@@ -312,11 +348,25 @@ class NoteEditorScreenState(State):
     def insertOrderedList(self):
         self.editor.insert_ordered_list()
 
-    def setFontColor(self, color):
-        self.editor.set_font_color(color)
+    def setFontColor(self):
+        ColorPicker.pick_color(
+            run_js=self.editor.run_javascript,
+            on_result=lambda color: self.editor.set_font_color(color),
+        )
 
     def setHeading(self, level: int):
         self.editor.set_heading(level=level)
+
+    def _toggle_heading_selector(self):
+        self.editor.toggle_heading_selector()
+
+    def _on_heading_selected(self, level: int):
+        self.editor.hide_heading_selector()
+        print(f"LEVEL: {level}")
+        if level == 0:
+            self.setParagraph()
+        else:
+            self.setHeading(level)
 
     def setFont(self, font_family: str):
         self.editor.set_font_name(font_family=font_family)
@@ -326,23 +376,67 @@ class NoteEditorScreenState(State):
         print("Font changed!: ", new_value)
         self.setFont(new_value)
 
-    def insertImage(
-        self, url: str = "c:\\Users\\SMILETECH COMPUTERS\\Documents\\food.png"
-    ):
-        self.editor.insert_image(url=url)
+    def insertImage(self):
+        FilePicker.pick_image(
+            run_js=self.editor.run_javascript,
+            on_result=lambda data_url: self.editor.insert_image(url=data_url),
+        )
 
-    def incrementCounter(self):
-        self.count += 1
-        print("self.count: ", self.count)
-        self.setState()
-
-    def decrementCounter(self):
-        self.count -= 1
-        print("self.count: ", self.count)
-        self.setState()
+    def save_note(self):
+        content = self.editor.get_content()
+        if not self.note_id:
+            repo = NoteRepository()
+            note = repo.create_note(content=content)
+            self.note_id = note.id
+        else:
+            repo = NoteRepository()
+            repo.update_note(self.note_id, content=content)
+        print(f"Note saved: {self.note_id}")
 
     def open_settings(self):
         self.navigator.push(self.settings_route)
+
+    def _open_note(self, note_id: str):
+        repo = NoteRepository()
+        note = repo.get_note(note_id)
+        if note:
+            tab_state.add_tab(note)
+        route = PageRoute(
+            builder=lambda nav: NoteEditorScreen(
+                key=Key(f"note_editor_{note_id}"),
+                navigator=nav,
+                note_id=note_id,
+            ),
+            name=f"note_editor_{note_id}",
+        )
+        self.navigator.push(route)
+
+    def _switch_note(self, note_id: str):
+        repo = NoteRepository()
+        note = repo.get_note(note_id)
+        if note:
+            tab_state.add_tab(note)
+            self.editor.content = note.content
+            md_state = self.markdown_editor.get_state()
+            if md_state:
+                md_state._dirty = True
+                md_state._content = None
+                md_state._cached_js_init = None
+            self.note_id = note_id
+            self.setState()
+
+    def _on_tab_close(self, note_id: str):
+        tab_state.remove_tab(note_id)
+        if not tab_state.open_tabs:
+            self.navigator.pop()
+        elif note_id == self.note_id:
+            new_active = tab_state.active_tab_id
+            if new_active:
+                self._switch_note(new_active)
+            else:
+                self.setState()
+        else:
+            self.setState()
 
     def select_item(self, item):
         print("Selected item: ", item)
@@ -434,28 +528,35 @@ class NoteEditorScreenState(State):
                                                                 "file_name_and_details_header"
                                                             ),
                                                             padding=EdgeInsets.only(
-                                                                top=20
+                                                                top=12
                                                             ),
                                                             child=Row(
                                                                 key=Key(
                                                                     "file_name_and_details_and_back_button_header_row"
                                                                 ),
                                                                 children=[
-                                                                    IconButton(
+                                                                    Container(
                                                                         key=Key(
-                                                                            "back_btn_1"
+                                                                            "back_btn_container"
                                                                         ),
-                                                                        icon=Icon(
-                                                                            Icons.arrow_back_rounded,
+                                                                        width=40,
+                                                                        height=40,
+                                                                        child=IconButton(
                                                                             key=Key(
-                                                                                "back_ico_1"
+                                                                                "back_btn_1"
                                                                             ),
-                                                                        ),
-                                                                        onPressed=lambda: self.widget.navigator.pop(),
-                                                                        style=ButtonStyle(
-                                                                            backgroundColor=AppColors.buttonBackgroundColor,
-                                                                            hoverColor=AppColors.buttonHoverColor,
-                                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                                            icon=Icon(
+                                                                                Icons.arrow_back_rounded,
+                                                                                key=Key(
+                                                                                    "back_ico_1"
+                                                                                ),
+                                                                            ),
+                                                                            onPressed=lambda: self.navigator.pop(),
+                                                                            style=ButtonStyle(
+                                                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                                                hoverColor=AppColors.buttonHoverColor,
+                                                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                                            ),
                                                                         ),
                                                                     ),
                                                                     SizedBox(
@@ -464,42 +565,49 @@ class NoteEditorScreenState(State):
                                                                             "sixe_box_back_controls_1"
                                                                         ),
                                                                     ),
-                                                                    Column(
+                                                                    # Column(
+                                                                    #     key=Key(
+                                                                    #         "file_name_and_details_header_column"
+                                                                    #     ),
+                                                                    #     mainAxisAlignment=MainAxisAlignment.START,
+                                                                    #     crossAxisAlignment=CrossAxisAlignment.START,
+                                                                    #     children=[
+                                                                    #         Text(
+                                                                    #             "Welcome",
+                                                                    #             key=Key(
+                                                                    #                 "file_name"
+                                                                    #             ),
+                                                                    #             style=TextStyle(
+                                                                    #                 fontSize=18,
+                                                                    #                 fontWeight="bold",
+                                                                    #                 color=Colors.adaptive(
+                                                                    #                     dark="#EDEDED",
+                                                                    #                     light=Colors.black,
+                                                                    #                 ),
+                                                                    #                 # fontFamily='verdana',
+                                                                    #             ),
+                                                                    #         ),
+                                                                    #         Text(
+                                                                    #             "first file",
+                                                                    #             key=Key(
+                                                                    #                 "file_detail"
+                                                                    #             ),
+                                                                    #             style=TextStyle(
+                                                                    #                 fontSize=14,
+                                                                    #                 color=Colors.adaptive(
+                                                                    #                     dark="#9E9E9E",
+                                                                    #                     light=Colors.grey,
+                                                                    #                 ),
+                                                                    #             ),
+                                                                    #         ),
+                                                                    #     ],
+                                                                    # ),
+                                                                    TabNavigationCard(
                                                                         key=Key(
-                                                                            "file_name_and_details_header_column"
+                                                                            "my_tabs"
                                                                         ),
-                                                                        mainAxisAlignment=MainAxisAlignment.START,
-                                                                        crossAxisAlignment=CrossAxisAlignment.START,
-                                                                        children=[
-                                                                            Text(
-                                                                                "Welcome",
-                                                                                key=Key(
-                                                                                    "file_name"
-                                                                                ),
-                                                                                style=TextStyle(
-                                                                                    fontSize=18,
-                                                                                    fontWeight="bold",
-                                                                                    color=Colors.adaptive(
-                                                                                        dark="#EDEDED",
-                                                                                        light=Colors.black,
-                                                                                    ),
-                                                                                    # fontFamily='verdana',
-                                                                                ),
-                                                                            ),
-                                                                            Text(
-                                                                                "first file",
-                                                                                key=Key(
-                                                                                    "file_detail"
-                                                                                ),
-                                                                                style=TextStyle(
-                                                                                    fontSize=14,
-                                                                                    color=Colors.adaptive(
-                                                                                        dark="#9E9E9E",
-                                                                                        light=Colors.grey,
-                                                                                    ),
-                                                                                ),
-                                                                            ),
-                                                                        ],
+                                                                        on_tab_clicked=self._switch_note,
+                                                                        on_tab_close=self._on_tab_close,
                                                                     ),
                                                                 ],
                                                             ),
@@ -509,7 +617,7 @@ class NoteEditorScreenState(State):
                                                                 "search_ai_and_controls_header"
                                                             ),
                                                             padding=EdgeInsets.only(
-                                                                top=20
+                                                                top=12
                                                             ),
                                                             child=Row(
                                                                 key=Key(
@@ -556,324 +664,372 @@ class NoteEditorScreenState(State):
                             width="100vw",
                             bottom="18px",
                             key=Key("home_page_Pythra_decrement_btn_Positioned"),
-                            child=Center(
-                                key=Key("home_page_Pythra_Center_Positioned_Container"),
-                                child=Container(
-                                    key=Key(
-                                        "home_page_Pythra_decrement_btn_Positioned_Container"
-                                    ),
-                                    # color=Colors.white,
-                                    padding=EdgeInsets.all(8),
-                                    child=Row(
-                                        mainAxisAlignment=MainAxisAlignment.CENTER,
-                                        crossAxisAlignment=CrossAxisAlignment.CENTER,
+                            child=Column(
+                                mainAxisSize=MainAxisSize.MIN,
+                                crossAxisAlignment=CrossAxisAlignment.CENTER,
+                                key=Key("toolbar_column_wrapper"),
+                                children=[
+                                    Center(
                                         key=Key(
-                                            "home_page_Pythra_decrement_btn_Positioned_Container_Row"
+                                            "home_page_Pythra_Center_Positioned_Container"
                                         ),
-                                        children=[
-                                            self.dropdown,
-                                            SizedBox(
-                                                width=(12),
-                                                key=Key("sixe_box_header_dropdown"),
+                                        child=Container(
+                                            key=Key(
+                                                "home_page_Pythra_decrement_btn_Positioned_Container"
                                             ),
-                                            IconButton(
+                                            # color=Colors.white,
+                                            padding=EdgeInsets.all(8),
+                                            child=Row(
+                                                mainAxisAlignment=MainAxisAlignment.CENTER,
+                                                crossAxisAlignment=CrossAxisAlignment.CENTER,
                                                 key=Key(
-                                                    "format_color_text_rounded_btn"
+                                                    "home_page_Pythra_decrement_btn_Positioned_Container_Row"
                                                 ),
-                                                icon=Icon(
-                                                    Icons.format_color_text_rounded,  # format_color_text_rounded
-                                                    key=Key(
-                                                        "format_color_text_rounded_btn_ico"
+                                                children=[
+                                                    Container(
+                                                        key=Key(
+                                                            "editor_header_dropdown_container"
+                                                        ),
+                                                        width=300,
+                                                        child=self.dropdown,
                                                     ),
-                                                    # color=(
-                                                    #     AppColors.iconDarkMode
-                                                    #     if self.is_dark
-                                                    #     else AppColors.iconLightModeFormatColorTextRounded
+                                                    SizedBox(
+                                                        width=(12),
+                                                        key=Key(
+                                                            "sixe_box_header_dropdown"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_color_text_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_color_text_rounded,  # format_color_text_rounded
+                                                            key=Key(
+                                                                "format_color_text_rounded_btn_ico"
+                                                            ),
+                                                            # color=(
+                                                            #     AppColors.iconDarkMode
+                                                            #     if self.is_dark
+                                                            #     else AppColors.iconLightModeFormatColorTextRounded
+                                                            # ),
+                                                            cssClass="pythra-toolbar-font-color-btn",
+                                                        ),
+                                                        onPressed=self.setFontColor,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Text Color",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_color_text_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_h1_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_h1_rounded,
+                                                            key=Key(
+                                                                "format_h1_rounded_btn_ico"
+                                                            ),
+                                                        ),
+                                                        onPressed=self._toggle_heading_selector,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Heading",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_h1_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    # IconButton(
+                                                    #     key=Key(
+                                                    #         "format_paragraph_rounded_btn"
+                                                    #     ),
+                                                    #     icon=Icon(
+                                                    #         Icons.format_paragraph_rounded,
+                                                    #         key=Key(
+                                                    #             "format_paragraph_rounded_btn_ico"
+                                                    #         ),
+                                                    #     ),
+                                                    #     onPressed=self.setParagraph,
+                                                    #     style=ButtonStyle(
+                                                    #         backgroundColor=AppColors.buttonBackgroundColor,
+                                                    #         hoverColor=AppColors.buttonHoverColor,
+                                                    #         shape=BorderRadius.circular(
+                                                    #             8.0
+                                                    #         ),
+                                                    #         foregroundColor=AppColors.buttonForegroundColor,
+                                                    #         activeColor=AppColors.buttonActiveColor,
+                                                    #     ),
+                                                    #     tooltip="Paragraph",
                                                     # ),
-                                                    cssClass="pythra-toolbar-font-color-btn",
-                                                ),
-                                                onPressed=self.setFontColor,
-                                                onPressedArgs=["red"],
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Text Color",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_color_text_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key("format_h1_rounded_btn"),
-                                                icon=Icon(
-                                                    Icons.format_h1_rounded,
-                                                    key=Key(
-                                                        "format_h1_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.setHeading,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Heading 1",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key("format_h1_rounded_size_box"),
-                                            ),
-                                            IconButton(
-                                                key=Key("format_paragraph_rounded_btn"),
-                                                icon=Icon(
-                                                    Icons.format_paragraph_rounded,
-                                                    key=Key(
-                                                        "format_paragraph_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.setParagraph,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Paragraph",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_paragraph_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key("format_bold_rounded_btn"),
-                                                icon=Icon(
-                                                    Icons.format_bold_rounded,
-                                                    key=Key(
-                                                        "format_bold_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=lambda: self.bold(),
-                                                onPressedName="bold_lambda",
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Bold",
-                                                cssClass="pythra-toolbar-bold",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key("format_bold_rounded_size_box"),
-                                            ),
-                                            IconButton(
-                                                key=Key("format_italic_rounded_btn"),
-                                                icon=Icon(
-                                                    Icons.format_italic_rounded,
-                                                    key=Key(
-                                                        "format_italic_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.italic,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Italic",
-                                                cssClass="pythra-toolbar-italic",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_italic_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key(
-                                                    "format_underlined_rounded_btn"
-                                                ),
-                                                icon=Icon(
-                                                    Icons.format_underlined_rounded,
-                                                    key=Key(
-                                                        "format_underlined_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.underline,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Underline",
-                                                cssClass="pythra-toolbar-underline",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_underlined_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key(
-                                                    "format_strikethrough_rounded_btn"
-                                                ),
-                                                icon=Icon(
-                                                    Icons.format_strikethrough_rounded,
-                                                    key=Key(
-                                                        "format_strikethrough_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.strikeThrough,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="Strike Through",
-                                                cssClass="pythra-toolbar-strikethrough",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_strikethrough_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key(
-                                                    "format_list_bulleted_rounded_btn"
-                                                ),
-                                                icon=Icon(
-                                                    Icons.format_list_bulleted_rounded,
-                                                    key=Key(
-                                                        "format_list_bulleted_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.insertUnorderedList,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="List Bulleted",
-                                                cssClass="pythra-toolbar-ul",
-                                            ),
-                                            SizedBox(
-                                                width=12,
-                                                key=Key(
-                                                    "format_list_bulleted_rounded_size_box"
-                                                ),
-                                            ),
-                                            IconButton(
-                                                key=Key(
-                                                    "format_list_numbered_rounded_btn"
-                                                ),
-                                                icon=Icon(
-                                                    Icons.format_list_numbered_rounded,
-                                                    key=Key(
-                                                        "format_list_numbered_rounded_btn_ico"
-                                                    ),
-                                                ),
-                                                onPressed=self.insertOrderedList,
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    activeColor=AppColors.buttonActiveColor,
-                                                ),
-                                                tooltip="List Numbered",
-                                                cssClass="pythra-toolbar-ol",
-                                            ),
-                                            Container(
-                                                key=Key("divider_container"),
-                                                color=AppColors.iconColor,
-                                                height=30,
-                                                width=2,
-                                                margin=EdgeInsets.symmetric(
-                                                    horizontal=12,
-                                                ),
-                                            ),
-                                            ElevatedButton(
-                                                key=Key("image_rounded_btn"),
-                                                child=Row(
-                                                    key=Key(
-                                                        "image_rounded_btn_inner_row"
-                                                    ),
-                                                    children=[
-                                                        Icon(
-                                                            Icons.image_rounded,
-                                                            key=Key(
-                                                                "image_rounded_btn_ico"
-                                                            ),
-                                                            size=24,
-                                                            color=AppColors.iconColor,
+                                                    # SizedBox(
+                                                    #     width=12,
+                                                    #     key=Key(
+                                                    #         "format_paragraph_rounded_size_box"
+                                                    #     ),
+                                                    # ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_bold_rounded_btn"
                                                         ),
-                                                        SizedBox(
-                                                            width=8,
+                                                        icon=Icon(
+                                                            Icons.format_bold_rounded,
                                                             key=Key(
-                                                                "image_rounded_btn_sized_box"
+                                                                "format_bold_rounded_btn_ico"
                                                             ),
                                                         ),
-                                                        Text(
-                                                            "Image",
-                                                            key=Key(
-                                                                "image_rounded_btn_txt"
+                                                        onPressed=lambda: self.bold(),
+                                                        onPressedName="bold_lambda",
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
                                                             ),
-                                                            style=TextStyle(
-                                                                fontSize=20,
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Bold",
+                                                        cssClass="pythra-toolbar-bold",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_bold_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_italic_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_italic_rounded,
+                                                            key=Key(
+                                                                "format_italic_rounded_btn_ico"
                                                             ),
                                                         ),
-                                                    ],
-                                                ),
-                                                style=ButtonStyle(
-                                                    backgroundColor=AppColors.buttonBackgroundColor,
-                                                    foregroundColor=AppColors.buttonForegroundColor,
-                                                    elevation=0,
-                                                    shape=BorderRadius.circular(8.0),
-                                                    margin=EdgeInsets.all(0),
-                                                    hoverColor=AppColors.buttonHoverColor,
-                                                ),
-                                                onPressed=self.insertImage,
-                                                tooltip="Image",
+                                                        onPressed=self.italic,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Italic",
+                                                        cssClass="pythra-toolbar-italic",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_italic_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_underlined_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_underlined_rounded,
+                                                            key=Key(
+                                                                "format_underlined_rounded_btn_ico"
+                                                            ),
+                                                        ),
+                                                        onPressed=self.underline,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Underline",
+                                                        cssClass="pythra-toolbar-underline",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_underlined_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_strikethrough_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_strikethrough_rounded,
+                                                            key=Key(
+                                                                "format_strikethrough_rounded_btn_ico"
+                                                            ),
+                                                        ),
+                                                        onPressed=self.strikeThrough,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="Strike Through",
+                                                        cssClass="pythra-toolbar-strikethrough",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_strikethrough_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_list_bulleted_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_list_bulleted_rounded,
+                                                            key=Key(
+                                                                "format_list_bulleted_rounded_btn_ico"
+                                                            ),
+                                                        ),
+                                                        onPressed=self.insertUnorderedList,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="List Bulleted",
+                                                        cssClass="pythra-toolbar-ul",
+                                                    ),
+                                                    SizedBox(
+                                                        width=12,
+                                                        key=Key(
+                                                            "format_list_bulleted_rounded_size_box"
+                                                        ),
+                                                    ),
+                                                    IconButton(
+                                                        key=Key(
+                                                            "format_list_numbered_rounded_btn"
+                                                        ),
+                                                        icon=Icon(
+                                                            Icons.format_list_numbered_rounded,
+                                                            key=Key(
+                                                                "format_list_numbered_rounded_btn_ico"
+                                                            ),
+                                                        ),
+                                                        onPressed=self.insertOrderedList,
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            activeColor=AppColors.buttonActiveColor,
+                                                        ),
+                                                        tooltip="List Numbered",
+                                                        cssClass="pythra-toolbar-ol",
+                                                    ),
+                                                    Container(
+                                                        key=Key("divider_container"),
+                                                        color=AppColors.iconColor,
+                                                        height=30,
+                                                        width=2,
+                                                        margin=EdgeInsets.symmetric(
+                                                            horizontal=12,
+                                                        ),
+                                                    ),
+                                                    ElevatedButton(
+                                                        key=Key("image_rounded_btn"),
+                                                        child=Row(
+                                                            key=Key(
+                                                                "image_rounded_btn_inner_row"
+                                                            ),
+                                                            children=[
+                                                                Icon(
+                                                                    Icons.image_rounded,
+                                                                    key=Key(
+                                                                        "image_rounded_btn_ico"
+                                                                    ),
+                                                                    size=24,
+                                                                    color=AppColors.iconColor,
+                                                                ),
+                                                                SizedBox(
+                                                                    width=8,
+                                                                    key=Key(
+                                                                        "image_rounded_btn_sized_box"
+                                                                    ),
+                                                                ),
+                                                                Text(
+                                                                    "Image",
+                                                                    key=Key(
+                                                                        "image_rounded_btn_txt"
+                                                                    ),
+                                                                    style=TextStyle(
+                                                                        fontSize=20,
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                            elevation=0,
+                                                            shape=BorderRadius.circular(
+                                                                8.0
+                                                            ),
+                                                            margin=EdgeInsets.all(0),
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                        ),
+                                                        onPressed=self.insertImage,
+                                                        tooltip="Image",
+                                                    ),
+                                                ],
                                             ),
-                                        ],
-                                    ),
-                                    decoration=BoxDecoration(
-                                        borderRadius=BorderRadius.all(16),
-                                        border=BorderSide(
-                                            width=1,
-                                            color=Colors.adaptive(
-                                                dark="#5a5a5a", light="#d3d3d3"
+                                            decoration=BoxDecoration(
+                                                borderRadius=BorderRadius.all(16),
+                                                border=BorderSide(
+                                                    width=1,
+                                                    color=Colors.adaptive(
+                                                        dark="#5a5a5a", light="#d3d3d3"
+                                                    ),
+                                                ),
+                                                color=Colors.adaptive(
+                                                    dark=AppColors.toolbarBackgroundDarkColor,
+                                                    light=Colors.white,
+                                                ),
                                             ),
                                         ),
-                                        color=Colors.adaptive(
-                                            dark=AppColors.toolbarBackgroundDarkColor,
-                                            light=Colors.white,
-                                        ),
                                     ),
-                                ),
+                                ],
                             ),
                         ),
                     ],
@@ -885,14 +1041,16 @@ class NoteEditorScreenState(State):
 class NoteEditorScreen(StatefulWidget):
     def __init__(
         self,
-        key: Key,
+        key: Key,  # type: ignore
         navigator: NavigatorState,
+        note_id: str = "",
     ):
         self.navigator = navigator
+        self.note_id = note_id
         super().__init__(key=key)
 
     def createState(self) -> NoteEditorScreenState:
-        return NoteEditorScreenState(self.navigator)
+        return NoteEditorScreenState(self.navigator, note_id=self.note_id)
 
 
 class MainState(State):

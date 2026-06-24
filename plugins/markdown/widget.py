@@ -16,15 +16,18 @@ class MarkdownEditor(StatefulWidget):
     def __init__(
         self,
         key: Key,
-        controller: MarkdownEditorController =None,
+        controller: MarkdownEditorController = None,
         width="100%",
         height="70vh",
         onChange: callable = None,
         initial_content: str = '<h1>Welcome!</h1><p style="color: red;">Start writing your document here...</p>',
         show_grid: bool = False,
         show_controls: bool = False,
+        spellcheck: bool = True,
+        autocorrect: bool = True,
         style: EditorStyle = None,
-        overlay: Widget = None, # New optional overlay widget
+        overlay: Widget = None,
+        heading_selector: Widget = None,
     ):
 
         if not isinstance(controller, MarkdownEditorController):
@@ -36,8 +39,11 @@ class MarkdownEditor(StatefulWidget):
         self.initial_content = initial_content
         self.show_grid = show_grid
         self.show_controls = show_controls
+        self.spellcheck = spellcheck
+        self.autocorrect = autocorrect
         self.style = EditorStyle()
         self.overlay = overlay
+        self.heading_selector = heading_selector
         super().__init__(key=key)
 
     def createState(self):

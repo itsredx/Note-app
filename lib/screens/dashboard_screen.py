@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from lib.constants.theme import AppThemes
 from lib.screens.settings_screen import SettingsAndProfileScreen
 from .note_editor_screen import NoteEditorScreen, load_system_fonts
@@ -5,6 +7,9 @@ from lib.components.note_card import NoteCard
 from lib.constants.colors import *
 from lib.components.header_actions import HeaderActions
 from lib.utils.shared_prefernce import PythraPreferences
+from lib.backend.repository import NoteRepository
+from lib.utils.strip_html import strip_html
+from lib.state.tab_state import tab_state
 from lib import pref
 from PySide6.QtCore import QTimer
 
@@ -55,6 +60,8 @@ from pythra import (
 
 
 class DashboardScreen(StatefulWidget):
+    _render_counter = 0
+
     def __init__(
         self,
         key: Key,
@@ -65,6 +72,10 @@ class DashboardScreen(StatefulWidget):
 
     def createState(self):
         return DashboardScreenState(self.navigator)
+
+    def render_props(self):
+        type(self)._render_counter += 1
+        return {"rebuild_guard": type(self)._render_counter}
 
 
 class DashboardScreenState(State):
@@ -78,53 +89,41 @@ class DashboardScreenState(State):
         self.show_color_picker = False
         self.show_create_dialog = False
         self.selected_color = None
-        self.panel_mode = (
-            pref.get("panel_state", None)
-            if pref.get("panel_state", None) != None
-            else False
-        )
 
         self.title_controller = TextEditingController()
         self.note_controller = TextEditingController()
 
-        self.notes = [
-            {
-                "title": "Design",
-                "note": "Make the design looks okay...",
-                "date": "20 Dec",
-                "color": Colors.hex("#FFAB91"),
-            },
-            {
-                "title": "Project",
-                "note": "Finish the project documentation",
-                "date": "21 Dec",
-                "color": Colors.hex("#CE93D8"),
-            },
-            {
-                "title": "Meeting",
-                "note": "Sync with the team at 10am",
-                "date": "22 Dec",
-                "color": Colors.hex("#4DD0E1"),
-            },
-        ]
+        self._repo = NoteRepository()
+        self.notes = self._repo.list_notes()
+
+        if not self.notes:
+            self._repo.create_note(
+                title="Design", content="Make the design looks okay...", color="#FFAB91"
+            )
+            self._repo.create_note(
+                title="Project",
+                content="Finish the project documentation",
+                color="#CE93D8",
+            )
+            self._repo.create_note(
+                title="Meeting", content="Sync with the team at 10am", color="#4DD0E1"
+            )
+            self.notes = self._repo.list_notes()
+
         self.note_colors = [
-            Colors.hex("#FFAB91"),  # Orange
-            Colors.hex("#CE93D8"),  # Purple
-            Colors.hex("#4DD0E1"),  # Cyan
-            Colors.hex("#FFF176"),  # Yellow
-            Colors.hex("#80CBC4"),  # Teal
+            "#FFAB91",
+            "#CE93D8",
+            "#4DD0E1",
+            "#FFF176",
+            "#80CBC4",
         ]
+
+    @property
+    def panel_mode(self) -> bool:
+        return pref.get("panel_state", False)
 
     def initState(self):
         load_system_fonts()
-        self.note_editor_route = PageRoute(
-            builder=lambda nav: NoteEditorScreen(
-                key=Key("note_page"),
-                navigator=nav,
-            ),
-            name="note_editor",
-        )
-        # print("==== Dashboard Initializing ====")
         self.settings_route = PageRoute(
             builder=lambda nav: SettingsAndProfileScreen(
                 key=Key("settings_&_profile_page"), navigator=nav
@@ -132,21 +131,75 @@ class DashboardScreenState(State):
             name="settings_page",
         )
 
-        print("🚀 Preloading NoteEditorScreen in background...")
-        self.navigator.preload(self.note_editor_route)
-        
-
-    def open_note(self):
-        self.navigator.push(self.note_editor_route)
+    def open_note(self, note_id: str):
+        repo = NoteRepository()
+        note = repo.get_note(note_id)
+        if note:
+            tab_state.add_tab(note)
+        route = PageRoute(
+            builder=lambda nav: NoteEditorScreen(
+                key=Key(f"note_editor_{note_id}"),
+                navigator=nav,
+                note_id=note_id,
+            ),
+            name=f"note_editor_{note_id}",
+        )
+        self.navigator.push(route)
 
     def open_settings(self):
         self.navigator.push(self.settings_route)
 
-    def delete_note(self):
-        print("Delete note clicked")
+    def delete_note(self, note_id: str):
+        tab_state.remove_tab(note_id)
+        self._repo.delete_note(note_id)
+        self.notes = self._repo.list_notes()
+        self.setState()
 
-    def chat_note(self):
-        print("AI Chat note clicked")
+    def chat_note(self, note_id: str):
+        print(f"AI Chat note clicked: {note_id}")
+
+    @staticmethod
+    def _format_date(iso_str: str) -> str:
+        try:
+            dt = datetime.fromisoformat(iso_str)
+            now = datetime.now(dt.tzinfo)
+            delta = now - dt
+            if delta.total_seconds() < 300:
+                return "Now"
+            if dt.date() == now.date():
+                return dt.strftime("%I:%M %p").lstrip("0")
+            if dt.year == now.year:
+                return dt.strftime("%d %b")
+            return dt.strftime("%d %b %Y")
+        except Exception:
+            return "Unknown"
+
+    def _note_card(self, i: int, note):
+        def on_open():
+            self.open_note(note.id)
+
+        on_open.__name__ = f"open_{note.id}"
+
+        def on_delete():
+            self.delete_note(note.id)
+
+        on_delete.__name__ = f"delete_{note.id}"
+
+        def on_chat():
+            self.chat_note(note.id)
+
+        on_chat.__name__ = f"chat_{note.id}"
+
+        return NoteCard(
+            key=Key(f"note_{i}"),
+            title=note.title,
+            note=strip_html(note.content),
+            date=self._format_date(note.updated_at),
+            color=Colors.hex(note.color),
+            on_open=on_open,
+            on_delete=on_delete,
+            on_chat=on_chat,
+        )
 
     def toggle_color_picker_depercated(self):
         self.show_color_picker = not self.show_color_picker
@@ -157,8 +210,8 @@ class DashboardScreenState(State):
         print(f"show_color_picker: {self.show_color_picker}")
         self.setState()
 
-    def initiate_create_note(self, color):
-        self.selected_color = color
+    def initiate_create_note(self, color_hex):
+        self.selected_color = color_hex
         self.show_color_picker = False
         self.show_create_dialog = True
         self.title_controller.text = ""
@@ -171,17 +224,13 @@ class DashboardScreenState(State):
         self.setState()
 
     def finalize_create_note(self):
-        new_note = {
-            "title": (
-                self.title_controller.text if self.title_controller.text else "New Note"
-            ),
-            "note": (
-                self.note_controller.text if self.note_controller.text else "No content"
-            ),
-            "date": "Now",
-            "color": self.selected_color if self.selected_color else Colors.white,
-        }
-        self.notes.insert(0, new_note)
+        title = self.title_controller.text if self.title_controller.text else "New Note"
+        content = (
+            self.note_controller.text if self.note_controller.text else "No content"
+        )
+        color = self.selected_color if self.selected_color else "#4DD0E1"
+        self._repo.create_note(title=title, content=content, color=color)
+        self.notes = self._repo.list_notes()
         self.show_create_dialog = False
         self.selected_color = None
         self.setState()
@@ -197,6 +246,8 @@ class DashboardScreenState(State):
         self.setState()
 
     def build(self) -> Widget:
+        self._repo.reload()
+        self.notes = self._repo.list_notes()
         # Sidebar with Create Button and Color Picker
         sidebar = Container(
             key=Key("sidebar_container"),
@@ -250,21 +301,25 @@ class DashboardScreenState(State):
                             ),
                             header=Container(
                                 key=Key("sidebar_title_create_note__container"),
-                                child=IconButton(
-                                    key=Key("create_note_btn"),
-                                    icon=Icon(
-                                        (
-                                            Icons.add_circle_outline_rounded
-                                            if not self.show_color_picker
-                                            else Icons.close_rounded
+                                width="100%",
+                                child=Center(
+                                    key=Key("create_note_center"),
+                                    child=IconButton(
+                                        key=Key("create_note_btn"),
+                                        icon=Icon(
+                                            (
+                                                Icons.add_circle_outline_rounded
+                                                if not self.show_color_picker
+                                                else Icons.close_rounded
+                                            ),
+                                            key=Key("create_note_icon"),
                                         ),
-                                        key=Key("create_note_icon"),
-                                    ),
-                                    # onPressed=self.toggle_color_picker,
-                                    style=ButtonStyle(
-                                        backgroundColor=AppColors.buttonBackgroundColor,
-                                        hoverColor=AppColors.buttonHoverColor,
-                                        foregroundColor=AppColors.buttonForegroundColor,
+                                        # onPressed=self.toggle_color_picker,
+                                        style=ButtonStyle(
+                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                            hoverColor=AppColors.buttonHoverColor,
+                                            foregroundColor=AppColors.buttonForegroundColor,
+                                        ),
                                     ),
                                 ),
                             ),
@@ -282,7 +337,7 @@ class DashboardScreenState(State):
                                             height=30,
                                             margin=EdgeInsets.only(top=10),
                                             decoration=BoxDecoration(
-                                                color=color,
+                                                color=Colors.hex(color),
                                                 borderRadius=BorderRadius.circular(15),
                                                 border=BorderSide(
                                                     color=Colors.adaptive(
@@ -348,10 +403,14 @@ class DashboardScreenState(State):
                                 key=Key("content_column_s_inner_row"),
                                 mainAxisAlignment=MainAxisAlignment.END,
                                 children=[
-                                    HeaderActions(
-                                        key=Key("dashboard_header"),
-                                        onAccount=self.open_settings,  # lambda: print('on account')
-                                    ),
+                                    Container(
+                                        key=Key("dashboard_header_container"),
+                                        width=92,
+                                        child=HeaderActions(
+                                            key=Key("dashboard_header"),
+                                            onAccount=self.open_settings,  # lambda: print('on account')
+                                        ),
+                                    )
                                 ],
                             ),
                             SizedBox(key=Key("page_heading_sized_box"), height=24),
@@ -378,16 +437,7 @@ class DashboardScreenState(State):
                                     childMinWidth=231.0,
                                     shrinkWrap=True,
                                     children=[
-                                        NoteCard(
-                                            key=Key(f"note_{i}"),
-                                            title=note["title"],
-                                            note=note["note"],
-                                            date=note["date"],
-                                            color=note["color"],
-                                            on_open=self.open_note,
-                                            on_delete=self.delete_note,
-                                            on_chat=self.chat_note,
-                                        )
+                                        self._note_card(i, note)
                                         for i, note in enumerate(self.notes)
                                     ],
                                 ),
@@ -417,7 +467,7 @@ class DashboardScreenState(State):
                                 height="100vh",
                                 width="100vw",
                                 zAxisIndex=4999,
-                                cssPosition='fixed',
+                                cssPosition="fixed",
                                 color=Colors.rgba(0, 0, 0, 0.5),
                                 child=Center(
                                     key=Key("dialog_center"),
@@ -522,8 +572,13 @@ class DashboardScreenState(State):
                                                                 backgroundColor=Colors.hex(
                                                                     "#f47171"
                                                                 ),
-                                                                padding=EdgeInsets.symmetric(horizontal=16, vertical=8),
-                                                                margin=EdgeInsets.all(0),
+                                                                padding=EdgeInsets.symmetric(
+                                                                    horizontal=16,
+                                                                    vertical=8,
+                                                                ),
+                                                                margin=EdgeInsets.all(
+                                                                    0
+                                                                ),
                                                                 minimumSize=(80, 40),
                                                                 maximumSize=(80, 40),
                                                             ),
@@ -545,10 +600,20 @@ class DashboardScreenState(State):
                                                             ),
                                                             onPressed=self.finalize_create_note,
                                                             style=ButtonStyle(
-                                                                backgroundColor=self.selected_color
-                                                                or Colors.blue,
-                                                                padding=EdgeInsets.symmetric(horizontal=16, vertical=8),
-                                                                margin=EdgeInsets.all(0),
+                                                                backgroundColor=(
+                                                                    Colors.hex(
+                                                                        self.selected_color
+                                                                    )
+                                                                    if self.selected_color
+                                                                    else Colors.blue
+                                                                ),
+                                                                padding=EdgeInsets.symmetric(
+                                                                    horizontal=16,
+                                                                    vertical=8,
+                                                                ),
+                                                                margin=EdgeInsets.all(
+                                                                    0
+                                                                ),
                                                                 minimumSize=(80, 40),
                                                                 maximumSize=(80, 40),
                                                             ),

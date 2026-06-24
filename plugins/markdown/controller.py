@@ -67,6 +67,26 @@ class MarkdownEditorController:
         """Hides the AI controls overlay."""
         self.run_javascript("window.hidePythraSelectionOverlay()")
 
+    def toggle_heading_selector(self):
+        """Toggles the heading selector popup visibility."""
+        self.run_javascript("window.toggleHeadingSelector()")
+
+    def hide_heading_selector(self):
+        """Hides the heading selector popup."""
+        self.run_javascript("window.hideHeadingSelector()")
+
+    def update_spellcheck_settings(self, spellcheck: bool, autocorrect: bool):
+        """Dynamically update spellcheck/autocorrect settings without recreating the editor."""
+        js = f"""
+            (function(){{
+                const editorInstance = window._pythra_instances['{self._state_ref.widget.key.value}_PythraMarkdownEditor' if self._state_ref and self._state_ref.widget else ''];
+                if (editorInstance && typeof editorInstance.updateSpellcheckSettings === 'function') {{
+                    editorInstance.updateSpellcheckSettings({json.dumps(spellcheck)}, {json.dumps(autocorrect)});
+                }}
+            }})()
+        """
+        self.run_javascript(js)
+
     def add_listener(self, listener: Callable):
         """Subscribe to notifications from this controller."""
         if listener not in self._listeners:

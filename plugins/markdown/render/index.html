@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="pretext.min.js"></script>
+  <style>
+    canvas { border: 1px solid #ccc; display: block; margin: 20px; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="300"></canvas>
+  
+  <script>
+    const { prepareWithSegments, layoutWithLines } = window.pretext
+    const canvas = document.getElementById('canvas')
+    const ctx = canvas.getContext('2d')
+    
+    const text = 'Hello World! This is a test of Pretext text layout. It works now!'
+    const font = '16px Arial'
+    
+    // Use prepareWithSegments instead of prepare
+    const prepared = prepareWithSegments(text, font)
+    
+    // Get the lines
+    const { lines } = layoutWithLines(prepared, 450, 24)
+    
+    // Draw each line
+    ctx.font = font
+    ctx.fillStyle = '#000'
+    lines.forEach((line, i) => {
+      ctx.fillText(line.text, 10, 20 + i * 24)
+    })
+  </script>
+</body>
+</html>

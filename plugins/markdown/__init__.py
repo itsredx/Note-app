@@ -14,7 +14,7 @@ plugin_definition = {
     'version': __version__,
     'js_modules': {
         'PythraMarkdownEditor': {
-            'file': 'markdown_editor_engine.js',
+            'file': 'engine.js',
             'global': 'pythraMarkdownEditor',
             'initializer': 'initialize'
         }

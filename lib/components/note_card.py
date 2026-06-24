@@ -29,30 +29,22 @@ from pythra import (
     BoxConstraints,
 )
 
-class NoteCardState(State):
-    def __init__(self):
-        self.base_key = None
-        self.title = None
-        self.note = None
-        self.date = None
-        self.color = None
-        self.on_open = None
-        self.on_delete = None
-        self.on_chat = None
 
+class NoteCardState(State):
     def initState(self):
-        self.base_key = self.widget.key.value
-        self.title = self.widget.title
-        self.note = self.widget.note
-        self.date = self.widget.date
-        self.color = self.widget.color
-        self.on_open = self.widget.on_open
-        self.on_delete = self.widget.on_delete
-        self.on_chat = self.widget.on_chat
+        pass
 
     def build(self) -> Widget:
+        base_key = self.widget.key.value
+        title = self.widget.title
+        note = self.widget.note
+        date = self.widget.date
+        color = self.widget.color
+        on_open = self.widget.on_open
+        on_delete = self.widget.on_delete
+        on_chat = self.widget.on_chat
         return Stack(
-            key=Key(f"{self.base_key}_stack"),
+            key=Key(f"{base_key}_stack"),
             clipBehavior=ClipBehavior.NONE,
             children=[
                 ClipPath(
@@ -60,83 +52,87 @@ class NoteCardState(State):
                     width="231px",
                     viewBox=[100, 100],
                     points=[
-                        (0,0),
-                        (58,0),
+                        (0, 0),
+                        (58, 0),
                         (58, 22),
                         (100, 22),
-                        (100,78),
-                        (78,78),
-                        (78,100),
-                        (48,100),
+                        (100, 78),
+                        (78, 78),
+                        (78, 100),
+                        (48, 100),
                         (48, 78),
                         (0, 78),
                     ],
                     radius=8,
                     aspectRatio=1,
-                    key=Key(f"{self.base_key}_clip_path"),
+                    key=Key(f"{base_key}_clip_path"),
                     child=Container(
-                        key=Key(f"{self.base_key}_container"),
+                        key=Key(f"{base_key}_container"),
                         height="231px",
                         width="231px",
                         padding=EdgeInsets.all(12),
-                        color=self.color or Colors.white,
+                        color=color or Colors.white,
                         child=Column(
-                            key=Key(f"{self.base_key}_details_column"),
+                            key=Key(f"{base_key}_details_column"),
                             mainAxisAlignment=MainAxisAlignment.START,
                             crossAxisAlignment=CrossAxisAlignment.START,
                             children=[
                                 Container(
-                                    key=Key(f"{self.base_key}_heading_wrapper"),
+                                    key=Key(f"{base_key}_heading_wrapper"),
                                     width=110,
                                     height=30,
                                     child=Text(
-                                        f"{self.title}", 
-                                        key=Key(f"{self.base_key}_heading_txt"),
-                                        style=TextStyle(fontSize=24, fontFamily="ubuntu"),
+                                        f"{title}",
+                                        key=Key(f"{base_key}_heading_txt"),
+                                        style=TextStyle(
+                                            fontSize=24, fontFamily="ubuntu"
+                                        ),
                                     ),
                                 ),
-                                SizedBox(height=24, key=Key(f"{self.base_key}_header_spacer")),
+                                SizedBox(
+                                    height=24, key=Key(f"{base_key}_header_spacer")
+                                ),
                                 Text(
-                                    f"{self.note}", 
-                                    key=Key(f"{self.base_key}_note_snippet"),
+                                    f"{note}",
+                                    key=Key(f"{base_key}_note_snippet"),
                                     style=TextStyle(fontSize=16, fontFamily="ubuntu"),
+                                    maxLines=5,
                                 ),
                             ],
                         ),
                     ),
                 ),
-                # Top Right Icons: Delete (1) and AI Chat (2)
                 Positioned(
                     height="231px",
                     width="231px",
-                    key=Key(f"{self.base_key}_top_actions_pos"),
+                    key=Key(f"{base_key}_top_actions_pos"),
                     child=Container(
-                        key=Key(f"{self.base_key}_top_actions_container"),
+                        key=Key(f"{base_key}_top_actions_container"),
                         child=Row(
                             mainAxisAlignment=MainAxisAlignment.END,
-                            key=Key(f"{self.base_key}_top_actions_row"),
+                            key=Key(f"{base_key}_top_actions_row"),
                             children=[
                                 IconButton(
-                                    key=Key(f"{self.base_key}_delete_btn"),
+                                    key=Key(f"{base_key}_delete_btn"),
                                     icon=Icon(
                                         Icons.delete,
-                                        key=Key(f"{self.base_key}_delete_icon"),
+                                        key=Key(f"{base_key}_delete_icon"),
                                     ),
-                                    onPressed=self.on_delete,
+                                    onPressed=on_delete,
                                     style=ButtonStyle(
                                         backgroundColor=AppColors.buttonBackgroundColor,
                                         hoverColor=AppColors.buttonHoverColor,
                                         foregroundColor=AppColors.buttonForegroundColor,
                                     ),
                                 ),
-                                SizedBox(width=8, key=Key(f"{self.base_key}_top_spacer")),
+                                SizedBox(width=8, key=Key(f"{base_key}_top_spacer")),
                                 IconButton(
-                                    key=Key(f"{self.base_key}_chat_btn"),
+                                    key=Key(f"{base_key}_chat_btn"),
                                     icon=Icon(
-                                        Icons.auto_awesome_rounded, # Using chat for AI chat
-                                        key=Key(f"{self.base_key}_chat_icon"),
+                                        Icons.auto_awesome_rounded,
+                                        key=Key(f"{base_key}_chat_icon"),
                                     ),
-                                    onPressed=self.on_chat,
+                                    onPressed=on_chat,
                                     style=ButtonStyle(
                                         backgroundColor=AppColors.buttonBackgroundColor,
                                         hoverColor=AppColors.buttonHoverColor,
@@ -147,20 +143,19 @@ class NoteCardState(State):
                         ),
                     ),
                 ),
-                # Bottom Area: Date and Open Button
                 Positioned(
                     height="231px",
                     width="231px",
                     top="189px",
-                    key=Key(f"{self.base_key}_bottom_actions_pos"),
+                    key=Key(f"{base_key}_bottom_actions_pos"),
                     child=Container(
-                        key=Key(f"{self.base_key}_bottom_actions_container"),
+                        key=Key(f"{base_key}_bottom_actions_container"),
                         child=Row(
                             mainAxisAlignment=MainAxisAlignment.SPACE_BETWEEN,
-                            key=Key(f"{self.base_key}_bottom_actions_row"),
+                            key=Key(f"{base_key}_bottom_actions_row"),
                             children=[
                                 Container(
-                                    key=Key(f"{self.base_key}_date_container"),
+                                    key=Key(f"{base_key}_date_container"),
                                     height=40,
                                     width=100,
                                     color=AppColors.buttonBackgroundColor,
@@ -168,24 +163,28 @@ class NoteCardState(State):
                                         borderRadius=BorderRadius.all(20)
                                     ),
                                     child=Center(
-                                        key=Key(f"{self.base_key}_date_center"),
+                                        key=Key(f"{base_key}_date_center"),
                                         child=Text(
-                                            f"{self.date}", 
-                                            key=Key(f"{self.base_key}_date_text"),
-                                            style=TextStyle(fontSize=12, fontFamily="ubuntu mono", color=AppColors.buttonForegroundColor),
+                                            f"{date}",
+                                            key=Key(f"{base_key}_date_text"),
+                                            style=TextStyle(
+                                                fontSize=12,
+                                                fontFamily="ubuntu mono",
+                                                color=AppColors.buttonForegroundColor,
+                                            ),
                                         ),
                                     ),
                                 ),
                                 IconButton(
-                                    key=Key(f"{self.base_key}_open_btn"),
+                                    key=Key(f"{base_key}_open_btn"),
                                     icon=Icon(
-                                        Icons.open_in_new, # Use open_in_new or arrow
-                                        key=Key(f"{self.base_key}_open_icon"),
+                                        Icons.open_in_new,
+                                        key=Key(f"{base_key}_open_icon"),
                                     ),
-                                    onPressed=self.on_open,
+                                    onPressed=on_open,
                                     style=ButtonStyle(
-                                        backgroundColor=self.color,
-                                        hoverColor=self.color,
+                                        backgroundColor=color,
+                                        hoverColor=color,
                                         foregroundColor=Colors.hex("#2c2c2c"),
                                     ),
                                 ),
@@ -195,6 +194,7 @@ class NoteCardState(State):
                 ),
             ],
         )
+
 
 class NoteCard(StatefulWidget):
     def __init__(

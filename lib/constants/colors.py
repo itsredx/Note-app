@@ -38,7 +38,7 @@ class AppColors:
     
     buttonActiveColor = Colors.adaptive(
         dark=Colors.rgba(211, 211, 211, 0.50),
-        light=Colors.transparent # Default fallback
+        light=Colors.hex('#00000038') # Default fallback
     )
 
     buttonDarkBackgroundColor = Colors.hex("#4c4c4c") #837b7b #383838
@@ -62,6 +62,11 @@ class AppColors:
     dropDownColor = Colors.adaptive(
         dark=Colors.hex("#4c4c4c"),
         light=Colors.hex("#e9ecef")
+    )
+
+    dropDownItemColor = Colors.adaptive(
+        dark=Colors.hex("#2f2f2fa3"),
+        light=Colors.hex("#d3d3d3")
     )
     
     dropDownDarkHoverColor = buttonDarkHoverColor

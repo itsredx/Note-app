@@ -100,6 +100,7 @@ class PythraMarkdownEditor {
     }
 
     init() {
+        console.log('PythraMarkdownEditor init, options:', JSON.stringify(this.options));
         let controlPanel = this.container.querySelector('.control-panel');
         let editorEl = this.container.querySelector('[contenteditable="true"]');
 
@@ -141,9 +142,13 @@ class PythraMarkdownEditor {
             editorEl = document.createElement('div');
             editorEl.id = this.options.instanceId ? `editor_${this.options.instanceId}` : 'editor';
             editorEl.contentEditable = true;
+            editorEl.lang = 'en';
             editorEl.className = 'editor-inner-container';
             this.container.appendChild(editorEl);
         }
+        editorEl.spellcheck = this.options.spellcheck !== false;
+        editorEl.setAttribute('autocorrect', this.options.autocorrect !== false ? 'on' : 'off');
+        console.log(`spellcheck=${editorEl.spellcheck}, autocorrect=${editorEl.getAttribute('autocorrect')} from options`, this.options);
         this.editorElement = editorEl;
 
         if (this.options.initialContent != null && this.editorElement.innerHTML !== this.options.initialContent) {
@@ -328,8 +333,16 @@ class PythraMarkdownEditor {
             .control-panel button:hover,.control-panel select:hover{background:var(--pe-toolbar-hover)}
             .control-panel button.active{background-color:var(--pe-toolbar-active);color:white;border-color:var(--pe-accent-hover)}
             .control-panel select:focus{border-color:var(--pe-accent-color);box-shadow:0 0 0 var(--pe-focus-ring-width) var(--pe-focus-ring-color);background-color:var(--pe-content-bg);}
-            .pythra-image-resizer-wrapper{position:absolute;border:2px solid var(--pe-accent-color);pointer-events:none;}
-            .pythra-resize-handle{position:absolute;width:10px;height:10px;background-color:var(--pe-accent-color);border:1px solid white;border-radius:50%;pointer-events:auto;}
+            .pythra-image-resizer-wrapper{position:absolute;border:2px solid var(--pe-accent-color);pointer-events:none;z-index:100;}
+            .pythra-resize-handle{position:absolute;width:12px;height:12px;background-color:var(--pe-accent-color);border:2px solid white;border-radius:2px;pointer-events:auto;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+            .pythra-resize-handle.top-left{top:-7px;left:-7px;cursor:nwse-resize;}
+            .pythra-resize-handle.top-right{top:-7px;right:-7px;cursor:nesw-resize;}
+            .pythra-resize-handle.bottom-left{bottom:-7px;left:-7px;cursor:nesw-resize;}
+            .pythra-resize-handle.bottom-right{bottom:-7px;right:-7px;cursor:nwse-resize;}
+            .pythra-resize-handle.top{top:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
+            .pythra-resize-handle.bottom{bottom:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
+            .pythra-resize-handle.left{left:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
+            .pythra-resize-handle.right{right:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
             .pythra-editor-wrapper [contenteditable].grid-background{background-image:radial-gradient(var(--pe-grid-dot-color) var(--pe-grid-dot-size), transparent 0);background-size:var(--pe-grid-dot-spacing) var(--pe-grid-dot-spacing);background-color:var(--pe-grid-background-color)}
             [contenteditable="true"] {user-select: text;}
         `;
@@ -361,6 +374,14 @@ class PythraMarkdownEditor {
     setContent(html) { if (this.editorElement) this.editorElement.innerHTML = html; }
     getContent() { return this.editorElement ? this.editorElement.innerHTML : ''; }
     focus() { if (this.editorElement) this.editorElement.focus(); }
+
+    updateSpellcheckSettings(spellcheck, autocorrect) {
+        if (this.editorElement) {
+            this.editorElement.spellcheck = spellcheck !== false;
+            this.editorElement.setAttribute('autocorrect', autocorrect !== false ? 'on' : 'off');
+            console.log(`Updated spellcheck: ${this.editorElement.spellcheck}, autocorrect: ${this.editorElement.getAttribute('autocorrect')}`);
+        }
+    }
 
     destroy() {
         console.log(`🔥 Destroying PythraMarkdownEditor instance: ${this.options.instanceId}`);
@@ -405,6 +426,49 @@ class PythraSelectionOverlay {
 
 window.PythraSelectionOverlay = PythraSelectionOverlay;
 
+// --- NEW: JS-Controlled Heading Selector Overlay ---
+
+class PythraHeadingSelector {
+    constructor(elementOrId, options = {}) {
+        if (typeof elementOrId === 'string') {
+            this.container = document.getElementById(elementOrId);
+        } else {
+            this.container = elementOrId;
+        }
+
+        if (this.container) {
+            window._pythraHeadingSelector = this.container;
+            this.container.style.display = 'none';
+            this.container.style.position = 'absolute';
+            this.container.style.bottom = '0';
+            this.container.style.left = '50%';
+            this.container.style.transform = 'translateX(-50%)';
+            this.container.style.zIndex = '10000';
+        }
+    }
+}
+
+window.PythraHeadingSelector = PythraHeadingSelector;
+
+window.showHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        window._pythraHeadingSelector.style.display = 'block';
+    }
+};
+
+window.hideHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        window._pythraHeadingSelector.style.display = 'none';
+    }
+};
+
+window.toggleHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        var current = window._pythraHeadingSelector.style.display;
+        window._pythraHeadingSelector.style.display = current === 'none' ? 'block' : 'none';
+    }
+};
+
 window.PythraMarkdownEditor = PythraMarkdownEditor;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -439,15 +503,152 @@ window.hidePythraSelectionOverlay = function () {
 };
 
 class PythraImageResizer {
-    constructor(editorElement) { this.editor = editorElement; this.selectedImage = null; this.wrapper = null; this.handleClick = this.handleClick.bind(this); this.handleMouseDown = this.handleMouseDown.bind(this); this.handleMouseMove = this.handleMouseMove.bind(this); this.handleMouseUp = this.handleMouseUp.bind(this); this.editor.addEventListener('click', this.handleClick); }
-    handleClick(e) { const target = e.target; if (target.tagName === 'IMG') { if (this.selectedImage !== target) { this.selectImage(target); } } else if (this.selectedImage) { this.deselectImage(); } }
-    selectImage(img) { this.deselectImage(); this.selectedImage = img; this.wrapper = document.createElement('div'); this.wrapper.className = 'pythra-image-resizer-wrapper'; this.editor.parentNode.style.position = this.editor.parentNode.style.position || 'relative'; this.editor.parentNode.appendChild(this.wrapper); this.positionWrapper(); const handlePositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right']; handlePositions.forEach(pos => { const handle = document.createElement('div'); handle.className = `pythra-resize-handle ${pos}`; handle.dataset.position = pos; this.wrapper.appendChild(handle); handle.addEventListener('mousedown', this.handleMouseDown); }); }
-    deselectImage() { if (this.wrapper) { this.wrapper.remove(); this.wrapper = null; } this.selectedImage = null; }
-    positionWrapper() { if (!this.selectedImage || !this.wrapper) return; const editorParent = this.editor.parentNode; const imgRect = this.selectedImage.getBoundingClientRect(); const parentRect = editorParent.getBoundingClientRect(); this.wrapper.style.top = `${imgRect.top - parentRect.top}px`; this.wrapper.style.left = `${imgRect.left - parentRect.left}px`; this.wrapper.style.width = `${imgRect.width}px`; this.wrapper.style.height = `${imgRect.height}px`; }
-    handleMouseDown(e) { e.preventDefault(); e.stopPropagation(); this.startRect = this.selectedImage.getBoundingClientRect(); this.startPos = { x: e.clientX, y: e.clientY }; this.handlePosition = e.target.dataset.position; document.addEventListener('mousemove', this.handleMouseMove); document.addEventListener('mouseup', this.handleMouseUp); }
-    handleMouseMove(e) { if (!this.startRect) return; const dx = e.clientX - this.startPos.x; let newWidth = this.startRect.width; if (this.handlePosition.includes('right')) { newWidth += dx; } else if (this.handlePosition.includes('left')) { newWidth -= dx; } this.selectedImage.style.width = `${Math.max(20, newWidth)}px`; this.selectedImage.style.height = 'auto'; this.positionWrapper(); }
-    handleMouseUp() { document.removeEventListener('mousemove', this.handleMouseMove); document.removeEventListener('mouseup', this.handleMouseUp); this.startRect = null; this.editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })); }
-    destroy() { this.editor.removeEventListener('click', this.handleClick); this.deselectImage(); }
+    constructor(editorElement) {
+        this.editor = editorElement;
+        this.selectedImage = null;
+        this.wrapper = null;
+        this.parent = editorElement.parentNode;
+        this._originalParentPosition = this.parent.style.position;
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleEditorEvent = this.handleEditorEvent.bind(this);
+
+        this.editor.addEventListener('click', this.handleClick);
+        this.editor.addEventListener('scroll', this.handleEditorEvent, { passive: true });
+        this.editor.addEventListener('input', this.handleEditorEvent, { passive: true });
+        window.addEventListener('resize', this.handleEditorEvent, { passive: true });
+
+        if (this.parent && getComputedStyle(this.parent).position === 'static') {
+            this.parent.style.position = 'relative';
+        }
+    }
+
+    handleClick(e) {
+        const target = e.target;
+        if (target.tagName === 'IMG' && this.editor.contains(target)) {
+            if (this.selectedImage !== target) {
+                this.selectImage(target);
+            }
+        } else if (this.selectedImage) {
+            this.deselectImage();
+        }
+    }
+
+    handleEditorEvent() {
+        if (this.selectedImage) {
+            this.positionWrapper();
+        }
+    }
+
+    selectImage(img) {
+        this.deselectImage();
+        this.selectedImage = img;
+
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = 'pythra-image-resizer-wrapper';
+        this.parent.appendChild(this.wrapper);
+        this.positionWrapper();
+
+        var handlePositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+        handlePositions.forEach(function(pos) {
+            var handle = document.createElement('div');
+            handle.className = 'pythra-resize-handle ' + pos;
+            handle.dataset.position = pos;
+            this.wrapper.appendChild(handle);
+            handle.addEventListener('mousedown', this.handleMouseDown);
+        }.bind(this));
+    }
+
+    deselectImage() {
+        if (this.wrapper) {
+            this.wrapper.remove();
+            this.wrapper = null;
+        }
+        if (this.selectedImage) {
+            this.selectedImage.style.outline = '';
+            this.selectedImage = null;
+        }
+    }
+
+    positionWrapper() {
+        if (!this.selectedImage || !this.wrapper) return;
+
+        var imgRect = this.selectedImage.getBoundingClientRect();
+        var parentRect = this.parent.getBoundingClientRect();
+
+        this.wrapper.style.top = (imgRect.top - parentRect.top) + 'px';
+        this.wrapper.style.left = (imgRect.left - parentRect.left) + 'px';
+        this.wrapper.style.width = imgRect.width + 'px';
+        this.wrapper.style.height = imgRect.height + 'px';
+    }
+
+    handleMouseDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var img = this.selectedImage;
+        this._startWidth = img.offsetWidth;
+        this._startHeight = img.offsetHeight;
+        this._startX = e.clientX;
+        this._startY = e.clientY;
+        this._handlePosition = e.target.dataset.position;
+
+        document.addEventListener('mousemove', this.handleMouseMove);
+        document.addEventListener('mouseup', this.handleMouseUp);
+    }
+
+    handleMouseMove(e) {
+        if (!this._startWidth) return;
+
+        var dx = e.clientX - this._startX;
+        var dy = e.clientY - this._startY;
+        var pos = this._handlePosition;
+        var newWidth = this._startWidth;
+        var newHeight = this._startHeight;
+
+        if (pos.includes('right')) {
+            newWidth = Math.max(30, this._startWidth + dx);
+        } else if (pos.includes('left')) {
+            newWidth = Math.max(30, this._startWidth - dx);
+        }
+
+        if (pos.includes('bottom')) {
+            newHeight = Math.max(30, this._startHeight + dy);
+        } else if (pos.includes('top')) {
+            newHeight = Math.max(30, this._startHeight - dy);
+        }
+
+        var img = this.selectedImage;
+        img.removeAttribute('width');
+        img.removeAttribute('height');
+        img.style.width = newWidth + 'px';
+        img.style.height = newHeight + 'px';
+        this.positionWrapper();
+    }
+
+    handleMouseUp() {
+        document.removeEventListener('mousemove', this.handleMouseMove);
+        document.removeEventListener('mouseup', this.handleMouseUp);
+        this._startWidth = null;
+
+        if (this.selectedImage) {
+            this.editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        }
+    }
+
+    destroy() {
+        this.editor.removeEventListener('click', this.handleClick);
+        this.editor.removeEventListener('scroll', this.handleEditorEvent);
+        this.editor.removeEventListener('input', this.handleEditorEvent);
+        window.removeEventListener('resize', this.handleEditorEvent);
+        this.deselectImage();
+        if (this.parent) {
+            this.parent.style.position = this._originalParentPosition || '';
+        }
+    }
 }
 
 // Add this new function at the very end of your editor.js file.
