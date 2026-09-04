@@ -179,7 +179,7 @@ class HeaderActionsState(State):
                             IconButton(
                                 key=Key("account_circle_rounded_btn"),
                                 icon=Icon(
-                                    Icons.account_circle_rounded,
+                                    Icons.settings_account_box_rounded,
                                     key=Key("account_circle_rounded_ico"),
                                 ),
                                 onPressed=self.widget.onAccount,

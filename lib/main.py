@@ -22,6 +22,12 @@ from pythra import (
     Container,
     Navigator,
     PageRoute,
+    ContextMenu,
+    MenuItem,
+    Icons,
+    ContextMenuTheme,
+    BorderRadius,
+    Colors,
 )
 
 pref = shared_prefernce.PythraPreferences()
@@ -75,8 +81,46 @@ class MainState(State):
     def __init__(self):
         self.home_page = HomePage(key=Key("home_page"))
 
+    def on_copy(self):
+        print("Copy pressed")
+
+    def on_paste(self):
+        print("Paste pressed")
+
+    def on_delete(self):
+        print("Delete pressed")
+
     def build(self):
-        return self.home_page
+        return ContextMenu(
+                items=[
+                    MenuItem(
+                        "New Note",
+                        icon=Icons.add_circle_outline_rounded,
+                        onPressed=self.on_copy,
+                    ),
+                    MenuItem(
+                        "Settings",
+                        icon=Icons.settings_account_box_rounded,
+                        onPressed=self.on_paste,
+                    ),
+                    MenuItem(divider=True),
+                    MenuItem(
+                        "Close App",
+                        icon=Icons.delete_outline_rounded,
+                        onPressed=self.on_delete,
+                    ),
+                ],
+                child=self.home_page,
+                theme=ContextMenuTheme(
+                    backgroundColor=Colors.surface,
+                    borderColor=Colors.outline,
+                    itemTextColor=Colors.onSurface,
+                    itemHoverColor=Colors.surfaceVariant,
+                    iconSize=20,
+                    borderRadius=BorderRadius.all(8),
+                    elevation=8,
+                ),
+            )
 
 
 class Main(StatefulWidget):

@@ -375,7 +375,7 @@ class MarkdownEditorState(State):
                 Positioned(
                     width="100%",
                     left="0",
-                    bottom="76px",
+                    bottom="80px",
                     child=Center(child=heading_selector_container)
                 )
             )

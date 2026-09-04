@@ -80,6 +80,9 @@ from pythra import (
     NavigatorState,
     InputDecoration,
     MainAxisSize,
+    ContextMenuTheme,
+    ContextMenu,
+    MenuItem,
 )
 
 DEFAULT_FONTS = [
@@ -164,7 +167,9 @@ class NoteEditorScreenState(State):
         _sp = pref.get("spell_check", True)
         _ac = pref.get("autocorrect", True)
         if not _sp or not _ac:
-            print(f"WARNING: spell_check={_sp!r}, autocorrect={_ac!r} — check settings screen")
+            print(
+                f"WARNING: spell_check={_sp!r}, autocorrect={_ac!r} — check settings screen"
+            )
         self.markdown_editor = MarkdownEditor(
             key=Key(editor_key),
             controller=self.editor,
@@ -438,6 +443,15 @@ class NoteEditorScreenState(State):
         else:
             self.setState()
 
+    def on_copy(self):
+        print("[NOTE APP] Copy")
+
+    def on_paste(self):
+        print("[NOTE APP] Paste")
+
+    def on_delete(self):
+        print("[NOTE APP] Delete")
+
     def select_item(self, item):
         print("Selected item: ", item)
         selected_font = item[0] if isinstance(item, list) else item
@@ -635,7 +649,41 @@ class NoteEditorScreenState(State):
                                             ),
                                         ],
                                     ),
-                                    self.markdown_editor,
+                                    ContextMenu(
+                                        items=[
+                                            MenuItem(
+                                                "Copy",
+                                                icon=Icons.content_copy_rounded,
+                                                onPressed=self.on_copy,
+                                            ),
+                                            MenuItem(
+                                                "Paste",
+                                                icon=Icons.content_paste_rounded,
+                                                onPressed=self.on_paste,
+                                            ),
+                                            MenuItem(
+                                                "Insert Markdown",
+                                                icon=Icons.text_fields_rounded,
+                                                onPressed=self.on_paste,
+                                            ),
+                                            MenuItem(divider=True),
+                                            MenuItem(
+                                                "Delete",
+                                                icon=Icons.delete_outline_rounded,
+                                                onPressed=self.on_delete,
+                                            ),
+                                        ],
+                                        child=self.markdown_editor,
+                                        theme=ContextMenuTheme(
+                                            backgroundColor=Colors.surface,
+                                            borderColor=Colors.outline,
+                                            itemTextColor=Colors.onSurface,
+                                            itemHoverColor=Colors.surfaceVariant,
+                                            iconSize=20,
+                                            borderRadius=BorderRadius.all(8),
+                                            elevation=8,
+                                        ),
+                                    ),
                                 ]
                             ),
                         ),
@@ -660,7 +708,7 @@ class NoteEditorScreenState(State):
                             else ()
                         ),
                         Positioned(
-                            height=40,
+                            height=58,
                             width="100vw",
                             bottom="18px",
                             key=Key("home_page_Pythra_decrement_btn_Positioned"),
@@ -761,34 +809,6 @@ class NoteEditorScreenState(State):
                                                             "format_h1_rounded_size_box"
                                                         ),
                                                     ),
-                                                    # IconButton(
-                                                    #     key=Key(
-                                                    #         "format_paragraph_rounded_btn"
-                                                    #     ),
-                                                    #     icon=Icon(
-                                                    #         Icons.format_paragraph_rounded,
-                                                    #         key=Key(
-                                                    #             "format_paragraph_rounded_btn_ico"
-                                                    #         ),
-                                                    #     ),
-                                                    #     onPressed=self.setParagraph,
-                                                    #     style=ButtonStyle(
-                                                    #         backgroundColor=AppColors.buttonBackgroundColor,
-                                                    #         hoverColor=AppColors.buttonHoverColor,
-                                                    #         shape=BorderRadius.circular(
-                                                    #             8.0
-                                                    #         ),
-                                                    #         foregroundColor=AppColors.buttonForegroundColor,
-                                                    #         activeColor=AppColors.buttonActiveColor,
-                                                    #     ),
-                                                    #     tooltip="Paragraph",
-                                                    # ),
-                                                    # SizedBox(
-                                                    #     width=12,
-                                                    #     key=Key(
-                                                    #         "format_paragraph_rounded_size_box"
-                                                    #     ),
-                                                    # ),
                                                     IconButton(
                                                         key=Key(
                                                             "format_bold_rounded_btn"

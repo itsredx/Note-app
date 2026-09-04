@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Note App</title>
+    <script>
+        window._console_logs = [];
+        (function() {
+            const origLog = console.log;
+            const origWarn = console.warn;
+            const origErr = console.error;
+            console.log = function(...args) {
+                window._console_logs.push("[LOG] " + args.map(String).join(" "));
+                origLog.apply(console, args);
+            };
+            console.warn = function(...args) {
+                window._console_logs.push("[WARN] " + args.map(String).join(" "));
+                origWarn.apply(console, args);
+            };
+            console.error = function(...args) {
+                window._console_logs.push("[ERROR] " + args.map(String).join(" "));
+                origErr.apply(console, args);
+            };
+        })();
+    </script>
     <!-- ADD SIMPLEBAR CSS -->
     <link rel="stylesheet" href="./js/scroll-bar/simplebar.min.css" />
      <link id="base-stylesheet" type="text/css" rel="stylesheet" href="styles.css">
-
                 <style id="theme-styles">:root {
     --md-sys-color-primary: #D0BCFF;
     --md-sys-color-on-primary: #381E72;
@@ -56,7 +75,6 @@
     --dynamic-e930f999: #2f2f2fa3;
     --dynamic-c3a58620: #5a5a5a;
 }</style>
-
                 <style id="dynamic-styles">
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -66,7 +84,27 @@
                         );  
                     }
                     
-.shared-container-0 { box-sizing: border-box; background: var(--md-sys-color-surface); width: 100vw; height: 100vh; }
+.pythra-context-menu-wrapper { box-sizing: border-box; }
+
+                    [data-role="floating-label-container"] {
+                        background: linear-gradient(
+                            to bottom,
+                            transparent 35%,
+                            var(--ptf-bg, white) 35%
+                        );  
+                    }
+                    
+.shared-container-0 { box-sizing: border-box; }
+
+                    [data-role="floating-label-container"] {
+                        background: linear-gradient(
+                            to bottom,
+                            transparent 35%,
+                            var(--ptf-bg, white) 35%
+                        );  
+                    }
+                    
+.shared-container-1 { box-sizing: border-box; background: var(--md-sys-color-surface); width: 100vw; height: 100vh; }
 .shared-stack-0 { position: relative; display: grid; width: fit-content; height: fit-content; justify-items: start; align-items: start; direction: ltr; overflow: hidden; }
 .shared-stack-0 > * { grid-area: 1 / 1; }
 .shared-row-1 { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; width: 100%; direction: ltr; }
@@ -79,7 +117,7 @@
                         );  
                     }
                     
-.shared-container-9 { box-sizing: border-box; border: 1px solid var(--dynamic-c3a58620); background: var(--md-sys-color-surface); padding: 0px 4px; width: 80px; height: 100vh; }
+.shared-container-10 { box-sizing: border-box; border: 1px solid var(--dynamic-c3a58620); background: var(--md-sys-color-surface); padding: 0px 4px; width: 80px; height: 100vh; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -89,7 +127,7 @@
                         );  
                     }
                     
-.shared-container-8 { box-sizing: border-box; border: none; border-radius: 0.0px; background: transparent; padding: 24px 10px; height: 100%; }
+.shared-container-9 { box-sizing: border-box; border: none; border-radius: 0.0px; background: transparent; padding: 24px 10px; height: 100%; }
 .shared-column-0 { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; height: 100%; direction: ltr; }
 
                     [data-role="floating-label-container"] {
@@ -100,7 +138,7 @@
                         );  
                     }
                     
-.shared-container-1 { box-sizing: border-box; padding: 0.0px 0.0px 20px; }
+.shared-container-2 { box-sizing: border-box; padding: 0.0px 0.0px 20px; }
 
             .shared-text-0 {
                 margin: 0; /* Reset default paragraph margin */
@@ -121,7 +159,7 @@
                         );  
                     }
                     
-.shared-container-16 { box-sizing: border-box; }
+.shared-container-17 { box-sizing: border-box; }
 .shared-column-1 { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; direction: ltr; }
 .shared-gesture-0 > * { cursor: pointer; }
 .shared-gesture-0 { display: contents; }
@@ -144,7 +182,7 @@
                         );  
                     }
                     
-.shared-container-15 { box-sizing: border-box; background: transparent; width: 100%; align-items: center; cursor: pointer; display: flex; user-select: none; }
+.shared-container-16 { box-sizing: border-box; background: transparent; width: 100%; align-items: center; cursor: pointer; display: flex; user-select: none; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -154,7 +192,7 @@
                         );  
                     }
                     
-.shared-container-2 { box-sizing: border-box; width: 100%; }
+.shared-container-3 { box-sizing: border-box; width: 100%; }
 .shared-center-0 { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;  }
 .shared-iconbutton-0 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: var(--dynamic-e0ed6f04); color: var(--dynamic-2fda1699); cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
 
@@ -206,27 +244,17 @@
                         );  
                     }
                     
+.shared-container-15 { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
+
+                    [data-role="floating-label-container"] {
+                        background: linear-gradient(
+                            to bottom,
+                            transparent 35%,
+                            var(--ptf-bg, white) 35%
+                        );  
+                    }
+                    
 .expandable-body { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
-
-                    [data-role="floating-label-container"] {
-                        background: linear-gradient(
-                            to bottom,
-                            transparent 35%,
-                            var(--ptf-bg, white) 35%
-                        );  
-                    }
-                    
-.shared-container-14 { box-sizing: border-box; background: transparent; display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; }
-
-                    [data-role="floating-label-container"] {
-                        background: linear-gradient(
-                            to bottom,
-                            transparent 35%,
-                            var(--ptf-bg, white) 35%
-                        );  
-                    }
-                    
-.shared-container-13 { box-sizing: border-box; min-height: 0px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -246,7 +274,7 @@
                         );  
                     }
                     
-.shared-container-3 { box-sizing: border-box; background: #FFAB91; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+.shared-container-14 { box-sizing: border-box; min-height: 0px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -256,7 +284,7 @@
                         );  
                     }
                     
-.shared-container-4 { box-sizing: border-box; background: #CE93D8; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+.shared-container-4 { box-sizing: border-box; background: #FFAB91; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -266,7 +294,7 @@
                         );  
                     }
                     
-.shared-container-5 { box-sizing: border-box; background: #4DD0E1; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+.shared-container-5 { box-sizing: border-box; background: #CE93D8; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -276,7 +304,7 @@
                         );  
                     }
                     
-.shared-container-6 { box-sizing: border-box; background: #FFF176; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+.shared-container-6 { box-sizing: border-box; background: #4DD0E1; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -286,7 +314,7 @@
                         );  
                     }
                     
-.shared-container-7 { box-sizing: border-box; background: #80CBC4; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+.shared-container-7 { box-sizing: border-box; background: #FFF176; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -296,7 +324,17 @@
                         );  
                     }
                     
-.shared-container-12 { box-sizing: border-box; background: var(--md-sys-color-surface); padding: 24px 40px 32px; width: calc(100vw - 80px); height: 100vh; }
+.shared-container-8 { box-sizing: border-box; background: #80CBC4; border: 1px solid var(--dynamic-c3a58620); border-radius: 15px; margin: 10px 0.0px 0.0px; width: 30px; height: 30px; }
+
+                    [data-role="floating-label-container"] {
+                        background: linear-gradient(
+                            to bottom,
+                            transparent 35%,
+                            var(--ptf-bg, white) 35%
+                        );  
+                    }
+                    
+.shared-container-13 { box-sizing: border-box; background: var(--md-sys-color-surface); padding: 24px 40px 32px; width: calc(100vw - 80px); height: 100vh; }
 .shared-row-0 { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; direction: ltr; }
 
                     [data-role="floating-label-container"] {
@@ -307,7 +345,7 @@
                         );  
                     }
                     
-.shared-container-10 { box-sizing: border-box; width: 92px; }
+.shared-container-11 { box-sizing: border-box; width: 92px; }
 .shared-row-2 { display: flex; flex-direction: row; justify-content: flex-end; align-items: flex-start; width: 100%; direction: ltr; }
 
             .shared-text-1 {
@@ -329,7 +367,7 @@
                         );  
                     }
                     
-.shared-container-11 { box-sizing: border-box; height: 85vh; }
+.shared-container-12 { box-sizing: border-box; height: 85vh; }
 .shared-gridview-0 { padding: (0, 0, 0, 0); width: auto; height: auto; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(231.0px, 1fr)); gap: 20px 20px;box-sizing: border-box; }
 .shared-gridview-0 > * { aspect-ratio: 1.0; overflow: hidden;min-width: 0; min-height: 0; }
 .shared-stack-1 { position: relative; display: grid; width: fit-content; height: fit-content; justify-items: start; align-items: start; direction: ltr;  }
@@ -343,7 +381,7 @@
                         );  
                     }
                     
-.shared-container-18 { box-sizing: border-box; background: #80CBC4; padding: 12px; width: 231px; height: 231px; }
+.shared-container-19 { box-sizing: border-box; background: #80CBC4; padding: 12px; width: 231px; height: 231px; }
 .shared-column-2 { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; height: 100%; direction: ltr; }
 
                     [data-role="floating-label-container"] {
@@ -354,7 +392,7 @@
                         );  
                     }
                     
-.shared-container-17 { box-sizing: border-box; width: 110px; height: 30px; }
+.shared-container-18 { box-sizing: border-box; width: 110px; height: 30px; }
 
             .shared-text-2 {
                 margin: 0; /* Reset default paragraph margin */
@@ -386,7 +424,7 @@
                         );  
                     }
                     
-.shared-container-19 { box-sizing: border-box; }
+.shared-container-20 { box-sizing: border-box; }
 
                 .material-icon-1 {
                     position: relative;
@@ -421,7 +459,7 @@
                         );  
                     }
                     
-.shared-container-21 { box-sizing: border-box; }
+.shared-container-22 { box-sizing: border-box; }
 .shared-row-3 { display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; direction: ltr; }
 
                     [data-role="floating-label-container"] {
@@ -432,7 +470,7 @@
                         );  
                     }
                     
-.shared-container-20 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
+.shared-container-21 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
 
             .shared-text-4 {
                 margin: 0; /* Reset default paragraph margin */
@@ -469,7 +507,7 @@
                         );  
                     }
                     
-.shared-container-23 { box-sizing: border-box; background: #CE93D8; padding: 12px; width: 231px; height: 231px; }
+.shared-container-24 { box-sizing: border-box; background: #CE93D8; padding: 12px; width: 231px; height: 231px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -479,7 +517,7 @@
                         );  
                     }
                     
-.shared-container-22 { box-sizing: border-box; width: 110px; height: 30px; }
+.shared-container-23 { box-sizing: border-box; width: 110px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -489,7 +527,7 @@
                         );  
                     }
                     
-.shared-container-24 { box-sizing: border-box; }
+.shared-container-25 { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -499,7 +537,7 @@
                         );  
                     }
                     
-.shared-container-26 { box-sizing: border-box; }
+.shared-container-27 { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -509,7 +547,7 @@
                         );  
                     }
                     
-.shared-container-25 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
+.shared-container-26 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
 .shared-iconbutton-2 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #CE93D8; color: #2c2c2c; cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
 
             .shared-iconbutton-2 > i, .shared-iconbutton-2 > img, .shared-iconbutton-2 > svg, .shared-iconbutton-2 > * {
@@ -535,7 +573,7 @@
                         );  
                     }
                     
-.shared-container-28 { box-sizing: border-box; background: #FFAB91; padding: 12px; width: 231px; height: 231px; }
+.shared-container-29 { box-sizing: border-box; background: #FFAB91; padding: 12px; width: 231px; height: 231px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -545,7 +583,7 @@
                         );  
                     }
                     
-.shared-container-27 { box-sizing: border-box; width: 110px; height: 30px; }
+.shared-container-28 { box-sizing: border-box; width: 110px; height: 30px; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -555,7 +593,7 @@
                         );  
                     }
                     
-.shared-container-29 { box-sizing: border-box; }
+.shared-container-30 { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -565,7 +603,7 @@
                         );  
                     }
                     
-.shared-container-31 { box-sizing: border-box; }
+.shared-container-32 { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -575,7 +613,7 @@
                         );  
                     }
                     
-.shared-container-30 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
+.shared-container-31 { box-sizing: border-box; border-radius: 20px; background: var(--dynamic-e0ed6f04); width: 100px; height: 40px; }
 .shared-iconbutton-3 { display: inline-flex; align-items: center; justify-content: center; padding: 8px; margin: 0; border: none; background-color: #FFAB91; color: #2c2c2c; cursor: pointer; outline: none; pointer-events: auto; border-radius: 50%; overflow: hidden; position: relative; box-sizing: border-box; transition: background-color 0.15s linear; -webkit-appearance: none; appearance: none; z-index: 1000; width: calc(24px + 16px); height: calc(24px + 16px); }
 
             .shared-iconbutton-3 > i, .shared-iconbutton-3 > img, .shared-iconbutton-3 > svg, .shared-iconbutton-3 > * {
@@ -592,7 +630,6 @@
 @keyframes ripple_shared-iconbutton-3 { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0.2; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
 .shared-iconbutton-3::after { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; padding-top: 100%; background-color: currentColor; border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
 .shared-iconbutton-3:active::after { animation: ripple_shared-iconbutton-3 0.6s ease-out; }</style>
-
                 
         <script src="qwebchannel.js"></script>
         <script>
@@ -609,6 +646,7 @@
                     originalWarn.apply(console, args);
                 };
             })();
+
             
             document.addEventListener('DOMContentLoaded', () => {
                 new QWebChannel(qt.webChannelTransport, (channel) => {
@@ -631,6 +669,28 @@
                         });
                         ro.observe(root);
                     }
+                    
+                    // --- Frameless Drag & Resize Listeners ---
+                    document.querySelectorAll('.resize-handle').forEach(handle => {
+                        handle.addEventListener('mousedown', (e) => {
+                            if (e.button === 0 && window.pywebview) {
+                                const edge = parseInt(handle.dataset.edge, 10);
+                                window.pywebview.startWindowResize(edge);
+                                e.preventDefault();
+                            }
+                        });
+                    });
+
+                    document.addEventListener('mousedown', (e) => {
+                        if (e.button !== 0) return;
+                        
+                        // Check if we clicked on or inside a drag region
+                        const dragRegion = e.target.closest('.pythra-window-drag');
+                        if (dragRegion && window.pywebview) {
+                            window.pywebview.startWindowDrag();
+                            e.preventDefault();
+                        }
+                    });
                 });
                 window.__PYTHRA_CONFIG__ = {"app_name":"Note App","app_version":"0.0.1","win_width":1024,"win_height":710,"min_win_width":1024,"min_win_height":710,"frameless":false,"maximixed":false,"fixed_size":false,"Debug":true,"render_dir":"render","assets_dir":"assets","assets_server_port":8002,"app_id":"com.pythra.note-app"};
                 try {
@@ -725,14 +785,24 @@
             }
         </script>
         
-
                 <link rel="stylesheet" href="http://localhost:8002/packages/pythra-markdown-render/css/vendor/github-dark.min.css">
     <link rel="stylesheet" href="http://localhost:8002/packages/pythra-markdown-render/css/styles.css">
-
             </head>
 <body>
-    <div id="root-container"><div id="fw_id_1" class="custom-widget" data-key="" data-role=""><div id="fw_id_2" class="custom-widget" data-key="" data-role=""><div id="fw_id_3" class="shared-container-0" data-key="home_page_Pythra_wrapper_container" data-role="None"><div id="fw_id_4" class="custom-widget" data-key="" data-role=""><div id="fw_id_5" class="" data-key="" data-role=""><div id="fw_id_6" class="shared-stack-0" data-key="" data-role=""><div id="fw_id_7" class="shared-row-1" data-key="" data-role=""><div id="fw_id_8" class="shared-container-9" data-key="sidebar_container" data-role="None"><div id="fw_id_9" class="shared-container-8" data-key="sidebar_inner_container" data-role="None"><div id="fw_id_10" class="shared-column-0" data-key="" data-role=""><div id="fw_id_11" class="shared-container-1" data-key="sidebar_title_note_container" data-role="None"><p id="fw_id_12" class="shared-text-0" data-key="" data-role="" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_13" class="custom-widget" data-key="" data-role=""><div id="fw_id_14" class="shared-container-16" data-key="myExpandable_root" data-role="None"><div id="fw_id_15" class="shared-column-1" data-key="" data-role=""><div id="fw_id_16" class="shared-gesture-0"><div id="fw_id_17" class="shared-container-15 expandable-header" data-key="myExpandable_header" data-role="None" style="cursor: pointer; user-select: none; display: flex; align-items: center"><div id="fw_id_18" class="shared-container-2" data-key="sidebar_title_create_note__container" data-role="None"><div id="fw_id_19" class="shared-center-0" data-key="" data-role=""><button id="fw_id_20" class="shared-iconbutton-0" data-key="" data-role=""><i id="fw_id_21" class="material-icon-0" data-key="" data-role="">add_circle_outline</i></button></div></div></div></div><div id="fw_id_22" class="shared-container-14 expandable-body" data-key="myExpandable_body" data-role="None" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; opacity: 0; overflow: hidden"><div id="fw_id_23" class="shared-container-13 expandable-inner" data-key="myExpandable_inner_wrapper" data-role="None" style="min-height: 0px"><div id="fw_id_24" class="shared-column-0" data-key="" data-role=""><div id="fw_id_25" class="shared-gesture-0"><div id="fw_id_26" class="shared-container-3" data-key="color_pick_circle_0" data-role="None"></div></div><div id="fw_id_27" class="shared-gesture-0"><div id="fw_id_28" class="shared-container-4" data-key="color_pick_circle_1" data-role="None"></div></div><div id="fw_id_29" class="shared-gesture-0"><div id="fw_id_30" class="shared-container-5" data-key="color_pick_circle_2" data-role="None"></div></div><div id="fw_id_31" class="shared-gesture-0"><div id="fw_id_32" class="shared-container-6" data-key="color_pick_circle_3" data-role="None"></div></div><div id="fw_id_33" class="shared-gesture-0"><div id="fw_id_34" class="shared-container-7" data-key="color_pick_circle_4" data-role="None"></div></div></div></div></div></div></div></div></div></div></div><div id="fw_id_35" class="shared-container-12" data-key="main_content_area" data-role="None"><div id="fw_id_36" class="shared-column-1" data-key="" data-role=""><div id="fw_id_37" class="shared-row-0" data-key="" data-role=""><div id="fw_id_38" class="shared-container-10" data-key="dashboard_header_container" data-role="None"><div id="fw_id_39" class="custom-widget" data-key="" data-role=""><div id="fw_id_40" class="shared-stack-0" data-key="" data-role=""><div id="fw_id_41" class="shared-row-2" data-key="" data-role=""><button id="fw_id_42" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_43" class="material-icon-0" data-key="" data-role="">light_mode</i></button><div id="fw_id_44" class="" data-key="" data-role="" style="width: 12px"></div><button id="fw_id_45" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_46" class="material-icon-0" data-key="" data-role="">account_circle</i></button></div></div></div></div></div><div id="fw_id_47" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_48" class="shared-text-1" data-key="" data-role="" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_49" class="" data-key="" data-role="" style="height: 24px"></div><div id="fw_id_50" class="shared-container-11" data-key="grid_container" data-role="None"><div id="fw_id_51" class="shared-gridview-0" data-key="" data-role=""><div id="fw_id_52" class="custom-widget" data-key="" data-role=""><div id="fw_id_53" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_54" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_55" class="shared-container-18" data-key="note_0_container" data-role="None"><div id="fw_id_56" class="shared-column-2" data-key="" data-role=""><div id="fw_id_57" class="shared-container-17" data-key="note_0_heading_wrapper" data-role="None"><p id="fw_id_58" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">New</p></div><div id="fw_id_59" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_60" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">Note App. v0.0.1, okay. looks okay ndbjkabdcjkdjkajnfa jdhh hdhh</p></div></div></div><div id="fw_id_61" class="" data-key="note_0_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_62" class="shared-container-19" data-key="note_0_top_actions_container" data-role="None"><div id="fw_id_63" class="shared-row-0" data-key="" data-role=""><button id="fw_id_64" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_36f70134f6e3')"><i id="fw_id_65" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_66" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_67" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_36f70134f6e3')"><i id="fw_id_68" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_69" class="" data-key="note_0_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_70" class="shared-container-21" data-key="note_0_bottom_actions_container" data-role="None"><div id="fw_id_71" class="shared-row-3" data-key="" data-role=""><div id="fw_id_72" class="shared-container-20" data-key="note_0_date_container" data-role="None"><div id="fw_id_73" class="shared-center-0" data-key="" data-role=""><p id="fw_id_74" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">10:13 PM</p></div></div><button id="fw_id_75" class="shared-iconbutton-1" data-key="" data-role="" onclick="handleClick('open_36f70134f6e3')"><i id="fw_id_76" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div><div id="fw_id_77" class="custom-widget" data-key="" data-role=""><div id="fw_id_78" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_79" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_80" class="shared-container-23" data-key="note_1_container" data-role="None"><div id="fw_id_81" class="shared-column-2" data-key="" data-role=""><div id="fw_id_82" class="shared-container-22" data-key="note_1_heading_wrapper" data-role="None"><p id="fw_id_83" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_84" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_85" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">Finish the project documentation. t his is not good. whats upp, okay we wanna see the lines in action so we should see 5 lines</p></div></div></div><div id="fw_id_86" class="" data-key="note_1_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_87" class="shared-container-24" data-key="note_1_top_actions_container" data-role="None"><div id="fw_id_88" class="shared-row-0" data-key="" data-role=""><button id="fw_id_89" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_c810c72371db')"><i id="fw_id_90" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_91" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_92" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_c810c72371db')"><i id="fw_id_93" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_94" class="" data-key="note_1_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_95" class="shared-container-26" data-key="note_1_bottom_actions_container" data-role="None"><div id="fw_id_96" class="shared-row-3" data-key="" data-role=""><div id="fw_id_97" class="shared-container-25" data-key="note_1_date_container" data-role="None"><div id="fw_id_98" class="shared-center-0" data-key="" data-role=""><p id="fw_id_99" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">7:07 PM</p></div></div><button id="fw_id_100" class="shared-iconbutton-2" data-key="" data-role="" onclick="handleClick('open_c810c72371db')"><i id="fw_id_101" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div><div id="fw_id_102" class="custom-widget" data-key="" data-role=""><div id="fw_id_103" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_104" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_105" class="shared-container-28" data-key="note_2_container" data-role="None"><div id="fw_id_106" class="shared-column-2" data-key="" data-role=""><div id="fw_id_107" class="shared-container-27" data-key="note_2_heading_wrapper" data-role="None"><p id="fw_id_108" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_109" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_110" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">hello world this is fun, but does it work</p></div></div></div><div id="fw_id_111" class="" data-key="note_2_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: ; right: ; left: "><div id="fw_id_112" class="shared-container-29" data-key="note_2_top_actions_container" data-role="None"><div id="fw_id_113" class="shared-row-0" data-key="" data-role=""><button id="fw_id_114" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_95d967d3edc0')"><i id="fw_id_115" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_116" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_117" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_95d967d3edc0')"><i id="fw_id_118" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_119" class="" data-key="note_2_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; bottom: ; top: 189px; right: ; left: "><div id="fw_id_120" class="shared-container-31" data-key="note_2_bottom_actions_container" data-role="None"><div id="fw_id_121" class="shared-row-3" data-key="" data-role=""><div id="fw_id_122" class="shared-container-30" data-key="note_2_date_container" data-role="None"><div id="fw_id_123" class="shared-center-0" data-key="" data-role=""><p id="fw_id_124" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">6:37 PM</p></div></div><button id="fw_id_125" class="shared-iconbutton-3" data-key="" data-role="" onclick="handleClick('open_95d967d3edc0')"><i id="fw_id_126" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
-    <div id="overlay-container"></div>
+    <div id="app-wrapper">
+        <!-- Resize Handles for Frameless Window -->
+        <div class="resize-handle top" data-edge="1"></div>
+        <div class="resize-handle bottom" data-edge="8"></div>
+        <div class="resize-handle left" data-edge="2"></div>
+        <div class="resize-handle right" data-edge="4"></div>
+        <div class="resize-handle top-left" data-edge="3"></div>
+        <div class="resize-handle top-right" data-edge="5"></div>
+        <div class="resize-handle bottom-left" data-edge="10"></div>
+        <div class="resize-handle bottom-right" data-edge="12"></div>
+
+        <div id="root-container"><div id="fw_id_1" class="custom-widget" data-key="" data-role=""><div id="fw_id_2" class="shared-container-0 pythra-context-menu-wrapper" data-key="None" data-role="None"><div id="fw_id_3" class="custom-widget" data-key="" data-role=""><div id="fw_id_4" class="shared-container-1" data-key="home_page_Pythra_wrapper_container" data-role="None"><div id="fw_id_5" class="custom-widget" data-key="" data-role=""><div id="fw_id_6" class="" data-key="" data-role=""><div id="fw_id_7" class="shared-stack-0" data-key="" data-role=""><div id="fw_id_8" class="shared-row-1" data-key="" data-role=""><div id="fw_id_9" class="shared-container-10" data-key="sidebar_container" data-role="None"><div id="fw_id_10" class="shared-container-9" data-key="sidebar_inner_container" data-role="None"><div id="fw_id_11" class="shared-column-0" data-key="" data-role=""><div id="fw_id_12" class="shared-container-2" data-key="sidebar_title_note_container" data-role="None"><p id="fw_id_13" class="shared-text-0" data-key="" data-role="" style="color: var(--md-sys-color-on-surface); font-size: 16; font-weight: bold">Note</p></div><div id="fw_id_14" class="custom-widget" data-key="" data-role=""><div id="fw_id_15" class="shared-container-17" data-key="myExpandable_root" data-role="None"><div id="fw_id_16" class="shared-column-1" data-key="" data-role=""><div id="fw_id_17" class="shared-gesture-0"><div id="fw_id_18" class="shared-container-16 expandable-header" data-key="myExpandable_header" data-role="None" style="cursor: pointer; user-select: none; display: flex; align-items: center"><div id="fw_id_19" class="shared-container-3" data-key="sidebar_title_create_note__container" data-role="None"><div id="fw_id_20" class="shared-center-0" data-key="" data-role=""><button id="fw_id_21" class="shared-iconbutton-0" data-key="" data-role=""><i id="fw_id_22" class="material-icon-0" data-key="" data-role="">add_circle_outline</i></button></div></div></div></div><div id="fw_id_23" class="shared-container-15 expandable-body" data-key="myExpandable_body" data-role="None" style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease-out, opacity 300ms ease-out; opacity: 0; overflow: hidden"><div id="fw_id_24" class="shared-container-14 expandable-inner" data-key="myExpandable_inner_wrapper" data-role="None" style="min-height: 0px"><div id="fw_id_25" class="shared-column-0" data-key="" data-role=""><div id="fw_id_26" class="shared-gesture-0"><div id="fw_id_27" class="shared-container-4" data-key="color_pick_circle_0" data-role="None"></div></div><div id="fw_id_28" class="shared-gesture-0"><div id="fw_id_29" class="shared-container-5" data-key="color_pick_circle_1" data-role="None"></div></div><div id="fw_id_30" class="shared-gesture-0"><div id="fw_id_31" class="shared-container-6" data-key="color_pick_circle_2" data-role="None"></div></div><div id="fw_id_32" class="shared-gesture-0"><div id="fw_id_33" class="shared-container-7" data-key="color_pick_circle_3" data-role="None"></div></div><div id="fw_id_34" class="shared-gesture-0"><div id="fw_id_35" class="shared-container-8" data-key="color_pick_circle_4" data-role="None"></div></div></div></div></div></div></div></div></div></div></div><div id="fw_id_36" class="shared-container-13" data-key="main_content_area" data-role="None"><div id="fw_id_37" class="shared-column-1" data-key="" data-role=""><div id="fw_id_38" class="shared-row-0" data-key="" data-role=""><div id="fw_id_39" class="shared-container-11" data-key="dashboard_header_container" data-role="None"><div id="fw_id_40" class="custom-widget" data-key="" data-role=""><div id="fw_id_41" class="shared-stack-0" data-key="" data-role=""><div id="fw_id_42" class="shared-row-2" data-key="" data-role=""><button id="fw_id_43" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('toggle_theme')" title="Light Mode"><i id="fw_id_44" class="material-icon-0" data-key="" data-role="">light_mode</i></button><div id="fw_id_45" class="" data-key="" data-role="" style="width: 12px"></div><button id="fw_id_46" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('open_settings')" title="User Account &amp; Settings"><i id="fw_id_47" class="material-icon-0" data-key="" data-role="">settings_account_box</i></button></div></div></div></div></div><div id="fw_id_48" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_49" class="shared-text-1" data-key="" data-role="" style="color: var(--md-sys-color-on-surface); font-size: 32; font-weight: bold">Dashboard</p><div id="fw_id_50" class="" data-key="" data-role="" style="height: 24px"></div><div id="fw_id_51" class="shared-container-12" data-key="grid_container" data-role="None"><div id="fw_id_52" class="shared-gridview-0" data-key="" data-role=""><div id="fw_id_53" class="custom-widget" data-key="" data-role=""><div id="fw_id_54" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_55" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_56" class="shared-container-19" data-key="note_0_container" data-role="None"><div id="fw_id_57" class="shared-column-2" data-key="" data-role=""><div id="fw_id_58" class="shared-container-18" data-key="note_0_heading_wrapper" data-role="None"><p id="fw_id_59" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">New</p></div><div id="fw_id_60" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_61" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">Note App. v0.0.1, okay. looks okay ndbjkabdcjkdjkajnfa jdhh hdhh</p></div></div></div><div id="fw_id_62" class="" data-key="note_0_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px"><div id="fw_id_63" class="shared-container-20" data-key="note_0_top_actions_container" data-role="None"><div id="fw_id_64" class="shared-row-0" data-key="" data-role=""><button id="fw_id_65" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_36f70134f6e3')"><i id="fw_id_66" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_67" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_68" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_36f70134f6e3')"><i id="fw_id_69" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_70" class="" data-key="note_0_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; top: 189px"><div id="fw_id_71" class="shared-container-22" data-key="note_0_bottom_actions_container" data-role="None"><div id="fw_id_72" class="shared-row-3" data-key="" data-role=""><div id="fw_id_73" class="shared-container-21" data-key="note_0_date_container" data-role="None"><div id="fw_id_74" class="shared-center-0" data-key="" data-role=""><p id="fw_id_75" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">24 Jun</p></div></div><button id="fw_id_76" class="shared-iconbutton-1" data-key="" data-role="" onclick="handleClick('open_36f70134f6e3')"><i id="fw_id_77" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div><div id="fw_id_78" class="custom-widget" data-key="" data-role=""><div id="fw_id_79" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_80" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_81" class="shared-container-24" data-key="note_1_container" data-role="None"><div id="fw_id_82" class="shared-column-2" data-key="" data-role=""><div id="fw_id_83" class="shared-container-23" data-key="note_1_heading_wrapper" data-role="None"><p id="fw_id_84" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">Project</p></div><div id="fw_id_85" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_86" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">Finish the project documentation. t his is not good. whats upp, okay we wanna see the lines in action so we should see 5 lines</p></div></div></div><div id="fw_id_87" class="" data-key="note_1_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px"><div id="fw_id_88" class="shared-container-25" data-key="note_1_top_actions_container" data-role="None"><div id="fw_id_89" class="shared-row-0" data-key="" data-role=""><button id="fw_id_90" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_c810c72371db')"><i id="fw_id_91" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_92" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_93" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_c810c72371db')"><i id="fw_id_94" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_95" class="" data-key="note_1_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; top: 189px"><div id="fw_id_96" class="shared-container-27" data-key="note_1_bottom_actions_container" data-role="None"><div id="fw_id_97" class="shared-row-3" data-key="" data-role=""><div id="fw_id_98" class="shared-container-26" data-key="note_1_date_container" data-role="None"><div id="fw_id_99" class="shared-center-0" data-key="" data-role=""><p id="fw_id_100" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">24 Jun</p></div></div><button id="fw_id_101" class="shared-iconbutton-2" data-key="" data-role="" onclick="handleClick('open_c810c72371db')"><i id="fw_id_102" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div><div id="fw_id_103" class="custom-widget" data-key="" data-role=""><div id="fw_id_104" class="shared-stack-1" data-key="" data-role=""><div id="fw_id_105" class="pythra-clip-bp-b4c41c41c4" data-key="" data-role="" style="width: 231px; height: 231px; aspect-ratio: 1"><div id="fw_id_106" class="shared-container-29" data-key="note_2_container" data-role="None"><div id="fw_id_107" class="shared-column-2" data-key="" data-role=""><div id="fw_id_108" class="shared-container-28" data-key="note_2_heading_wrapper" data-role="None"><p id="fw_id_109" class="shared-text-2" data-key="" data-role="" style="font-family: ubuntu; font-size: 24">Design</p></div><div id="fw_id_110" class="" data-key="" data-role="" style="height: 24px"></div><p id="fw_id_111" class="shared-text-3" data-key="" data-role="" style="font-family: ubuntu; font-size: 16">hello world this is fun, but does it work</p></div></div></div><div id="fw_id_112" class="" data-key="note_2_top_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px"><div id="fw_id_113" class="shared-container-30" data-key="note_2_top_actions_container" data-role="None"><div id="fw_id_114" class="shared-row-0" data-key="" data-role=""><button id="fw_id_115" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('delete_95d967d3edc0')"><i id="fw_id_116" class="material-icon-1" data-key="" data-role="">delete</i></button><div id="fw_id_117" class="" data-key="" data-role="" style="width: 8px"></div><button id="fw_id_118" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('chat_95d967d3edc0')"><i id="fw_id_119" class="material-icon-0" data-key="" data-role="">auto_awesome</i></button></div></div></div><div id="fw_id_120" class="" data-key="note_2_bottom_actions_pos" data-role="" style="position: absolute; height: 231px; width: 231px; top: 189px"><div id="fw_id_121" class="shared-container-32" data-key="note_2_bottom_actions_container" data-role="None"><div id="fw_id_122" class="shared-row-3" data-key="" data-role=""><div id="fw_id_123" class="shared-container-31" data-key="note_2_date_container" data-role="None"><div id="fw_id_124" class="shared-center-0" data-key="" data-role=""><p id="fw_id_125" class="shared-text-4" data-key="" data-role="" style="color: var(--dynamic-2fda1699); font-family: ubuntu mono; font-size: 12">24 Jun</p></div></div><button id="fw_id_126" class="shared-iconbutton-3" data-key="" data-role="" onclick="handleClick('open_95d967d3edc0')"><i id="fw_id_127" class="material-icon-1" data-key="" data-role="">open_in_new</i></button></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+        <div id="overlay-container"></div>
+    </div>
 
     <!-- ADD SIMPLEBAR JS -->
     <script src="./js/scroll-bar/simplebar.min.js"></script>
@@ -1005,6 +1075,296 @@ class PythraGestureDetector {
                         if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
 
                     } catch (e) { console.error('Error loading gesture_detector.js:', e); }
+
+// --- Injected from context_menu.js ---
+try {
+                        
+const _ctxMenuDefaults = {
+    panel: {
+        backgroundColor: '#2d2d2d',
+        borderColor: '#555',
+        borderRadius: '6px',
+        borderWidth: '1px',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+    },
+    item: {
+        color: '#eee',
+        fontSize: '13px',
+        fontFamily: 'sans-serif',
+        padding: '6px 16px',
+        hoverBackgroundColor: '#3d3d3d',
+        disabledOpacity: 0.4,
+    },
+    icon: {
+        size: '18px',
+        color: null,
+    },
+    divider: {
+        color: '#555',
+        margin: '4px 0',
+    },
+};
+
+function _mergeTheme(user) {
+    const t = {};
+    for (const key of ['panel', 'item', 'icon', 'divider']) {
+        t[key] = { ..._ctxMenuDefaults[key], ...(user?.[key] || {}) };
+    }
+    return t;
+}
+
+class PythraContextMenuInternal {
+    constructor(element, options) {
+        this.element = (element instanceof HTMLElement) ? element : document.getElementById(element);
+        if (!this.element) {
+            console.error('PythraContextMenu: element not found');
+            return;
+        }
+
+        this.options = options || {};
+        this.menuEl = null;
+        this.menuItems = this.options.items || [];
+        this.theme = _mergeTheme(this.options.theme);
+        this.active = false;
+
+        this._onContextMenu = this._onContextMenu.bind(this);
+        this._onClickOutside = this._onClickOutside.bind(this);
+        this._onKeyDown = this._onKeyDown.bind(this);
+
+        this.element.addEventListener('contextmenu', this._onContextMenu);
+    }
+
+    // ── Build ────────────────────────────────────────────────────────────────
+
+    _buildMenu() {
+        const t = this.theme;
+
+        this.menuEl = document.createElement('div');
+        this.menuEl.className = 'pythra-context-menu';
+        this.menuEl.style.cssText = `
+            position: fixed;
+            z-index: 999999;
+            display: none;
+            min-width: 180px;
+            max-width: 280px;
+            padding: 4px 0;
+            background: ${t.panel.backgroundColor};
+            border: ${t.panel.borderWidth} solid ${t.panel.borderColor};
+            border-radius: ${t.panel.borderRadius};
+            box-shadow: ${t.panel.boxShadow};
+            font-family: ${t.item.fontFamily};
+            font-size: ${t.item.fontSize};
+            color: ${t.item.color};
+            user-select: none;
+            -webkit-user-select: none;
+        `;
+
+        this.menuItems.forEach((item, i) => {
+            if (item.divider) {
+                const divider = document.createElement('div');
+                divider.style.cssText = `
+                    height: 1px;
+                    background: ${t.divider.color};
+                    margin: ${t.divider.margin};
+                `;
+                this.menuEl.appendChild(divider);
+                return;
+            }
+
+            const itemEl = document.createElement('div');
+            itemEl.className = 'pythra-context-menu-item';
+            itemEl.dataset.index = i;
+            itemEl.style.cssText = `
+                display: flex;
+                align-items: center;
+                padding: ${t.item.padding};
+                cursor: ${item.enabled !== false ? 'pointer' : 'default'};
+                opacity: ${item.enabled !== false ? '1' : t.item.disabledOpacity};
+                transition: background 0.12s;
+            `;
+
+            if (item.icon) {
+                const iconEl = document.createElement('span');
+                const fontFamily = item.fontFamily || 'Material Symbols Outlined';
+                iconEl.textContent = item.icon;
+                iconEl.style.cssText = `
+                    font-family: '${fontFamily}';
+                    font-weight: normal;
+                    font-style: normal;
+                    font-size: ${t.icon.size};
+                    margin-right: 12px;
+                    width: ${t.icon.size};
+                    text-align: center;
+                    line-height: 1;
+                    letter-spacing: normal;
+                    text-transform: none;
+                    display: inline-block;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    direction: ltr;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-feature-settings: 'liga';
+                    ${t.icon.color ? `color: ${t.icon.color};` : ''}
+                `;
+                itemEl.appendChild(iconEl);
+            } else {
+                const spacer = document.createElement('span');
+                spacer.style.cssText = 'display:inline-block;width:30px;';
+                itemEl.appendChild(spacer);
+            }
+
+            const labelEl = document.createElement('span');
+            labelEl.style.cssText = 'flex:1;';
+            labelEl.textContent = item.label;
+            itemEl.appendChild(labelEl);
+
+            if (item.shortcut) {
+                const shortcutEl = document.createElement('span');
+                shortcutEl.style.cssText = 'margin-left:16px;color:#888;font-size:11px;';
+                shortcutEl.textContent = item.shortcut;
+                itemEl.appendChild(shortcutEl);
+            }
+
+            itemEl.addEventListener('mouseenter', () => {
+                if (item.enabled !== false) {
+                    itemEl.style.background = t.item.hoverBackgroundColor;
+                }
+            });
+            itemEl.addEventListener('mouseleave', () => {
+                itemEl.style.background = 'transparent';
+            });
+
+            itemEl.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                if (item.enabled === false) return;
+                this._hide();
+                if (item.cb && window.pywebview) {
+                    window.pywebview.on_pressed_str(item.cb);
+                }
+            });
+
+            this.menuEl.appendChild(itemEl);
+        });
+
+        document.body.appendChild(this.menuEl);
+    }
+
+    _updateItemStates() {
+        if (!this.menuEl) return;
+        const t = this.theme;
+        const items = this.menuEl.querySelectorAll('.pythra-context-menu-item');
+        items.forEach((el, i) => {
+            const item = this.menuItems[i];
+            if (!item) return;
+            el.style.opacity = item.enabled !== false ? '1' : t.item.disabledOpacity;
+            el.style.cursor = item.enabled !== false ? 'pointer' : 'default';
+        });
+    }
+
+    _positionMenu(x, y) {
+        if (!this.menuEl) return;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const mw = this.menuEl.offsetWidth || 200;
+        const mh = this.menuEl.offsetHeight || 200;
+
+        let left = x;
+        let top = y;
+
+        if (left + mw > vw) left = vw - mw - 8;
+        if (top + mh > vh) top = vh - mh - 8;
+        if (left < 0) left = 8;
+        if (top < 0) top = 8;
+
+        this.menuEl.style.left = left + 'px';
+        this.menuEl.style.top = top + 'px';
+    }
+
+    _show() {
+        if (this.menuEl) {
+            this.menuEl.style.display = 'block';
+            this.active = true;
+        }
+    }
+
+    _hide() {
+        if (this.menuEl) {
+            this.menuEl.style.display = 'none';
+            this.active = false;
+        }
+        document.removeEventListener('click', this._onClickOutside);
+        document.removeEventListener('keydown', this._onKeyDown);
+    }
+
+    _onContextMenu(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!this.menuEl) {
+            this._buildMenu();
+        }
+
+        this._updateItemStates();
+        this._positionMenu(e.clientX, e.clientY);
+        this._show();
+
+        document.addEventListener('click', this._onClickOutside);
+        document.addEventListener('keydown', this._onKeyDown);
+    }
+
+    _onClickOutside(e) {
+        if (this.menuEl && !this.menuEl.contains(e.target)) {
+            this._hide();
+        }
+    }
+
+    _onKeyDown(e) {
+        if (e.key === 'Escape') {
+            this._hide();
+        }
+    }
+
+    destroy() {
+        this._hide();
+        if (this.menuEl && this.menuEl.parentNode) {
+            this.menuEl.parentNode.removeChild(this.menuEl);
+        }
+        this.menuEl = null;
+        this.element.removeEventListener('contextmenu', this._onContextMenu);
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.PythraContextMenu = PythraContextMenuInternal;
+    window.PythraContextMenuInternal = PythraContextMenuInternal;
+}
+
+
+                        // Make common names available on window if defined
+
+                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
+
+                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
+
+                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
+
+                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
+
+                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
+
+                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
+
+                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
+
+                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
+
+                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
+
+                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
+
+                    } catch (e) { console.error('Error loading context_menu.js:', e); }
 
 // --- Injected from clipPathUtils.js ---
 try {
@@ -1325,857 +1685,6 @@ window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
                         if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
 
                     } catch (e) { console.error('Error loading clipPathUtils.js:', e); }
-
-// --- Injected Plugin 'pythra-markdown-editor': editor.js ---
-try {
-// PythraMarkdownEditor - A full-featured, themeable, and memory-safe WYSIWYG Editor Engine
-class PythraMarkdownEditor {
-    constructor(elementOrId, options = {}) {
-        if (typeof elementOrId === 'string') {
-            this.container = document.getElementById(elementOrId);
-            if (!this.container) {
-                console.error(`PythraMarkdownEditor Error: Container with ID '${elementOrId}' not found.`);
-                return;
-            }
-        } else {
-            this.container = elementOrId;
-        }
-
-        this.options = options;
-        this.options.showControls = this.options.showControls ?? true;
-        this.options.showGrid = this.options.showGrid ?? false;
-
-        this.editorElement = null;
-        this._changeTimer = null;
-        this._changeHandler = null;
-        this._feedbackHandler = null;
-
-        if (this.container) {
-            this.container.style.width = this.options.width || (this.options.style?.defaults?.width || '100%');
-            this.container.style.height = this.options.height || (this.options.style?.defaults?.height || 'auto');
-        }
-
-        if (!window._pythraEditorStylesInjected) {
-            this.injectStyles();
-            window._pythraEditorStylesInjected = true;
-        }
-
-        this._applyStyles();
-
-        // --- NEW: Attach the global selection listener if it doesn't exist ---
-        if (!window._pythraSelectionListenerAttached) {
-            console.log("Attaching global selection listener for Pythra editors.");
-
-            document.addEventListener('selectionchange', () => {
-                const selection = window.getSelection();
-                if (selection.rangeCount > 0) {
-                    const currentRange = selection.getRangeAt(0);
-                    const allInstances = window._pythra_instances || {};
-                    // Check if the current selection is inside ANY known editor instance
-                    for (const key in allInstances) {
-                        if (allInstances[key] && allInstances[key].editorElement && allInstances[key].editorElement.contains(selection.anchorNode)) {
-                            // This is a valid selection inside our editor, save it globally.
-                            window._pythraSavedSelection = currentRange;
-                            console.log("current range: ", currentRange);
-                            return; // Found the active editor
-                        }
-                    }
-                }
-            });
-            window._pythraSelectionListenerAttached = true;
-        }
-
-        this.init();
-    }
-
-    _applyStyles() {
-        if (!this.options.style || !this.container) return;
-        const style = this.options.style;
-        const root = this.container;
-        const setVar = (name, value) => value != null && root.style.setProperty(name, value);
-
-        if (style.theme) {
-            setVar('--pe-accent-color', style.theme.accentColor);
-            setVar('--pe-accent-hover', style.theme.accentHover);
-            setVar('--pe-border-color', style.theme.borderColor);
-            setVar('--pe-border-radius', style.theme.borderRadius);
-            setVar('--pe-border-width', style.theme.borderWidth);
-            if (style.theme.focusRing) {
-                setVar('--pe-focus-ring-color', style.theme.focusRing.color);
-                setVar('--pe-focus-ring-width', style.theme.focusRing.width);
-            }
-        }
-        if (style.toolbar) {
-            setVar('--pe-toolbar-bg', style.toolbar.backgroundColor);
-            setVar('--pe-toolbar-hover', style.toolbar.hoverColor);
-            setVar('--pe-toolbar-active', style.toolbar.activeColor);
-            setVar('--pe-toolbar-icon', style.toolbar.iconColor);
-            setVar('--pe-toolbar-shadow', style.toolbar.shadow);
-        }
-        if (style.content) {
-            setVar('--pe-content-bg', style.content.backgroundColor);
-            setVar('--pe-content-text', style.content.textColor);
-            setVar('--pe-content-font', style.content.fontFamily);
-            setVar('--pe-content-font-size', style.content.fontSize);
-            setVar('--pe-content-line-height', style.content.lineHeight);
-            setVar('--pe-content-padding', style.content.padding);
-            setVar('--pe-content-placeholder', style.content.placeholderColor);
-        }
-        if (style.grid) {
-            setVar('--pe-grid-dot-color', style.grid.dotColor);
-            setVar('--pe-grid-dot-size', `${style.grid.dotSize || 1}px`);
-            setVar('--pe-grid-dot-spacing', `${style.grid.dotSpacing || 20}px`);
-            setVar('--pe-grid-background-color', style.grid.backgroundColor);
-        }
-    }
-
-    init() {
-        console.log('PythraMarkdownEditor init, options:', JSON.stringify(this.options));
-        let controlPanel = this.container.querySelector('.control-panel');
-        let editorEl = this.container.querySelector('[contenteditable="true"]');
-
-        this.container.classList.add('pythra-editor-wrapper');
-
-        if (this.options.showControls) {
-            let toggleBtn = this.container.querySelector('.pythra-toggle-button');
-            if (!controlPanel) {
-                toggleBtn = document.createElement('button');
-                toggleBtn.id = `toggleControls_${this.options.instanceId || ''}`;
-                toggleBtn.className = 'pythra-toggle-button';
-                this.container.prepend(toggleBtn);
-                controlPanel = this.createControlPanel();
-                toggleBtn.insertAdjacentElement('afterend', controlPanel);
-            }
-            if (this.options.controlsInitiallyHidden && !controlPanel.classList.contains('hidden')) {
-                controlPanel.classList.add('hidden');
-            } else if (!this.options.controlsInitiallyHidden && controlPanel.classList.contains('hidden')) {
-                controlPanel.classList.remove('hidden');
-            }
-            if (toggleBtn) {
-                const isHidden = controlPanel.classList.contains('hidden');
-                toggleBtn.textContent = isHidden ? 'Show Controls' : 'Hide Controls';
-                toggleBtn.onclick = () => {
-                    const isNowHidden = controlPanel.classList.toggle('hidden');
-                    toggleBtn.textContent = isNowHidden ? 'Show Controls' : 'Hide Controls';
-                    if (typeof handleInput === 'function' && this.options.onToggleControlsCallback) {
-                        handleInput(this.options.onToggleControlsCallback, !isNowHidden);
-                    }
-                };
-            }
-        } else if (controlPanel) {
-            const toggleBtn = this.container.querySelector('.pythra-toggle-button');
-            if (toggleBtn) toggleBtn.remove();
-            controlPanel.remove();
-        }
-
-        if (!editorEl) {
-            editorEl = document.createElement('div');
-            editorEl.id = this.options.instanceId ? `editor_${this.options.instanceId}` : 'editor';
-            editorEl.contentEditable = true;
-            editorEl.lang = 'en';
-            editorEl.className = 'editor-inner-container';
-            this.container.appendChild(editorEl);
-        }
-        editorEl.spellcheck = this.options.spellcheck !== false;
-        editorEl.setAttribute('autocorrect', this.options.autocorrect !== false ? 'on' : 'off');
-        console.log(`spellcheck=${editorEl.spellcheck}, autocorrect=${editorEl.getAttribute('autocorrect')} from options`, this.options);
-        this.editorElement = editorEl;
-
-        if (this.options.initialContent != null && this.editorElement.innerHTML !== this.options.initialContent) {
-            this.editorElement.innerHTML = this.options.initialContent;
-        }
-
-        this.editorElement.classList.toggle('grid-background', this.options.showGrid);
-        this._setupChangeHandler();
-        this._setupVisualFeedbackHandlers();
-
-        if (this.imageResizer) this.imageResizer.destroy();
-        this.imageResizer = new PythraImageResizer(this.editorElement);
-    }
-
-    createControlPanel() {
-        const panel = document.createElement('div');
-        panel.className = 'control-panel';
-        const group1 = document.createElement('div');
-        group1.className = 'control-group';
-        [{ cmd: 'formatBlock', val: 'H1', title: 'Heading 1', label: 'H1' }, { cmd: 'formatBlock', val: 'H2', title: 'Heading 2', label: 'H2' }, { cmd: 'formatBlock', val: 'P', title: 'Paragraph', label: 'P' }, { cmd: 'insertUnorderedList', title: 'Unordered List', label: 'UL' }, { cmd: 'insertOrderedList', title: 'Ordered List', label: 'OL' },].forEach(c => group1.appendChild(this.createButton(c.cmd, c.label, c.title, c.val)));
-        panel.appendChild(group1);
-        const group2 = document.createElement('div');
-        group2.className = 'control-group';
-        [{ id: `btn-bold_${this.options.instanceId}`, cmd: 'bold', title: 'Bold', label: '<b>B</b>' }, { id: `btn-italic_${this.options.instanceId}`, cmd: 'italic', title: 'Italic', label: '<i>I</i>' }, { id: `btn-underline_${this.options.instanceId}`, cmd: 'underline', title: 'Underline', label: '<u>U</u>' }, { id: `btn-strikeThrough_${this.options.instanceId}`, cmd: 'strikeThrough', title: 'Strikethrough', label: '<s>S</s>' },].forEach(c => group2.appendChild(this.createButton(c.cmd, c.label, c.title, null, c.id)));
-        panel.appendChild(group2);
-        const group3 = document.createElement('div');
-        group3.className = 'control-group';
-        group3.appendChild(this.createColorPicker());
-        group3.appendChild(this.createFontSelector());
-        panel.appendChild(group3);
-        const group4 = document.createElement('div');
-        group4.className = 'control-group';
-        const insertImageBtn = this.createButton('insertImage', '🖼️', 'Insert Image');
-        insertImageBtn.onclick = () => { const url = prompt("Enter the image URL:"); if (url) { this.execCommand('insertImage', url); } };
-        group4.appendChild(insertImageBtn);
-        panel.appendChild(group4);
-        return panel;
-    }
-
-    createButton(command, label, title, value = null, id = null) {
-        const button = document.createElement('button');
-        if (id) button.id = id;
-        button.title = title;
-        button.innerHTML = label;
-        button.onclick = () => this.execCommand(command, value);
-        return button;
-    }
-
-    createColorPicker() {
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.title = 'Font Color';
-        input.oninput = (e) => this.execCommand('foreColor', e.target.value);
-        return input;
-    }
-
-    createFontSelector() {
-        const select = document.createElement('select');
-        select.title = 'Font Family';
-        select.onchange = (e) => this.execCommand('fontName', e.target.value);
-        const fontsToUse = (this.options.fontList && Array.isArray(this.options.fontList) && this.options.fontList.length > 0) ? this.options.fontList : [{ val: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif', label: 'System Default' }, { val: 'Arial, sans-serif', label: 'Arial' }, { val: "'Times New Roman', serif", label: 'Times New Roman' },];
-        fontsToUse.forEach(font => select.add(new Option(font.label, font.val)));
-        return select;
-    }
-
-    _setupChangeHandler() {
-        if (!this.editorElement) return;
-        this._changeHandler = () => {
-            clearTimeout(this._changeTimer);
-            this._changeTimer = setTimeout(() => {
-                const content = this.editorElement.innerHTML;
-                if (typeof handleInput === 'function' && this.options.callback) {
-                    handleInput(this.options.callback, content);
-                }
-            }, 180);
-        };
-        this.editorElement.addEventListener('input', this._changeHandler);
-    }
-
-    _setupVisualFeedbackHandlers() {
-        if (!this.editorElement) return;
-        this._feedbackHandler = () => {
-            this.updateButtonStates();
-            this.reportCursorState();
-        };
-        ['keyup', 'mouseup', 'focus', 'click'].forEach(eventType => {
-            this.editorElement.addEventListener(eventType, this._feedbackHandler);
-        });
-    }
-
-    // --- NEW METHOD ---
-    reportCursorState() {
-        if (typeof handleInput !== 'function' || !this.options.onStateChangeCallback) {
-            return;
-        }
-
-        // Gather all the formatting states at the current cursor position
-        const state = {
-            isBold: document.queryCommandState('bold'),
-            isItalic: document.queryCommandState('italic'),
-            isUnderline: document.queryCommandState('underline'),
-            isStrikeThrough: document.queryCommandState('strikeThrough'),
-            isUnorderedList: document.queryCommandState('insertUnorderedList'),
-            isOrderedList: document.queryCommandState('insertOrderedList'),
-
-            // queryCommandValue returns the value of the command (e.g., 'Verdana' or 'H1')
-            fontName: document.queryCommandValue('fontName'),
-            fontColor: document.queryCommandValue('foreColor'), // This will be an RGB string like "rgb(255, 0, 0)"
-            blockFormat: document.queryCommandValue('formatBlock'), // e.g., 'h1', 'p'
-        };
-
-        // --- NEW: Add selection coordinates ---
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0 && !selection.isCollapsed) {
-            const range = selection.getRangeAt(0);
-            const rect = range.getBoundingClientRect();
-            // Important: These coordinates are relative to the viewport.
-            // We might need to adjust them based on the window/screen context in Python,
-            // or just pass them as is if the Python UI overlay is also screen-relative (which it often is in these frameworks).
-            state.hasSelection = true;
-            state.selectionRect = {
-                top: rect.top,
-                bottom: rect.bottom,
-                left: rect.left,
-                right: rect.right,
-                width: rect.width,
-                height: rect.height
-            };
-
-            // --- NEW: Update Overlay Position via JS ---
-            if (window._pythraOverlay) {
-                const overlay = window._pythraOverlay;
-                overlay.style.display = 'block';
-                // Position above the selection
-                // We assume the overlay has position: absolute or fixed
-                // Adding scroll offset if needed, though getBoundingClientRect is viewport relative.
-                // If the Container is fixed/absolute to viewport, this is fine.
-                // Subtract overlay height (estimated or measured) to place on top
-
-                // Better approach: Let's assume the overlay wrapper is absolute 0,0 in a Stack covering the window.
-                const containerOffset = 222;
-                const overlayHeight = overlay.offsetHeight || 60; // Estimate or measure
-                const top = Math.max(0, rect.top - overlayHeight - 10) + containerOffset;
-                const left = rect.left;
-
-                overlay.style.top = `${top}px`;
-                overlay.style.left = `${left}px`;
-            }
-
-        } else {
-            state.hasSelection = false;
-            state.selectionRect = null;
-
-            // Hide overlay
-            if (window._pythraOverlay) {
-                window._pythraOverlay.style.display = 'none';
-            }
-        }
-
-        // Send this entire state object to Python in a single call.
-        // We reuse handleInput, but the value is now a JSON string of the state object.
-        // console.log("cusorState: ", state);
-        handleInput(this.options.onStateChangeCallback, JSON.stringify(state));
-        syncExternalToolbarState(state);
-    }
-
-    injectStyles() {
-        const style = document.createElement('style');
-        style.id = 'pythra-editor-styles';
-        style.textContent = `
-            :root{--pe-accent-color:#007aff;--pe-accent-hover:#005bb5;--pe-border-color:#dee2e6;--pe-border-radius:6px;--pe-border-width:1px;--pe-focus-ring-color:rgba(0,122,255,0.25);--pe-focus-ring-width:3px;--pe-toolbar-bg:#f1f3f5;--pe-toolbar-hover:#e9ecef;--pe-toolbar-active:#007aff;--pe-toolbar-icon:#212529;--pe-content-bg:#ffffff;--pe-content-text:#212529;--pe-content-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--pe-content-font-size:16px;--pe-content-line-height:1.7;--pe-content-padding:1.5rem;--pe-content-placeholder:#6c757d;--pe-grid-dot-color:#D3D3D3;--pe-grid-dot-size:1px;--pe-grid-dot-spacing:20px;--pe-grid-background-color:transparent;}
-            .pythra-editor-wrapper{box-sizing:border-box;display:flex;flex-direction:column;background:var(--pe-content-bg);border:var(--pe-border-width) solid var(--pe-border-color);border-radius:var(--pe-border-radius);box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-            .pythra-editor-wrapper [contenteditable]{color:var(--pe-content-text);font-family:var(--pe-content-font);font-size:var(--pe-content-font-size);line-height:var(--pe-content-line-height);padding:var(--pe-content-padding);flex-grow:1;min-height:150px;border-top:1px solid var(--pe-border-color);outline:none;overflow-y:auto;}
-            .pythra-editor-wrapper [contenteditable]:focus{border-color:var(--pe-accent-color) !important;box-shadow:0 0 0 var(--pe-focus-ring-width) var(--pe-focus-ring-color)}
-            .pythra-editor-wrapper [contenteditable]:empty:before{content:"Start writing...";color:var(--pe-content-placeholder);font-style:italic}
-            .pythra-editor-wrapper .pythra-toggle-button{flex-shrink:0;width:100%;padding:0.75rem;font-size:1rem;font-weight:600;color:white;background-color:var(--pe-accent-color);border:none;border-radius:var(--pe-border-radius) var(--pe-border-radius) 0 0;cursor:pointer;transition:background-color 0.2s ease;}
-            .pythra-editor-wrapper .pythra-toggle-button:hover{background-color:var(--pe-accent-hover)}
-            .control-panel{flex-shrink:0;background:var(--pe-toolbar-bg);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:all 0.3s ease-in-out;max-height:1000px;opacity:1;overflow:hidden;}
-            .control-panel.hidden{max-height:0;padding-top:0;padding-bottom:0;opacity:0;}
-            .control-group{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center}
-            .control-panel button,.control-panel select,.control-panel input[type="color"]{color:var(--pe-toolbar-icon);font-family:var(--pe-content-font);font-size:0.9rem;padding:0.5rem 0.75rem;background:var(--pe-content-bg);border:1px solid var(--pe-border-color);border-radius:var(--pe-border-radius);cursor:pointer;transition:all 0.2s ease;}
-            .control-panel button:hover,.control-panel select:hover{background:var(--pe-toolbar-hover)}
-            .control-panel button.active{background-color:var(--pe-toolbar-active);color:white;border-color:var(--pe-accent-hover)}
-            .control-panel select:focus{border-color:var(--pe-accent-color);box-shadow:0 0 0 var(--pe-focus-ring-width) var(--pe-focus-ring-color);background-color:var(--pe-content-bg);}
-            .pythra-image-resizer-wrapper{position:absolute;border:2px solid var(--pe-accent-color);pointer-events:none;z-index:100;}
-            .pythra-resize-handle{position:absolute;width:12px;height:12px;background-color:var(--pe-accent-color);border:2px solid white;border-radius:2px;pointer-events:auto;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
-            .pythra-resize-handle.top-left{top:-7px;left:-7px;cursor:nwse-resize;}
-            .pythra-resize-handle.top-right{top:-7px;right:-7px;cursor:nesw-resize;}
-            .pythra-resize-handle.bottom-left{bottom:-7px;left:-7px;cursor:nesw-resize;}
-            .pythra-resize-handle.bottom-right{bottom:-7px;right:-7px;cursor:nwse-resize;}
-            .pythra-resize-handle.top{top:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
-            .pythra-resize-handle.bottom{bottom:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
-            .pythra-resize-handle.left{left:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
-            .pythra-resize-handle.right{right:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
-            .pythra-editor-wrapper [contenteditable].grid-background{background-image:radial-gradient(var(--pe-grid-dot-color) var(--pe-grid-dot-size), transparent 0);background-size:var(--pe-grid-dot-spacing) var(--pe-grid-dot-spacing);background-color:var(--pe-grid-background-color)}
-            [contenteditable="true"] {user-select: text;}
-        `;
-        document.head.appendChild(style);
-    }
-
-    updateButtonStates() {
-        ['bold', 'italic', 'underline', 'strikeThrough'].forEach(command => {
-            const button = document.getElementById(`btn-${command}_${this.options.instanceId}`);
-            if (!button) return;
-            try {
-                button.classList.toggle('active', document.queryCommandState(command));
-            } catch (e) { }
-        });
-    }
-
-    execCommand(command, value = null) {
-        if (!command || !this.editorElement) return;
-        this.editorElement.focus();
-        try {
-            var result = document.execCommand(command, false, value);
-            console.log(`JS execCommand: ${command}, Value: ${value}, Success: ${result}`);
-        } catch (err) {
-            console.error(`Error executing command '${command}':`, err);
-        }
-        this.updateButtonStates();
-    }
-
-    setContent(html) { if (this.editorElement) this.editorElement.innerHTML = html; }
-    getContent() { return this.editorElement ? this.editorElement.innerHTML : ''; }
-    focus() { if (this.editorElement) this.editorElement.focus(); }
-
-    updateSpellcheckSettings(spellcheck, autocorrect) {
-        if (this.editorElement) {
-            this.editorElement.spellcheck = spellcheck !== false;
-            this.editorElement.setAttribute('autocorrect', autocorrect !== false ? 'on' : 'off');
-            console.log(`Updated spellcheck: ${this.editorElement.spellcheck}, autocorrect: ${this.editorElement.getAttribute('autocorrect')}`);
-        }
-    }
-
-    destroy() {
-        console.log(`🔥 Destroying PythraMarkdownEditor instance: ${this.options.instanceId}`);
-        if (this.editorElement && this._changeHandler) {
-            this.editorElement.removeEventListener('input', this._changeHandler);
-        }
-        if (this.editorElement && this._feedbackHandler) {
-            ['keyup', 'mouseup', 'focus', 'click'].forEach(eventType => {
-                this.editorElement.removeEventListener(eventType, this._feedbackHandler);
-            });
-        }
-        if (this.imageResizer) {
-            this.imageResizer.destroy();
-        }
-        clearTimeout(this._changeTimer);
-    }
-}
-
-// --- NEW: JS-Controlled Overlay Logic ---
-
-class PythraSelectionOverlay {
-    constructor(elementOrId, options = {}) {
-        if (typeof elementOrId === 'string') {
-            this.container = document.getElementById(elementOrId);
-        } else {
-            this.container = elementOrId;
-        }
-
-        if (this.container) {
-            // Save to global scope for the editor to access
-            window._pythraOverlay = this.container;
-
-            // Initial style: hidden and absolute
-            this.container.style.position = 'absolute';
-            this.container.style.display = 'none';
-            this.container.style.zIndex = '1000'; // Ensure it's on top
-            this.container.style.transition = 'opacity 0.2s ease, top 0.1s ease, left 0.1s ease';
-            this.container.style.pointerEvents = 'auto'; // Make sure clicks work
-        }
-    }
-}
-
-window.PythraSelectionOverlay = PythraSelectionOverlay;
-
-// --- NEW: JS-Controlled Heading Selector Overlay ---
-
-class PythraHeadingSelector {
-    constructor(elementOrId, options = {}) {
-        if (typeof elementOrId === 'string') {
-            this.container = document.getElementById(elementOrId);
-        } else {
-            this.container = elementOrId;
-        }
-
-        if (this.container) {
-            window._pythraHeadingSelector = this.container;
-            this.container.style.display = 'none';
-            this.container.style.position = 'absolute';
-            this.container.style.bottom = '0';
-            this.container.style.left = '50%';
-            this.container.style.transform = 'translateX(-50%)';
-            this.container.style.zIndex = '10000';
-        }
-    }
-}
-
-window.PythraHeadingSelector = PythraHeadingSelector;
-
-window.showHeadingSelector = function () {
-    if (window._pythraHeadingSelector) {
-        window._pythraHeadingSelector.style.display = 'block';
-    }
-};
-
-window.hideHeadingSelector = function () {
-    if (window._pythraHeadingSelector) {
-        window._pythraHeadingSelector.style.display = 'none';
-    }
-};
-
-window.toggleHeadingSelector = function () {
-    if (window._pythraHeadingSelector) {
-        var current = window._pythraHeadingSelector.style.display;
-        window._pythraHeadingSelector.style.display = current === 'none' ? 'block' : 'none';
-    }
-};
-
-window.PythraMarkdownEditor = PythraMarkdownEditor;
-
-document.addEventListener("DOMContentLoaded", () => {
-    try {
-        document.execCommand("styleWithCSS", false, true);
-    } catch (e) {
-        console.warn("styleWithCSS is not supported by this browser.");
-    }
-});
-
-// --- NEW: Global function to restore the saved selection ---
-function restoreEditorSelection() {
-    const savedRange = window._pythraSavedSelection;
-    if (savedRange) {
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(savedRange);
-        console.log('🔄 Selection Restored.');
-    } else {
-        console.warn("No valid selection was saved to restore.");
-    }
-}
-
-window.restoreEditorSelection = restoreEditorSelection;
-
-// --- NEW: Global function to hide the overlay ---
-window.hidePythraSelectionOverlay = function () {
-    if (window._pythraOverlay) {
-        window._pythraOverlay.style.display = 'none';
-        console.log('Overlay hidden');
-    }
-};
-
-class PythraImageResizer {
-    constructor(editorElement) {
-        this.editor = editorElement;
-        this.selectedImage = null;
-        this.wrapper = null;
-        this.parent = editorElement.parentNode;
-        this._originalParentPosition = this.parent.style.position;
-
-        this.handleClick = this.handleClick.bind(this);
-        this.handleMouseDown = this.handleMouseDown.bind(this);
-        this.handleMouseMove = this.handleMouseMove.bind(this);
-        this.handleMouseUp = this.handleMouseUp.bind(this);
-        this.handleEditorEvent = this.handleEditorEvent.bind(this);
-
-        this.editor.addEventListener('click', this.handleClick);
-        this.editor.addEventListener('scroll', this.handleEditorEvent, { passive: true });
-        this.editor.addEventListener('input', this.handleEditorEvent, { passive: true });
-        window.addEventListener('resize', this.handleEditorEvent, { passive: true });
-
-        if (this.parent && getComputedStyle(this.parent).position === 'static') {
-            this.parent.style.position = 'relative';
-        }
-    }
-
-    handleClick(e) {
-        const target = e.target;
-        if (target.tagName === 'IMG' && this.editor.contains(target)) {
-            if (this.selectedImage !== target) {
-                this.selectImage(target);
-            }
-        } else if (this.selectedImage) {
-            this.deselectImage();
-        }
-    }
-
-    handleEditorEvent() {
-        if (this.selectedImage) {
-            this.positionWrapper();
-        }
-    }
-
-    selectImage(img) {
-        this.deselectImage();
-        this.selectedImage = img;
-
-        this.wrapper = document.createElement('div');
-        this.wrapper.className = 'pythra-image-resizer-wrapper';
-        this.parent.appendChild(this.wrapper);
-        this.positionWrapper();
-
-        var handlePositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
-        handlePositions.forEach(function(pos) {
-            var handle = document.createElement('div');
-            handle.className = 'pythra-resize-handle ' + pos;
-            handle.dataset.position = pos;
-            this.wrapper.appendChild(handle);
-            handle.addEventListener('mousedown', this.handleMouseDown);
-        }.bind(this));
-    }
-
-    deselectImage() {
-        if (this.wrapper) {
-            this.wrapper.remove();
-            this.wrapper = null;
-        }
-        if (this.selectedImage) {
-            this.selectedImage.style.outline = '';
-            this.selectedImage = null;
-        }
-    }
-
-    positionWrapper() {
-        if (!this.selectedImage || !this.wrapper) return;
-
-        var imgRect = this.selectedImage.getBoundingClientRect();
-        var parentRect = this.parent.getBoundingClientRect();
-
-        this.wrapper.style.top = (imgRect.top - parentRect.top) + 'px';
-        this.wrapper.style.left = (imgRect.left - parentRect.left) + 'px';
-        this.wrapper.style.width = imgRect.width + 'px';
-        this.wrapper.style.height = imgRect.height + 'px';
-    }
-
-    handleMouseDown(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var img = this.selectedImage;
-        this._startWidth = img.offsetWidth;
-        this._startHeight = img.offsetHeight;
-        this._startX = e.clientX;
-        this._startY = e.clientY;
-        this._handlePosition = e.target.dataset.position;
-
-        document.addEventListener('mousemove', this.handleMouseMove);
-        document.addEventListener('mouseup', this.handleMouseUp);
-    }
-
-    handleMouseMove(e) {
-        if (!this._startWidth) return;
-
-        var dx = e.clientX - this._startX;
-        var dy = e.clientY - this._startY;
-        var pos = this._handlePosition;
-        var newWidth = this._startWidth;
-        var newHeight = this._startHeight;
-
-        if (pos.includes('right')) {
-            newWidth = Math.max(30, this._startWidth + dx);
-        } else if (pos.includes('left')) {
-            newWidth = Math.max(30, this._startWidth - dx);
-        }
-
-        if (pos.includes('bottom')) {
-            newHeight = Math.max(30, this._startHeight + dy);
-        } else if (pos.includes('top')) {
-            newHeight = Math.max(30, this._startHeight - dy);
-        }
-
-        var img = this.selectedImage;
-        img.removeAttribute('width');
-        img.removeAttribute('height');
-        img.style.width = newWidth + 'px';
-        img.style.height = newHeight + 'px';
-        this.positionWrapper();
-    }
-
-    handleMouseUp() {
-        document.removeEventListener('mousemove', this.handleMouseMove);
-        document.removeEventListener('mouseup', this.handleMouseUp);
-        this._startWidth = null;
-
-        if (this.selectedImage) {
-            this.editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-        }
-    }
-
-    destroy() {
-        this.editor.removeEventListener('click', this.handleClick);
-        this.editor.removeEventListener('scroll', this.handleEditorEvent);
-        this.editor.removeEventListener('input', this.handleEditorEvent);
-        window.removeEventListener('resize', this.handleEditorEvent);
-        this.deselectImage();
-        if (this.parent) {
-            this.parent.style.position = this._originalParentPosition || '';
-        }
-    }
-}
-
-// Add this new function at the very end of your editor.js file.
-
-/**
- * Updates the visual state of external toolbar buttons based on the editor's cursor state.
- * It looks for buttons with specific, predictable class names.
- * @param {object} cursorState - The state object received from Python.
- */
-function syncExternalToolbarState(cursorState) {
-    if (!cursorState) return;
-
-    console.log("sync state:", cursorState)
-
-    // A mapping from the state property to the CSS class to look for.
-    const stateToClassMap = {
-        isBold: 'pythra-toolbar-bold',
-        isItalic: 'pythra-toolbar-italic',
-        isUnderline: 'pythra-toolbar-underline',
-        isStrikeThrough: 'pythra-toolbar-strikethrough',
-        isUnorderedList: 'pythra-toolbar-ul',
-        isOrderedList: 'pythra-toolbar-ol'
-    };
-
-    for (const key in stateToClassMap) {
-        const className = stateToClassMap[key];
-        const isActive = cursorState[key];
-
-        // Find all buttons that have this class
-        const buttons = document.querySelectorAll(`.${className}`);
-
-        buttons.forEach(button => {
-            // Use classList.toggle for a clean and efficient update.
-            // The second argument forces 'add' if isActive is true, and 'remove' if false.
-            button.classList.toggle('active', isActive);
-        });
-    }
-
-    // --- 2. THE CORRECTED LOGIC for the font color button ---
-
-    // Find the icon using its new, stable class name.
-    const colorButtonIcon = document.querySelector('.pythra-toolbar-font-color-btn');
-
-    if (colorButtonIcon) {
-        // Get the color from the cursor state.
-        const newColor = cursorState.fontColor;
-
-        if (newColor && newColor !== "inherit" && newColor !== "rgb(0, 0, 0)" && newColor !== "rgba(0, 0, 0, 0)") {
-            // --- USE setProperty WITH '!important' ---
-            colorButtonIcon.style.setProperty('color', newColor, 'important');
-            console.log(newColor)
-        } else {
-            // If no specific color, remove our inline override to revert to CSS class default.
-            colorButtonIcon.style.removeProperty('color');
-        }
-    }
-    // You can add more complex logic for dropdowns here if needed
-    // For example, finding a dropdown and setting its value based on cursorState.fontName
-}
-
-window.syncExternalToolbarState = syncExternalToolbarState;
-
-/**
- * Replace the current selection (or saved selection) with the provided HTML.
- * - If there's an active selection, it will be replaced.
- * - If there's no active selection but a saved selection exists (`window._pythraSavedSelection`), that will be used.
- * - If no selection can be found, the HTML will be appended to the first `.editor-inner-container` found.
- * 
- * SMART INLINE HANDLING:
- * - If replacing text within an inline context (e.g., within a <p>), and the replacement
- *   contains only inline elements, it will be inserted cleanly without breaking the block.
- * - If the replacement contains block elements (e.g., <h1>, <div>), they are preserved
- *   and inserted naturally, potentially splitting the containing block if necessary.
- * 
- * After inserting, an `input` event is dispatched on the affected editor to notify change handlers.
- * @param {string} newHtml - The HTML string to insert in place of the selection.
- */
-function replaceEditorSelection(newHtml) {
-    if (!newHtml) return;
-    restoreEditorSelection();
-
-    let selection = window.getSelection();
-    let range = null;
-
-    if (selection && selection.rangeCount > 0) {
-        range = selection.getRangeAt(0);
-    } else if (window._pythraSavedSelection) {
-        try {
-            range = window._pythraSavedSelection.cloneRange ? window._pythraSavedSelection.cloneRange() : window._pythraSavedSelection;
-        } catch (e) {
-            range = window._pythraSavedSelection;
-        }
-    }
-
-    // Helper to dispatch input on closest editor container
-    function dispatchInputFromNode(node) {
-        if (!node) return;
-        const editor = node.nodeType === 3 ? node.parentElement.closest('.editor-inner-container') : (node.closest ? node.closest('.editor-inner-container') : null);
-        if (editor) editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    }
-
-    // Helper to check if HTML contains block-level elements
-    function containsBlockElements(html) {
-        const blockTags = /^<(div|p|h[1-6]|ul|ol|li|blockquote|pre|table|form|fieldset|section|article|aside|header|footer|main|nav)\b/i;
-        return blockTags.test(html.trim());
-    }
-
-    if (!range) {
-        // Fallback: append to first editor
-        const editor = document.querySelector('.editor-inner-container[contenteditable="true"]');
-        if (editor) {
-            try {
-                const frag = document.createRange().createContextualFragment(newHtml);
-                editor.appendChild(frag);
-                dispatchInputFromNode(editor);
-            } catch (e) {
-                console.error('replaceEditorSelection fallback append error:', e);
-            }
-        } else {
-            console.warn('replaceEditorSelection: no selection and no editor found to insert into.');
-        }
-        return;
-    }
-
-    try {
-        // Normalize selection to be editable: ensure we have a live selection object
-        selection = window.getSelection();
-        if (selection.rangeCount > 0) selection.removeAllRanges();
-
-        // Delete current contents of the range
-        range.deleteContents();
-
-        // Determine insertion strategy based on context
-        const isInlineOnlyReplacement = !containsBlockElements(newHtml);
-        const isWithinInlineContainer = range.commonAncestorContainer.nodeType === 3 ||
-            (range.commonAncestorContainer.nodeType === 1 && 
-             /^(p|span|a|em|strong|b|i|u|s|mark|code|small|sub|sup|kbd|var|samp|q|dfn|abbr|cite)$/i.test(range.commonAncestorContainer.tagName));
-
-        let lastInsertedNode = null;
-
-        if (isInlineOnlyReplacement && isWithinInlineContainer) {
-            // Smart inline insertion: use insertAdjacentHTML to avoid breaking the block
-            const temp = document.createElement('div');
-            temp.innerHTML = newHtml;
-            
-            // Insert each child node at the range position
-            const nodes = Array.from(temp.childNodes);
-            nodes.forEach((node, idx) => {
-                const cloned = node.cloneNode(true);
-                range.insertNode(cloned);
-                lastInsertedNode = cloned;
-                // Move range forward so next node inserts after this one
-                range.setStartAfter(cloned);
-                range.collapse(true);
-            });
-        } else {
-            // Standard insertion for block content or when not in inline context
-            const temp = document.createElement('div');
-            temp.innerHTML = newHtml;
-            const frag = document.createDocumentFragment();
-            while (temp.firstChild) {
-                lastInsertedNode = temp.firstChild;
-                frag.appendChild(temp.firstChild);
-            }
-            range.insertNode(frag);
-        }
-
-        // Move caret after inserted content
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        const newRange = document.createRange();
-
-        if (lastInsertedNode) {
-            try {
-                newRange.setStartAfter(lastInsertedNode);
-                newRange.collapse(true);
-            } catch (e) {
-                // Fallback: collapse to end of the original range
-                newRange.setStart(range.endContainer, range.endOffset);
-                newRange.collapse(true);
-            }
-        } else {
-            newRange.setStart(range.endContainer, range.endOffset);
-            newRange.collapse(true);
-        }
-        sel.addRange(newRange);
-
-        // Notify editor about input change
-        dispatchInputFromNode(newRange.startContainer || newRange.commonAncestorContainer);
-    } catch (err) {
-        console.error('replaceEditorSelection error:', err);
-    }
-}
-
-window.replaceEditorSelection = replaceEditorSelection;
-
-} catch (e) { console.error('Error loading plugin pythra-markdown-editor - editor.js:', e); }
 
 // --- Injected Plugin 'pythra-markdown-render': marked.umd.js ---
 try {
@@ -3593,9 +3102,880 @@ window.pythraMarkdownRender = {
 };
 
 } catch (e) { console.error('Error loading plugin pythra-markdown-render - marked_engine.js:', e); }
+
+// --- Injected Plugin 'pythra-markdown-editor': editor.js ---
+try {
+// PythraMarkdownEditor - A full-featured, themeable, and memory-safe WYSIWYG Editor Engine
+class PythraMarkdownEditor {
+    constructor(elementOrId, options = {}) {
+        if (typeof elementOrId === 'string') {
+            this.container = document.getElementById(elementOrId);
+            if (!this.container) {
+                console.error(`PythraMarkdownEditor Error: Container with ID '${elementOrId}' not found.`);
+                return;
+            }
+        } else {
+            this.container = elementOrId;
+        }
+
+        this.options = options;
+        this.options.showControls = this.options.showControls ?? true;
+        this.options.showGrid = this.options.showGrid ?? false;
+
+        this.editorElement = null;
+        this._changeTimer = null;
+        this._changeHandler = null;
+        this._feedbackHandler = null;
+
+        if (this.container) {
+            this.container.style.width = this.options.width || (this.options.style?.defaults?.width || '100%');
+            this.container.style.height = this.options.height || (this.options.style?.defaults?.height || 'auto');
+        }
+
+        if (!window._pythraEditorStylesInjected) {
+            this.injectStyles();
+            window._pythraEditorStylesInjected = true;
+        }
+
+        this._applyStyles();
+
+        // --- NEW: Attach the global selection listener if it doesn't exist ---
+        if (!window._pythraSelectionListenerAttached) {
+            console.log("Attaching global selection listener for Pythra editors.");
+
+            document.addEventListener('selectionchange', () => {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const currentRange = selection.getRangeAt(0);
+                    const allInstances = window._pythra_instances || {};
+                    // Check if the current selection is inside ANY known editor instance
+                    for (const key in allInstances) {
+                        if (allInstances[key] && allInstances[key].editorElement && allInstances[key].editorElement.contains(selection.anchorNode)) {
+                            // This is a valid selection inside our editor, save it globally.
+                            window._pythraSavedSelection = currentRange;
+                            console.log("current range: ", currentRange);
+                            return; // Found the active editor
+                        }
+                    }
+                }
+            });
+            window._pythraSelectionListenerAttached = true;
+        }
+
+        this.init();
+    }
+
+    _applyStyles() {
+        if (!this.options.style || !this.container) return;
+        const style = this.options.style;
+        const root = this.container;
+        const setVar = (name, value) => value != null && root.style.setProperty(name, value);
+
+        if (style.theme) {
+            setVar('--pe-accent-color', style.theme.accentColor);
+            setVar('--pe-accent-hover', style.theme.accentHover);
+            setVar('--pe-border-color', style.theme.borderColor);
+            setVar('--pe-border-radius', style.theme.borderRadius);
+            setVar('--pe-border-width', style.theme.borderWidth);
+            if (style.theme.focusRing) {
+                setVar('--pe-focus-ring-color', style.theme.focusRing.color);
+                setVar('--pe-focus-ring-width', style.theme.focusRing.width);
+            }
+        }
+        if (style.toolbar) {
+            setVar('--pe-toolbar-bg', style.toolbar.backgroundColor);
+            setVar('--pe-toolbar-hover', style.toolbar.hoverColor);
+            setVar('--pe-toolbar-active', style.toolbar.activeColor);
+            setVar('--pe-toolbar-icon', style.toolbar.iconColor);
+            setVar('--pe-toolbar-shadow', style.toolbar.shadow);
+        }
+        if (style.content) {
+            setVar('--pe-content-bg', style.content.backgroundColor);
+            setVar('--pe-content-text', style.content.textColor);
+            setVar('--pe-content-font', style.content.fontFamily);
+            setVar('--pe-content-font-size', style.content.fontSize);
+            setVar('--pe-content-line-height', style.content.lineHeight);
+            setVar('--pe-content-padding', style.content.padding);
+            setVar('--pe-content-placeholder', style.content.placeholderColor);
+        }
+        if (style.grid) {
+            setVar('--pe-grid-dot-color', style.grid.dotColor);
+            setVar('--pe-grid-dot-size', `${style.grid.dotSize || 1}px`);
+            setVar('--pe-grid-dot-spacing', `${style.grid.dotSpacing || 20}px`);
+            setVar('--pe-grid-background-color', style.grid.backgroundColor);
+        }
+    }
+
+    init() {
+        console.log('PythraMarkdownEditor init, options:', JSON.stringify(this.options));
+        let controlPanel = this.container.querySelector('.control-panel');
+        let editorEl = this.container.querySelector('[contenteditable="true"]');
+
+        this.container.classList.add('pythra-editor-wrapper');
+
+        if (this.options.showControls) {
+            let toggleBtn = this.container.querySelector('.pythra-toggle-button');
+            if (!controlPanel) {
+                toggleBtn = document.createElement('button');
+                toggleBtn.id = `toggleControls_${this.options.instanceId || ''}`;
+                toggleBtn.className = 'pythra-toggle-button';
+                this.container.prepend(toggleBtn);
+                controlPanel = this.createControlPanel();
+                toggleBtn.insertAdjacentElement('afterend', controlPanel);
+            }
+            if (this.options.controlsInitiallyHidden && !controlPanel.classList.contains('hidden')) {
+                controlPanel.classList.add('hidden');
+            } else if (!this.options.controlsInitiallyHidden && controlPanel.classList.contains('hidden')) {
+                controlPanel.classList.remove('hidden');
+            }
+            if (toggleBtn) {
+                const isHidden = controlPanel.classList.contains('hidden');
+                toggleBtn.textContent = isHidden ? 'Show Controls' : 'Hide Controls';
+                toggleBtn.onclick = () => {
+                    const isNowHidden = controlPanel.classList.toggle('hidden');
+                    toggleBtn.textContent = isNowHidden ? 'Show Controls' : 'Hide Controls';
+                    if (typeof handleInput === 'function' && this.options.onToggleControlsCallback) {
+                        handleInput(this.options.onToggleControlsCallback, !isNowHidden);
+                    }
+                };
+            }
+        } else if (controlPanel) {
+            const toggleBtn = this.container.querySelector('.pythra-toggle-button');
+            if (toggleBtn) toggleBtn.remove();
+            controlPanel.remove();
+        }
+
+        if (!editorEl) {
+            editorEl = document.createElement('div');
+            editorEl.id = this.options.instanceId ? `editor_${this.options.instanceId}` : 'editor';
+            editorEl.contentEditable = true;
+            editorEl.lang = 'en';
+            editorEl.className = 'editor-inner-container';
+            this.container.appendChild(editorEl);
+        }
+        editorEl.spellcheck = this.options.spellcheck !== false;
+        editorEl.setAttribute('autocorrect', this.options.autocorrect !== false ? 'on' : 'off');
+        console.log(`spellcheck=${editorEl.spellcheck}, autocorrect=${editorEl.getAttribute('autocorrect')} from options`, this.options);
+        this.editorElement = editorEl;
+
+        if (this.options.initialContent != null && this.editorElement.innerHTML !== this.options.initialContent) {
+            this.editorElement.innerHTML = this.options.initialContent;
+        }
+
+        this.editorElement.classList.toggle('grid-background', this.options.showGrid);
+        this._setupChangeHandler();
+        this._setupVisualFeedbackHandlers();
+
+        if (this.imageResizer) this.imageResizer.destroy();
+        this.imageResizer = new PythraImageResizer(this.editorElement);
+    }
+
+    createControlPanel() {
+        const panel = document.createElement('div');
+        panel.className = 'control-panel';
+        const group1 = document.createElement('div');
+        group1.className = 'control-group';
+        [{ cmd: 'formatBlock', val: 'H1', title: 'Heading 1', label: 'H1' }, { cmd: 'formatBlock', val: 'H2', title: 'Heading 2', label: 'H2' }, { cmd: 'formatBlock', val: 'P', title: 'Paragraph', label: 'P' }, { cmd: 'insertUnorderedList', title: 'Unordered List', label: 'UL' }, { cmd: 'insertOrderedList', title: 'Ordered List', label: 'OL' },].forEach(c => group1.appendChild(this.createButton(c.cmd, c.label, c.title, c.val)));
+        panel.appendChild(group1);
+        const group2 = document.createElement('div');
+        group2.className = 'control-group';
+        [{ id: `btn-bold_${this.options.instanceId}`, cmd: 'bold', title: 'Bold', label: '<b>B</b>' }, { id: `btn-italic_${this.options.instanceId}`, cmd: 'italic', title: 'Italic', label: '<i>I</i>' }, { id: `btn-underline_${this.options.instanceId}`, cmd: 'underline', title: 'Underline', label: '<u>U</u>' }, { id: `btn-strikeThrough_${this.options.instanceId}`, cmd: 'strikeThrough', title: 'Strikethrough', label: '<s>S</s>' },].forEach(c => group2.appendChild(this.createButton(c.cmd, c.label, c.title, null, c.id)));
+        panel.appendChild(group2);
+        const group3 = document.createElement('div');
+        group3.className = 'control-group';
+        group3.appendChild(this.createColorPicker());
+        group3.appendChild(this.createFontSelector());
+        panel.appendChild(group3);
+        const group4 = document.createElement('div');
+        group4.className = 'control-group';
+        const insertImageBtn = this.createButton('insertImage', '🖼️', 'Insert Image');
+        insertImageBtn.onclick = () => { const url = prompt("Enter the image URL:"); if (url) { this.execCommand('insertImage', url); } };
+        group4.appendChild(insertImageBtn);
+        panel.appendChild(group4);
+        return panel;
+    }
+
+    createButton(command, label, title, value = null, id = null) {
+        const button = document.createElement('button');
+        if (id) button.id = id;
+        button.title = title;
+        button.innerHTML = label;
+        button.onclick = () => this.execCommand(command, value);
+        return button;
+    }
+
+    createColorPicker() {
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.title = 'Font Color';
+        input.oninput = (e) => this.execCommand('foreColor', e.target.value);
+        return input;
+    }
+
+    createFontSelector() {
+        const select = document.createElement('select');
+        select.title = 'Font Family';
+        select.onchange = (e) => this.execCommand('fontName', e.target.value);
+        const fontsToUse = (this.options.fontList && Array.isArray(this.options.fontList) && this.options.fontList.length > 0) ? this.options.fontList : [{ val: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif', label: 'System Default' }, { val: 'Arial, sans-serif', label: 'Arial' }, { val: "'Times New Roman', serif", label: 'Times New Roman' },];
+        fontsToUse.forEach(font => select.add(new Option(font.label, font.val)));
+        return select;
+    }
+
+    _setupChangeHandler() {
+        if (!this.editorElement) return;
+        this._changeHandler = () => {
+            clearTimeout(this._changeTimer);
+            this._changeTimer = setTimeout(() => {
+                const content = this.editorElement.innerHTML;
+                if (typeof handleInput === 'function' && this.options.callback) {
+                    handleInput(this.options.callback, content);
+                }
+            }, 180);
+        };
+        this.editorElement.addEventListener('input', this._changeHandler);
+    }
+
+    _setupVisualFeedbackHandlers() {
+        if (!this.editorElement) return;
+        this._feedbackHandler = () => {
+            this.updateButtonStates();
+            this.reportCursorState();
+        };
+        ['keyup', 'mouseup', 'focus', 'click'].forEach(eventType => {
+            this.editorElement.addEventListener(eventType, this._feedbackHandler);
+        });
+    }
+
+    // --- NEW METHOD ---
+    reportCursorState() {
+        if (typeof handleInput !== 'function' || !this.options.onStateChangeCallback) {
+            return;
+        }
+
+        // Gather all the formatting states at the current cursor position
+        const state = {
+            isBold: document.queryCommandState('bold'),
+            isItalic: document.queryCommandState('italic'),
+            isUnderline: document.queryCommandState('underline'),
+            isStrikeThrough: document.queryCommandState('strikeThrough'),
+            isUnorderedList: document.queryCommandState('insertUnorderedList'),
+            isOrderedList: document.queryCommandState('insertOrderedList'),
+
+            // queryCommandValue returns the value of the command (e.g., 'Verdana' or 'H1')
+            fontName: document.queryCommandValue('fontName'),
+            fontColor: document.queryCommandValue('foreColor'), // This will be an RGB string like "rgb(255, 0, 0)"
+            blockFormat: document.queryCommandValue('formatBlock'), // e.g., 'h1', 'p'
+        };
+
+        // --- NEW: Add selection coordinates ---
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            // Important: These coordinates are relative to the viewport.
+            // We might need to adjust them based on the window/screen context in Python,
+            // or just pass them as is if the Python UI overlay is also screen-relative (which it often is in these frameworks).
+            state.hasSelection = true;
+            state.selectionRect = {
+                top: rect.top,
+                bottom: rect.bottom,
+                left: rect.left,
+                right: rect.right,
+                width: rect.width,
+                height: rect.height
+            };
+
+            // --- NEW: Update Overlay Position via JS ---
+            if (window._pythraOverlay) {
+                const overlay = window._pythraOverlay;
+                overlay.style.display = 'block';
+                // Position above the selection
+                // We assume the overlay has position: absolute or fixed
+                // Adding scroll offset if needed, though getBoundingClientRect is viewport relative.
+                // If the Container is fixed/absolute to viewport, this is fine.
+                // Subtract overlay height (estimated or measured) to place on top
+
+                // Better approach: Let's assume the overlay wrapper is absolute 0,0 in a Stack covering the window.
+                const containerOffset = 222;
+                const overlayHeight = overlay.offsetHeight || 60; // Estimate or measure
+                const top = Math.max(0, rect.top - overlayHeight - 10) + containerOffset;
+                const left = rect.left;
+
+                overlay.style.top = `${top}px`;
+                overlay.style.left = `${left}px`;
+            }
+
+        } else {
+            state.hasSelection = false;
+            state.selectionRect = null;
+
+            // Hide overlay
+            if (window._pythraOverlay) {
+                window._pythraOverlay.style.display = 'none';
+            }
+        }
+
+        // Send this entire state object to Python in a single call.
+        // We reuse handleInput, but the value is now a JSON string of the state object.
+        // console.log("cusorState: ", state);
+        handleInput(this.options.onStateChangeCallback, JSON.stringify(state));
+        syncExternalToolbarState(state);
+    }
+
+    injectStyles() {
+        const style = document.createElement('style');
+        style.id = 'pythra-editor-styles';
+        style.textContent = `
+            :root{--pe-accent-color:#007aff;--pe-accent-hover:#005bb5;--pe-border-color:#dee2e6;--pe-border-radius:6px;--pe-border-width:1px;--pe-focus-ring-color:rgba(0,122,255,0.25);--pe-focus-ring-width:3px;--pe-toolbar-bg:#f1f3f5;--pe-toolbar-hover:#e9ecef;--pe-toolbar-active:#007aff;--pe-toolbar-icon:#212529;--pe-content-bg:#ffffff;--pe-content-text:#212529;--pe-content-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--pe-content-font-size:16px;--pe-content-line-height:1.7;--pe-content-padding:1.5rem;--pe-content-placeholder:#6c757d;--pe-grid-dot-color:#D3D3D3;--pe-grid-dot-size:1px;--pe-grid-dot-spacing:20px;--pe-grid-background-color:transparent;}
+            .pythra-editor-wrapper{box-sizing:border-box;display:flex;flex-direction:column;background:var(--pe-content-bg);border:var(--pe-border-width) solid var(--pe-border-color);border-radius:var(--pe-border-radius);box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+            .pythra-editor-wrapper [contenteditable]{color:var(--pe-content-text);font-family:var(--pe-content-font);font-size:var(--pe-content-font-size);line-height:var(--pe-content-line-height);padding:var(--pe-content-padding);flex-grow:1;min-height:150px;border-top:1px solid var(--pe-border-color);outline:none;overflow-y:auto;}
+            .pythra-editor-wrapper [contenteditable]:focus{border-color:var(--pe-accent-color) !important;box-shadow:0 0 0 var(--pe-focus-ring-width) var(--pe-focus-ring-color)}
+            .pythra-editor-wrapper [contenteditable]:empty:before{content:"Start writing...";color:var(--pe-content-placeholder);font-style:italic}
+            .pythra-editor-wrapper .pythra-toggle-button{flex-shrink:0;width:100%;padding:0.75rem;font-size:1rem;font-weight:600;color:white;background-color:var(--pe-accent-color);border:none;border-radius:var(--pe-border-radius) var(--pe-border-radius) 0 0;cursor:pointer;transition:background-color 0.2s ease;}
+            .pythra-editor-wrapper .pythra-toggle-button:hover{background-color:var(--pe-accent-hover)}
+            .control-panel{flex-shrink:0;background:var(--pe-toolbar-bg);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:all 0.3s ease-in-out;max-height:1000px;opacity:1;overflow:hidden;}
+            .control-panel.hidden{max-height:0;padding-top:0;padding-bottom:0;opacity:0;}
+            .control-group{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center}
+            .control-panel button,.control-panel select,.control-panel input[type="color"]{color:var(--pe-toolbar-icon);font-family:var(--pe-content-font);font-size:0.9rem;padding:0.5rem 0.75rem;background:var(--pe-content-bg);border:1px solid var(--pe-border-color);border-radius:var(--pe-border-radius);cursor:pointer;transition:all 0.2s ease;}
+            .control-panel button:hover,.control-panel select:hover{background:var(--pe-toolbar-hover)}
+            .control-panel button.active{background-color:var(--pe-toolbar-active);color:white;border-color:var(--pe-accent-hover)}
+            .control-panel select:focus{border-color:var(--pe-accent-color);box-shadow:0 0 0 var(--pe-focus-ring-width) var(--pe-focus-ring-color);background-color:var(--pe-content-bg);}
+            .pythra-image-resizer-wrapper{position:absolute;border:2px solid var(--pe-accent-color);pointer-events:none;z-index:100;}
+            .pythra-resize-handle{position:absolute;width:12px;height:12px;background-color:var(--pe-accent-color);border:2px solid white;border-radius:2px;pointer-events:auto;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+            .pythra-resize-handle.top-left{top:-7px;left:-7px;cursor:nwse-resize;}
+            .pythra-resize-handle.top-right{top:-7px;right:-7px;cursor:nesw-resize;}
+            .pythra-resize-handle.bottom-left{bottom:-7px;left:-7px;cursor:nesw-resize;}
+            .pythra-resize-handle.bottom-right{bottom:-7px;right:-7px;cursor:nwse-resize;}
+            .pythra-resize-handle.top{top:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
+            .pythra-resize-handle.bottom{bottom:-7px;left:50%;margin-left:-6px;cursor:ns-resize;}
+            .pythra-resize-handle.left{left:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
+            .pythra-resize-handle.right{right:-7px;top:50%;margin-top:-6px;cursor:ew-resize;}
+            .pythra-editor-wrapper [contenteditable].grid-background{background-image:radial-gradient(var(--pe-grid-dot-color) var(--pe-grid-dot-size), transparent 0);background-size:var(--pe-grid-dot-spacing) var(--pe-grid-dot-spacing);background-color:var(--pe-grid-background-color)}
+            [contenteditable="true"] {user-select: text;}
+        `;
+        document.head.appendChild(style);
+    }
+
+    updateButtonStates() {
+        ['bold', 'italic', 'underline', 'strikeThrough'].forEach(command => {
+            const button = document.getElementById(`btn-${command}_${this.options.instanceId}`);
+            if (!button) return;
+            try {
+                button.classList.toggle('active', document.queryCommandState(command));
+            } catch (e) { }
+        });
+    }
+
+    execCommand(command, value = null) {
+        if (!command || !this.editorElement) return;
+        this.editorElement.focus();
+        try {
+            var result = document.execCommand(command, false, value);
+            console.log(`JS execCommand: ${command}, Value: ${value}, Success: ${result}`);
+        } catch (err) {
+            console.error(`Error executing command '${command}':`, err);
+        }
+        this.updateButtonStates();
+    }
+
+    setContent(html) { if (this.editorElement) this.editorElement.innerHTML = html; }
+    getContent() { return this.editorElement ? this.editorElement.innerHTML : ''; }
+    focus() { if (this.editorElement) this.editorElement.focus(); }
+
+    updateSpellcheckSettings(spellcheck, autocorrect) {
+        if (this.editorElement) {
+            this.editorElement.spellcheck = spellcheck !== false;
+            this.editorElement.setAttribute('autocorrect', autocorrect !== false ? 'on' : 'off');
+            console.log(`Updated spellcheck: ${this.editorElement.spellcheck}, autocorrect: ${this.editorElement.getAttribute('autocorrect')}`);
+        }
+    }
+
+    destroy() {
+        console.log(`🔥 Destroying PythraMarkdownEditor instance: ${this.options.instanceId}`);
+        if (this.editorElement && this._changeHandler) {
+            this.editorElement.removeEventListener('input', this._changeHandler);
+        }
+        if (this.editorElement && this._feedbackHandler) {
+            ['keyup', 'mouseup', 'focus', 'click'].forEach(eventType => {
+                this.editorElement.removeEventListener(eventType, this._feedbackHandler);
+            });
+        }
+        if (this.imageResizer) {
+            this.imageResizer.destroy();
+        }
+        clearTimeout(this._changeTimer);
+    }
+}
+
+// --- NEW: JS-Controlled Overlay Logic ---
+
+class PythraSelectionOverlay {
+    constructor(elementOrId, options = {}) {
+        if (typeof elementOrId === 'string') {
+            this.container = document.getElementById(elementOrId);
+        } else {
+            this.container = elementOrId;
+        }
+
+        if (this.container) {
+            // Save to global scope for the editor to access
+            window._pythraOverlay = this.container;
+
+            // Initial style: hidden and absolute
+            this.container.style.position = 'absolute';
+            this.container.style.display = 'none';
+            this.container.style.zIndex = '1000'; // Ensure it's on top
+            this.container.style.transition = 'opacity 0.2s ease, top 0.1s ease, left 0.1s ease';
+            this.container.style.pointerEvents = 'auto'; // Make sure clicks work
+        }
+    }
+}
+
+window.PythraSelectionOverlay = PythraSelectionOverlay;
+
+// --- NEW: JS-Controlled Heading Selector Overlay ---
+
+class PythraHeadingSelector {
+    constructor(elementOrId, options = {}) {
+        if (typeof elementOrId === 'string') {
+            this.container = document.getElementById(elementOrId);
+        } else {
+            this.container = elementOrId;
+        }
+
+        if (this.container) {
+            window._pythraHeadingSelector = this.container;
+            this.container.style.display = 'none';
+            this.container.style.position = 'absolute';
+            this.container.style.bottom = '0';
+            this.container.style.left = '50%';
+            this.container.style.transform = 'translateX(-50%)';
+            this.container.style.zIndex = '10000';
+        }
+    }
+}
+
+window.PythraHeadingSelector = PythraHeadingSelector;
+
+window.showHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        window._pythraHeadingSelector.style.display = 'block';
+    }
+};
+
+window.hideHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        window._pythraHeadingSelector.style.display = 'none';
+    }
+};
+
+window.toggleHeadingSelector = function () {
+    if (window._pythraHeadingSelector) {
+        var current = window._pythraHeadingSelector.style.display;
+        window._pythraHeadingSelector.style.display = current === 'none' ? 'block' : 'none';
+    }
+};
+
+window.PythraMarkdownEditor = PythraMarkdownEditor;
+
+document.addEventListener("DOMContentLoaded", () => {
+    try {
+        document.execCommand("styleWithCSS", false, true);
+    } catch (e) {
+        console.warn("styleWithCSS is not supported by this browser.");
+    }
+});
+
+// --- NEW: Global function to restore the saved selection ---
+function restoreEditorSelection() {
+    const savedRange = window._pythraSavedSelection;
+    if (savedRange) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+        console.log('🔄 Selection Restored.');
+    } else {
+        console.warn("No valid selection was saved to restore.");
+    }
+}
+
+window.restoreEditorSelection = restoreEditorSelection;
+
+// --- NEW: Global function to hide the overlay ---
+window.hidePythraSelectionOverlay = function () {
+    if (window._pythraOverlay) {
+        window._pythraOverlay.style.display = 'none';
+        console.log('Overlay hidden');
+    }
+};
+
+class PythraImageResizer {
+    constructor(editorElement) {
+        this.editor = editorElement;
+        this.selectedImage = null;
+        this.wrapper = null;
+        this.parent = editorElement.parentNode;
+        this._originalParentPosition = this.parent.style.position;
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleEditorEvent = this.handleEditorEvent.bind(this);
+
+        this.editor.addEventListener('click', this.handleClick);
+        this.editor.addEventListener('scroll', this.handleEditorEvent, { passive: true });
+        this.editor.addEventListener('input', this.handleEditorEvent, { passive: true });
+        window.addEventListener('resize', this.handleEditorEvent, { passive: true });
+
+        if (this.parent && getComputedStyle(this.parent).position === 'static') {
+            this.parent.style.position = 'relative';
+        }
+    }
+
+    handleClick(e) {
+        const target = e.target;
+        if (target.tagName === 'IMG' && this.editor.contains(target)) {
+            if (this.selectedImage !== target) {
+                this.selectImage(target);
+            }
+        } else if (this.selectedImage) {
+            this.deselectImage();
+        }
+    }
+
+    handleEditorEvent() {
+        if (this.selectedImage) {
+            this.positionWrapper();
+        }
+    }
+
+    selectImage(img) {
+        this.deselectImage();
+        this.selectedImage = img;
+
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = 'pythra-image-resizer-wrapper';
+        this.parent.appendChild(this.wrapper);
+        this.positionWrapper();
+
+        var handlePositions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+        handlePositions.forEach(function(pos) {
+            var handle = document.createElement('div');
+            handle.className = 'pythra-resize-handle ' + pos;
+            handle.dataset.position = pos;
+            this.wrapper.appendChild(handle);
+            handle.addEventListener('mousedown', this.handleMouseDown);
+        }.bind(this));
+    }
+
+    deselectImage() {
+        if (this.wrapper) {
+            this.wrapper.remove();
+            this.wrapper = null;
+        }
+        if (this.selectedImage) {
+            this.selectedImage.style.outline = '';
+            this.selectedImage = null;
+        }
+    }
+
+    positionWrapper() {
+        if (!this.selectedImage || !this.wrapper) return;
+
+        var imgRect = this.selectedImage.getBoundingClientRect();
+        var parentRect = this.parent.getBoundingClientRect();
+
+        this.wrapper.style.top = (imgRect.top - parentRect.top) + 'px';
+        this.wrapper.style.left = (imgRect.left - parentRect.left) + 'px';
+        this.wrapper.style.width = imgRect.width + 'px';
+        this.wrapper.style.height = imgRect.height + 'px';
+    }
+
+    handleMouseDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var img = this.selectedImage;
+        this._startWidth = img.offsetWidth;
+        this._startHeight = img.offsetHeight;
+        this._startX = e.clientX;
+        this._startY = e.clientY;
+        this._handlePosition = e.target.dataset.position;
+
+        document.addEventListener('mousemove', this.handleMouseMove);
+        document.addEventListener('mouseup', this.handleMouseUp);
+    }
+
+    handleMouseMove(e) {
+        if (!this._startWidth) return;
+
+        var dx = e.clientX - this._startX;
+        var dy = e.clientY - this._startY;
+        var pos = this._handlePosition;
+        var newWidth = this._startWidth;
+        var newHeight = this._startHeight;
+
+        if (pos.includes('right')) {
+            newWidth = Math.max(30, this._startWidth + dx);
+        } else if (pos.includes('left')) {
+            newWidth = Math.max(30, this._startWidth - dx);
+        }
+
+        if (pos.includes('bottom')) {
+            newHeight = Math.max(30, this._startHeight + dy);
+        } else if (pos.includes('top')) {
+            newHeight = Math.max(30, this._startHeight - dy);
+        }
+
+        var img = this.selectedImage;
+        img.removeAttribute('width');
+        img.removeAttribute('height');
+        img.style.width = newWidth + 'px';
+        img.style.height = newHeight + 'px';
+        this.positionWrapper();
+    }
+
+    handleMouseUp() {
+        document.removeEventListener('mousemove', this.handleMouseMove);
+        document.removeEventListener('mouseup', this.handleMouseUp);
+        this._startWidth = null;
+
+        if (this.selectedImage) {
+            this.editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        }
+    }
+
+    destroy() {
+        this.editor.removeEventListener('click', this.handleClick);
+        this.editor.removeEventListener('scroll', this.handleEditorEvent);
+        this.editor.removeEventListener('input', this.handleEditorEvent);
+        window.removeEventListener('resize', this.handleEditorEvent);
+        this.deselectImage();
+        if (this.parent) {
+            this.parent.style.position = this._originalParentPosition || '';
+        }
+    }
+}
+
+// Add this new function at the very end of your editor.js file.
+
+/**
+ * Updates the visual state of external toolbar buttons based on the editor's cursor state.
+ * It looks for buttons with specific, predictable class names.
+ * @param {object} cursorState - The state object received from Python.
+ */
+function syncExternalToolbarState(cursorState) {
+    if (!cursorState) return;
+
+    console.log("sync state:", cursorState)
+
+    // A mapping from the state property to the CSS class to look for.
+    const stateToClassMap = {
+        isBold: 'pythra-toolbar-bold',
+        isItalic: 'pythra-toolbar-italic',
+        isUnderline: 'pythra-toolbar-underline',
+        isStrikeThrough: 'pythra-toolbar-strikethrough',
+        isUnorderedList: 'pythra-toolbar-ul',
+        isOrderedList: 'pythra-toolbar-ol'
+    };
+
+    for (const key in stateToClassMap) {
+        const className = stateToClassMap[key];
+        const isActive = cursorState[key];
+
+        // Find all buttons that have this class
+        const buttons = document.querySelectorAll(`.${className}`);
+
+        buttons.forEach(button => {
+            // Use classList.toggle for a clean and efficient update.
+            // The second argument forces 'add' if isActive is true, and 'remove' if false.
+            button.classList.toggle('active', isActive);
+        });
+    }
+
+    // --- 2. THE CORRECTED LOGIC for the font color button ---
+
+    // Find the icon using its new, stable class name.
+    const colorButtonIcon = document.querySelector('.pythra-toolbar-font-color-btn');
+
+    if (colorButtonIcon) {
+        // Get the color from the cursor state.
+        const newColor = cursorState.fontColor;
+
+        if (newColor && newColor !== "inherit" && newColor !== "rgb(0, 0, 0)" && newColor !== "rgba(0, 0, 0, 0)") {
+            // --- USE setProperty WITH '!important' ---
+            colorButtonIcon.style.setProperty('color', newColor, 'important');
+            console.log(newColor)
+        } else {
+            // If no specific color, remove our inline override to revert to CSS class default.
+            colorButtonIcon.style.removeProperty('color');
+        }
+    }
+    // You can add more complex logic for dropdowns here if needed
+    // For example, finding a dropdown and setting its value based on cursorState.fontName
+}
+
+window.syncExternalToolbarState = syncExternalToolbarState;
+
+/**
+ * Replace the current selection (or saved selection) with the provided HTML.
+ * - If there's an active selection, it will be replaced.
+ * - If there's no active selection but a saved selection exists (`window._pythraSavedSelection`), that will be used.
+ * - If no selection can be found, the HTML will be appended to the first `.editor-inner-container` found.
+ * 
+ * SMART INLINE HANDLING:
+ * - If replacing text within an inline context (e.g., within a <p>), and the replacement
+ *   contains only inline elements, it will be inserted cleanly without breaking the block.
+ * - If the replacement contains block elements (e.g., <h1>, <div>), they are preserved
+ *   and inserted naturally, potentially splitting the containing block if necessary.
+ * 
+ * After inserting, an `input` event is dispatched on the affected editor to notify change handlers.
+ * @param {string} newHtml - The HTML string to insert in place of the selection.
+ */
+function replaceEditorSelection(newHtml) {
+    if (!newHtml) return;
+    restoreEditorSelection();
+
+    let selection = window.getSelection();
+    let range = null;
+
+    if (selection && selection.rangeCount > 0) {
+        range = selection.getRangeAt(0);
+    } else if (window._pythraSavedSelection) {
+        try {
+            range = window._pythraSavedSelection.cloneRange ? window._pythraSavedSelection.cloneRange() : window._pythraSavedSelection;
+        } catch (e) {
+            range = window._pythraSavedSelection;
+        }
+    }
+
+    // Helper to dispatch input on closest editor container
+    function dispatchInputFromNode(node) {
+        if (!node) return;
+        const editor = node.nodeType === 3 ? node.parentElement.closest('.editor-inner-container') : (node.closest ? node.closest('.editor-inner-container') : null);
+        if (editor) editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    }
+
+    // Helper to check if HTML contains block-level elements
+    function containsBlockElements(html) {
+        const blockTags = /^<(div|p|h[1-6]|ul|ol|li|blockquote|pre|table|form|fieldset|section|article|aside|header|footer|main|nav)\b/i;
+        return blockTags.test(html.trim());
+    }
+
+    if (!range) {
+        // Fallback: append to first editor
+        const editor = document.querySelector('.editor-inner-container[contenteditable="true"]');
+        if (editor) {
+            try {
+                const frag = document.createRange().createContextualFragment(newHtml);
+                editor.appendChild(frag);
+                dispatchInputFromNode(editor);
+            } catch (e) {
+                console.error('replaceEditorSelection fallback append error:', e);
+            }
+        } else {
+            console.warn('replaceEditorSelection: no selection and no editor found to insert into.');
+        }
+        return;
+    }
+
+    try {
+        // Normalize selection to be editable: ensure we have a live selection object
+        selection = window.getSelection();
+        if (selection.rangeCount > 0) selection.removeAllRanges();
+
+        // Delete current contents of the range
+        range.deleteContents();
+
+        // Determine insertion strategy based on context
+        const isInlineOnlyReplacement = !containsBlockElements(newHtml);
+        const isWithinInlineContainer = range.commonAncestorContainer.nodeType === 3 ||
+            (range.commonAncestorContainer.nodeType === 1 && 
+             /^(p|span|a|em|strong|b|i|u|s|mark|code|small|sub|sup|kbd|var|samp|q|dfn|abbr|cite)$/i.test(range.commonAncestorContainer.tagName));
+
+        let lastInsertedNode = null;
+
+        if (isInlineOnlyReplacement && isWithinInlineContainer) {
+            // Smart inline insertion: use insertAdjacentHTML to avoid breaking the block
+            const temp = document.createElement('div');
+            temp.innerHTML = newHtml;
+            
+            // Insert each child node at the range position
+            const nodes = Array.from(temp.childNodes);
+            nodes.forEach((node, idx) => {
+                const cloned = node.cloneNode(true);
+                range.insertNode(cloned);
+                lastInsertedNode = cloned;
+                // Move range forward so next node inserts after this one
+                range.setStartAfter(cloned);
+                range.collapse(true);
+            });
+        } else {
+            // Standard insertion for block content or when not in inline context
+            const temp = document.createElement('div');
+            temp.innerHTML = newHtml;
+            const frag = document.createDocumentFragment();
+            while (temp.firstChild) {
+                lastInsertedNode = temp.firstChild;
+                frag.appendChild(temp.firstChild);
+            }
+            range.insertNode(frag);
+        }
+
+        // Move caret after inserted content
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        const newRange = document.createRange();
+
+        if (lastInsertedNode) {
+            try {
+                newRange.setStartAfter(lastInsertedNode);
+                newRange.collapse(true);
+            } catch (e) {
+                // Fallback: collapse to end of the original range
+                newRange.setStart(range.endContainer, range.endOffset);
+                newRange.collapse(true);
+            }
+        } else {
+            newRange.setStart(range.endContainer, range.endOffset);
+            newRange.collapse(true);
+        }
+        sel.addRange(newRange);
+
+        // Notify editor about input change
+        dispatchInputFromNode(newRange.startContainer || newRange.commonAncestorContainer);
+    } catch (err) {
+        console.error('replaceEditorSelection error:', err);
+    }
+}
+
+window.replaceEditorSelection = replaceEditorSelection;
+
+} catch (e) { console.error('Error loading plugin pythra-markdown-editor - editor.js:', e); }
                     
                     // Then, RUN the initialization commands that were generated
-                    window._pythra_instances['fw_id_16'] = new PythraGestureDetector('fw_id_16', {"onTapName":"gd_tap_myExpandable_detector","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_25'] = new PythraGestureDetector('fw_id_25', {"onTapName":"gd_tap_color_pick_btn_0","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_27'] = new PythraGestureDetector('fw_id_27', {"onTapName":"gd_tap_color_pick_btn_1","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_29'] = new PythraGestureDetector('fw_id_29', {"onTapName":"gd_tap_color_pick_btn_2","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_31'] = new PythraGestureDetector('fw_id_31', {"onTapName":"gd_tap_color_pick_btn_3","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_33'] = new PythraGestureDetector('fw_id_33', {"onTapName":"gd_tap_color_pick_btn_4","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});
+                    
+                    function waitForAndInit(className, initCallback) {
+                            const interval = setInterval(() => {
+                                // Check if the class is now available on the window object
+                                if (typeof window[className] === 'function') {
+                                    clearInterval(interval); // Stop checking
+                                    console.log(`Class ${className} is defined. Initializing...`);
+                                    initCallback(); // Run the initialization code
+                                } else {
+                                    console.log(`Waiting for class ${className}...`);
+                                }
+                            }, 100); // Check every 100ms
+                        }
+                        waitForAndInit('PythraContextMenuInternal', () => {
+                            window._pythra_instances['ctx_menu_137570691590592'] = new PythraContextMenuInternal(
+                                document.getElementById('fw_id_2'),
+                                {"items":[{"label":"New Note","cb":"ctx_menu_c83c11bb7d8a","icon":"add_circle_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"Settings","cb":"ctx_menu_92dda6c60972","icon":"settings_account_box","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"","cb":null,"icon":null,"fontFamily":null,"enabled":true,"divider":true,"shortcut":null},{"label":"Close App","cb":"ctx_menu_7703a8eb30a1","icon":"delete_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null}],"theme":{"panel":{"backgroundColor":"var(--md-sys-color-surface)","borderColor":"var(--md-sys-color-outline)","borderRadius":"8px","borderWidth":"1px","boxShadow":"0 8pxpx 16pxpx rgba(0,0,0,0.3)"},"item":{"color":"var(--md-sys-color-on-surface)","fontSize":"13px","fontFamily":"sans-serif","padding":"6px 16px","hoverBackgroundColor":"var(--md-sys-color-surface-variant)","disabledOpacity":0.4},"icon":{"size":"20"},"divider":{"color":"#555","margin":"4px 0"}}}
+                            );
+                            
+                        });
+                        window._pythra_instances['fw_id_17'] = new PythraGestureDetector('fw_id_17', {"onTapName":"gd_tap_myExpandable_detector","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_26'] = new PythraGestureDetector('fw_id_26', {"onTapName":"gd_tap_color_pick_btn_0","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_28'] = new PythraGestureDetector('fw_id_28', {"onTapName":"gd_tap_color_pick_btn_1","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_30'] = new PythraGestureDetector('fw_id_30', {"onTapName":"gd_tap_color_pick_btn_2","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_32'] = new PythraGestureDetector('fw_id_32', {"onTapName":"gd_tap_color_pick_btn_3","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});window._pythra_instances['fw_id_34'] = new PythraGestureDetector('fw_id_34', {"onTapName":"gd_tap_color_pick_btn_4","onDoubleTapName":null,"onLongPressName":null,"onPanStartName":null,"onPanUpdateName":null,"onPanEndName":null});
                 if (!window._pythra_instances['pythra-clip-bp-b4c41c41c4']) {
                     const pointsForGenerator_pythra_clip_bp_b4c41c41c4 = [[0,0],[58,0],[58,22],[100,22],[100,78],[78,78],[78,100],[48,100],[48,78],[0,78]].map(p => ({x: p[0], y: p[1]}));
                     const initialPathString_pythra_clip_bp_b4c41c41c4 = window.generateRoundedPath(pointsForGenerator_pythra_clip_bp_b4c41c41c4, 8);
