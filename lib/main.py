@@ -7,8 +7,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from constants.colors import *
 from constants.theme import initial_theme
 
+# ── Imports ───────────────────────────────────────────────────────────
 from screens.note_editor_screen import NoteEditorScreen
 from screens.dashboard_screen import DashboardScreen
+from screens.login_screen import LoginScreen
 
 from utils import shared_prefernce
 
@@ -30,12 +32,14 @@ from pythra import (
     Colors,
 )
 
+# ── Preferences & Theme Setup ─────────────────────────────────────────
 pref = shared_prefernce.PythraPreferences()
 if pref.get("theme", None) is None:
     print("---- Perf theme is not set ----")
     pref.set("theme", "light")
 
 
+# ── Home Page & Navigation ────────────────────────────────────────────
 class HomePageState(State):
     def __init__(self):
         self.count = 0
@@ -51,6 +55,13 @@ class HomePageState(State):
         self.setState()
 
     def build(self) -> Widget:
+        is_logged_in = pref.get("is_logged_in", False)
+        initial_builder = (
+            (lambda navigator: DashboardScreen(navigator=navigator, key=Key("my_app_root")))
+            if is_logged_in
+            else (lambda navigator: LoginScreen(navigator=navigator, key=Key("my_login_root")))
+        )
+
         return Container(
             key=Key("home_page_Pythra_wrapper_container"),
             height="100vh",
@@ -59,11 +70,15 @@ class HomePageState(State):
             child=Navigator(
                 key=Key("app_navigator"),
                 initialRoute=PageRoute(
-                    builder=lambda navigator: DashboardScreen(
-                        navigator=navigator, key=Key("my_app_root")
-                    )
+                    builder=initial_builder
                 ),
                 routes={
+                    "/login": lambda navigator: LoginScreen(
+                        key=Key("login_page"), navigator=navigator
+                    ),
+                    "/dashboard": lambda navigator: DashboardScreen(
+                        key=Key("dashboard_page"), navigator=navigator
+                    ),
                     "/note": lambda navigator: NoteEditorScreen(
                         key=Key("note_page"), navigator=navigator
                     ),

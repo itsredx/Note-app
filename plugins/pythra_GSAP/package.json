@@ -1,0 +1,51 @@
+{
+    "name": "pythra_GSAP",
+    "version": "1.0.0",
+    "description": "A Flutter-style animation plugin for Pythra powered by GreenSock GSAP",
+    "package_type": "plugin",
+    "dependencies": {
+        "pythra": ">=0.1.0"
+    },
+    "author": {
+        "name": "itsredx",
+        "email": "ambashir02@gmail.com",
+        "url": "https://github.com/itsredx"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/itsredx/pythra-toolkit",
+        "directory": "plugins/pythra_GSAP"
+    },
+    "min_python_version": "0.1.0",
+    "supported_platforms": ["windows", "linux", "macos"],
+    "python_modules": [
+        "__init__",
+        "widget",
+        "controller",
+        "types"
+    ],
+    "asset_dir": "render",
+    "js_modules": {
+        "gsap": "js/gsap.min.js",
+        "MorphSVGPlugin": "js/MorphSVGPlugin.min.js",
+        "DrawSVGPlugin": "js/DrawSVGPlugin.min.js",
+        "MotionPathPlugin": "js/MotionPathPlugin.min.js",
+        "ScrollTrigger": "js/ScrollTrigger.min.js",
+        "ScrollSmoother": "js/ScrollSmoother.min.js",
+        "ScrollToPlugin": "js/ScrollToPlugin.min.js",
+        "Draggable": "js/Draggable.min.js",
+        "InertiaPlugin": "js/InertiaPlugin.min.js",
+        "Flip": "js/Flip.min.js",
+        "SplitText": "js/SplitText.min.js",
+        "TextPlugin": "js/TextPlugin.min.js",
+        "ScrambleTextPlugin": "js/ScrambleTextPlugin.min.js",
+        "CustomEase": "js/CustomEase.min.js",
+        "CustomBounce": "js/CustomBounce.min.js",
+        "CustomWiggle": "js/CustomWiggle.min.js",
+        "Physics2DPlugin": "js/Physics2DPlugin.min.js",
+        "GSDevTools": "js/GSDevTools.min.js",
+        "PythraGSAP": "js/gsap_engine.js"
+    },
+    "tags": ["animation", "gsap", "svg", "morph", "draw", "motionpath", "scrolltrigger", "scrollsmoother", "scrollto", "draggable", "inertia", "text", "scramble", "splittext", "easing", "bounce", "wiggle", "physics", "gsdevtools"]
+}

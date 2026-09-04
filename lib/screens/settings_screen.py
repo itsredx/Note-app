@@ -34,10 +34,10 @@ from pythra import (
     Image,
     AssetImage,
     NavigatorState,
+    PageRoute,
     Double,
     InputDecoration,
     BorderSide,
-    BorderRadius,
 )
 
 
@@ -137,6 +137,20 @@ class SettingsAndProfileScreenState(State):
     def update_autocorrect(self, value):
         self.autocorrect = value
         self.setState()
+
+    def sign_out(self):
+        pref.set("is_logged_in", False)
+        from lib.screens.login_screen import LoginScreen
+        login_route = PageRoute(
+            builder=lambda nav: LoginScreen(
+                navigator=nav,
+                key=Key("login_screen_after_signout"),
+            ),
+            name="login",
+        )
+        if hasattr(self.navigator, "history") and isinstance(self.navigator.history, list):
+            self.navigator.history.clear()
+        self.navigator.push(login_route)
 
     def update_ai_features(self, value):
         self.ai_features = value
@@ -413,6 +427,32 @@ class SettingsAndProfileScreenState(State):
                                                     ),
                                                 ),
                                             ]
+                                        ),
+                                        SettingsSection(
+                                            key=Key("account_section"),
+                                            title="Account",
+                                            children=[
+                                                SettingsTile(
+                                                    key=Key("sign_out_tile"),
+                                                    title="Sign Out",
+                                                    subtitle="Switch account or return to login screen",
+                                                    trailing=IconButton(
+                                                        key=Key("sign_out_btn"),
+                                                        icon=Icon(
+                                                            Icons.logout_rounded,
+                                                            color=Colors.hex("#EF4444"),
+                                                            size=20,
+                                                        ),
+                                                        onPressed=self.sign_out,
+                                                        tooltip="Sign Out",
+                                                        style=ButtonStyle(
+                                                            backgroundColor=AppColors.buttonBackgroundColor,
+                                                            hoverColor=AppColors.buttonHoverColor,
+                                                            foregroundColor=AppColors.buttonForegroundColor,
+                                                        ),
+                                                    ),
+                                                ),
+                                            ],
                                         ),
                                         SettingsSection(
                                             key=Key("about_app_section"),

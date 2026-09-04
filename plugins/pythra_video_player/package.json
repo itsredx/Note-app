@@ -1,0 +1,29 @@
+{
+    "name": "pythra-video-player",
+    "version": "1.0.0",
+    "description": "A high-performance video player plugin for Pythra using VLC and a transparent WebEngine overlay",
+    "package_type": "plugin",
+    "dependencies": {
+        "pythra": ">=0.1.0"
+    },
+    "author": {
+        "name": "itsredx",
+        "email": "ambashir02@gmail.com",
+        "url": "https://github.com/itsredx"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/itsredx/pythra-toolkit",
+        "directory": "plugins/pythra_video_player"
+    },
+    "min_python_version": "0.1.0",
+    "supported_platforms": ["windows", "linux", "macos"],
+    "python_modules": ["__init__", "widget", "controller", "player_state", "style"],
+    "asset_dir": "render",
+    "js_modules": {
+        "PythraVideoPlayer": "js/video_player_engine.js"
+    },
+    "css_files": ["css/video_player.css"],
+    "tags": ["video", "vlc", "media", "player"]
+}

@@ -687,25 +687,27 @@ class NoteEditorScreenState(State):
                                 ]
                             ),
                         ),
-                        (
-                            Positioned(
-                                key=Key(f"my_header_posit"),
-                                height="610px",
-                                width="610px",
-                                top="16px",
-                                right="4px",
-                                child=Container(
-                                    height=610,
-                                    width=610,
-                                    color=Colors.transparent,
-                                    child=ChatCard(
-                                        key=Key("my_chat_card_0xff"),
-                                        context=self.editor,
+                        *(
+                            [
+                                Positioned(
+                                    key=Key(f"my_header_posit"),
+                                    height="610px",
+                                    width="610px",
+                                    top="16px",
+                                    right="4px",
+                                    child=Container(
+                                        height=610,
+                                        width=610,
+                                        color=Colors.transparent,
+                                        child=ChatCard(
+                                            key=Key("my_chat_card_0xff"),
+                                            context=self.editor,
+                                        ),
                                     ),
-                                ),
-                            )
+                                )
+                            ]
                             if self.chatOpen
-                            else ()
+                            else []
                         ),
                         Positioned(
                             height=58,

@@ -5,7 +5,10 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 print("dir: ", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.shared_prefernce import PythraPreferences
+try:
+    from lib.utils.shared_prefernce import PythraPreferences
+except ImportError:
+    from utils.shared_prefernce import PythraPreferences
 from pythra.core import config
 
 pref = PythraPreferences()
