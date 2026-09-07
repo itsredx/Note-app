@@ -12,3 +12,7 @@ render_dir: render
 assets_dir: assets
 assets_server_port: 8002
 app_id: com.pythra.note-app
+plugins:
+  - markdown
+  - markdown_render
+  - pythra_video_player
