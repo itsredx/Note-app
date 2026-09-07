@@ -422,6 +422,7 @@ class NoteEditorScreenState(State):
         if note:
             tab_state.add_tab(note)
             self.editor.content = note.content
+            self.editor.set_content(note.content)
             md_state = self.markdown_editor.get_state()
             if md_state:
                 md_state._dirty = True
@@ -650,6 +651,7 @@ class NoteEditorScreenState(State):
                                         ],
                                     ),
                                     ContextMenu(
+                                        key=Key("note_editor_context_menu"),
                                         items=[
                                             MenuItem(
                                                 "Copy",
