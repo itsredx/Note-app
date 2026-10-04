@@ -83,7 +83,7 @@
                         );  
                     }
                     
-.pythra-context-menu-wrapper { box-sizing: border-box; }
+.shared-container-0 { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -93,7 +93,7 @@
                         );  
                     }
                     
-.shared-container-0 { box-sizing: border-box; }
+.pythra-context-menu-wrapper { box-sizing: border-box; }
 
                     [data-role="floating-label-container"] {
                         background: linear-gradient(
@@ -171,136 +171,6 @@
             }
             
 
-
-        /* === Styles for textfield-root-container === */
-
-        .textfield-root-container.textfield-root-container {
-            display: flex; flex-direction: column; margin: 0px;
-            border-radius: 4px;
-            width: 100%;
-        }
-        .textfield-root-container.textfield-root-container .textfield-container {
-            position: relative; padding-top: 0px;
-            background-color: transparent;
-            border-radius: 26px; /* Top corners only generally for filled */
-            border-top: 1.5px solid #D1D5DB;
-            border-left: 1.5px solid #D1D5DB;
-            border-right: 1.5px solid #D1D5DB;
-            border-bottom:1.5px solid #D1D5DB; outline: #D1D5DB; box-sizing: border-box;
-            transition: border-bottom-color 0.2s, background-color 0.2s, border-color 0.2s;
-            cursor: text;
-            display: flex;
-            align-items: center;
-        }
-        .textfield-root-container.textfield-root-container .textfield-leading {
-             margin-left: 12px;
-             margin-right: 4px;
-             display: flex; align-items: center; justify-content: center;
-             z-index: 5;
-        }
-        .textfield-root-container.textfield-root-container .textfield-trailing {
-             margin-right: 12px;
-             margin-left: 4px;
-             display: flex; align-items: center; justify-content: center;
-             z-index: 5;
-        }
-        .textfield-root-container.textfield-root-container .textfield-input {
-            flex-grow: 1;
-            width: 100%; height: 56px; padding: 15px 20px; font-size: 16px;
-            color: var(--md-sys-color-on-surface);  background-color: transparent;
-            border: none; outline: none; box-sizing: border-box;
-            border-radius: 26px;
-        }
-        
-        .textfield-root-container.textfield-root-container .textfield-input::placeholder {
-            color: #9CA3AF; /* show placeholder on focus */
-            font-size: 14px;
-            font-family: sans-serif;
-        }
-        
-        .textfield-root-container.textfield-root-container .textfield-input:focus::placeholder {
-            color: #9CA3AF; /* show placeholder on focus */
-            font-size: 14px;
-            font-family: sans-serif;
-        }
-        .textfield-root-container.textfield-root-container .textfield-label {
-            position: absolute; left: 16px; top: 18px; font-size: 16px; 
-            color: var(--md-sys-color-on-surface-variant); pointer-events: none;
-            transform-origin: left top; 
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s, top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .textfield-root-container.textfield-root-container.has-leading .textfield-label {
-            left: 48px; /* account for leading icon padding */
-        }
-        .textfield-root-container.textfield-root-container .textfield-outline {
-            display: none; /* using standard borders instead */
-        }
-        .textfield-root-container.textfield-root-container  .textfield-helper-text {
-            padding: 4px 16px 0 16px; font-size: 12px; color: var(--md-sys-color-on-surface-variant);
-            min-height: 1.2em; transition: color 0.2s;
-        }
-        .textfield-root-container.textfield-root-container .textfield-helper-text:empty {
-             display: none; 
-        }
-
-        /* --- HOVER STATE (Scoped) --- */
-        .textfield-root-container.textfield-root-container:hover:not(:focus-within) .textfield-container {
-            border-bottom-color: #1C1B1F;
-            border-top-color: #1C1B1F;
-            border-left-color: #1C1B1F;
-            border-right-color: #1C1B1F;
-        }
-
-        /* --- FOCUSED & VALUE STATE (Scoped) --- */
-        .textfield-root-container.textfield-root-container:focus-within .textfield-container {
-            border-top: 1.5px solid #111827;
-            border-left: 1.5px solid #111827;
-            border-right: 1.5px solid #111827;
-            border-bottom: 1.5px solid #111827;
-        }
-        .textfield-root-container.textfield-root-container .textfield-input:focus ~ .textfield-label,
-        .textfield-root-container.textfield-root-container .textfield-input:not(:placeholder-shown) ~ .textfield-label {
-            transform: translateY(-10.0px) scale(0.75); /* Dynamic translation based on font base */
-            top: 4px; /* Adjust top so the label breaks the border line */
-            color: var(--md-sys-color-primary);
-            background: linear-gradient(to bottom, transparent 37%, transparent 37%);;
-            padding: 0 4px;
-            z-index: 10;
-        }
-        .textfield-root-container.textfield-root-container.has-leading .textfield-input:focus ~ .textfield-label,
-        .textfield-root-container.textfield-root-container.has-leading .textfield-input:not(:placeholder-shown) ~ .textfield-label {
-            left: 12px; /* Return left to properly align with outline border edge, adjusted for padding */
-        }
-        .textfield-root-container.textfield-root-container:focus-within .textfield-container {
-            background-color: rgba(0, 0, 0, 0.08); /* slight highlight */
-        }
-        
-        /* --- ERROR STATE (Scoped) --- */
-        .textfield-root-container.textfield-root-container.error .textfield-label,
-        .textfield-root-container.textfield-root-container.error:focus-within .textfield-label {
-            color: var(--md-sys-color-error);
-        }
-        .textfield-root-container.textfield-root-container.error .textfield-outline {
-            height: 2.0px;
-            background-color: var(--md-sys-color-error);
-        }
-        .textfield-root-container.textfield-root-container.error .textfield-helper-text {
-            color: var(--md-sys-color-error);
-        }
-
-        /* --- DISABLED STATE (Scoped) --- */
-        .textfield-root-container.textfield-root-container.disabled .textfield-container {
-            background-color: rgba(0, 0, 0, 0.06);
-            color: rgba(0, 0, 0, 0.38);
-        }
-        .textfield-root-container.textfield-root-container.disabled .textfield-label,
-        .textfield-root-container.textfield-root-container.disabled .textfield-helper-text {
-            color: rgba(0, 0, 0, 0.38);
-        }
-        .textfield-root-container.textfield-root-container.disabled .textfield-outline {
-            background-color: rgba(0, 0, 0, 0.12);
-        }
-        
 
         /* === Styles for shared-textfield-0 === */
 
@@ -428,6 +298,136 @@
             color: rgba(0, 0, 0, 0.38);
         }
         .textfield-root-container.shared-textfield-0.disabled .textfield-outline {
+            background-color: rgba(0, 0, 0, 0.12);
+        }
+        
+
+        /* === Styles for textfield-root-container === */
+
+        .textfield-root-container.textfield-root-container {
+            display: flex; flex-direction: column; margin: 0px;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .textfield-root-container.textfield-root-container .textfield-container {
+            position: relative; padding-top: 0px;
+            background-color: transparent;
+            border-radius: 26px; /* Top corners only generally for filled */
+            border-top: 1.5px solid #D1D5DB;
+            border-left: 1.5px solid #D1D5DB;
+            border-right: 1.5px solid #D1D5DB;
+            border-bottom:1.5px solid #D1D5DB; outline: #D1D5DB; box-sizing: border-box;
+            transition: border-bottom-color 0.2s, background-color 0.2s, border-color 0.2s;
+            cursor: text;
+            display: flex;
+            align-items: center;
+        }
+        .textfield-root-container.textfield-root-container .textfield-leading {
+             margin-left: 12px;
+             margin-right: 4px;
+             display: flex; align-items: center; justify-content: center;
+             z-index: 5;
+        }
+        .textfield-root-container.textfield-root-container .textfield-trailing {
+             margin-right: 12px;
+             margin-left: 4px;
+             display: flex; align-items: center; justify-content: center;
+             z-index: 5;
+        }
+        .textfield-root-container.textfield-root-container .textfield-input {
+            flex-grow: 1;
+            width: 100%; height: 56px; padding: 15px 20px; font-size: 16px;
+            color: var(--md-sys-color-on-surface);  background-color: transparent;
+            border: none; outline: none; box-sizing: border-box;
+            border-radius: 26px;
+        }
+        
+        .textfield-root-container.textfield-root-container .textfield-input::placeholder {
+            color: #9CA3AF; /* show placeholder on focus */
+            font-size: 14px;
+            font-family: sans-serif;
+        }
+        
+        .textfield-root-container.textfield-root-container .textfield-input:focus::placeholder {
+            color: #9CA3AF; /* show placeholder on focus */
+            font-size: 14px;
+            font-family: sans-serif;
+        }
+        .textfield-root-container.textfield-root-container .textfield-label {
+            position: absolute; left: 16px; top: 18px; font-size: 16px; 
+            color: var(--md-sys-color-on-surface-variant); pointer-events: none;
+            transform-origin: left top; 
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s, top 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .textfield-root-container.textfield-root-container.has-leading .textfield-label {
+            left: 48px; /* account for leading icon padding */
+        }
+        .textfield-root-container.textfield-root-container .textfield-outline {
+            display: none; /* using standard borders instead */
+        }
+        .textfield-root-container.textfield-root-container  .textfield-helper-text {
+            padding: 4px 16px 0 16px; font-size: 12px; color: var(--md-sys-color-on-surface-variant);
+            min-height: 1.2em; transition: color 0.2s;
+        }
+        .textfield-root-container.textfield-root-container .textfield-helper-text:empty {
+             display: none; 
+        }
+
+        /* --- HOVER STATE (Scoped) --- */
+        .textfield-root-container.textfield-root-container:hover:not(:focus-within) .textfield-container {
+            border-bottom-color: #1C1B1F;
+            border-top-color: #1C1B1F;
+            border-left-color: #1C1B1F;
+            border-right-color: #1C1B1F;
+        }
+
+        /* --- FOCUSED & VALUE STATE (Scoped) --- */
+        .textfield-root-container.textfield-root-container:focus-within .textfield-container {
+            border-top: 1.5px solid #111827;
+            border-left: 1.5px solid #111827;
+            border-right: 1.5px solid #111827;
+            border-bottom: 1.5px solid #111827;
+        }
+        .textfield-root-container.textfield-root-container .textfield-input:focus ~ .textfield-label,
+        .textfield-root-container.textfield-root-container .textfield-input:not(:placeholder-shown) ~ .textfield-label {
+            transform: translateY(-10.0px) scale(0.75); /* Dynamic translation based on font base */
+            top: 4px; /* Adjust top so the label breaks the border line */
+            color: var(--md-sys-color-primary);
+            background: linear-gradient(to bottom, transparent 37%, transparent 37%);;
+            padding: 0 4px;
+            z-index: 10;
+        }
+        .textfield-root-container.textfield-root-container.has-leading .textfield-input:focus ~ .textfield-label,
+        .textfield-root-container.textfield-root-container.has-leading .textfield-input:not(:placeholder-shown) ~ .textfield-label {
+            left: 12px; /* Return left to properly align with outline border edge, adjusted for padding */
+        }
+        .textfield-root-container.textfield-root-container:focus-within .textfield-container {
+            background-color: rgba(0, 0, 0, 0.08); /* slight highlight */
+        }
+        
+        /* --- ERROR STATE (Scoped) --- */
+        .textfield-root-container.textfield-root-container.error .textfield-label,
+        .textfield-root-container.textfield-root-container.error:focus-within .textfield-label {
+            color: var(--md-sys-color-error);
+        }
+        .textfield-root-container.textfield-root-container.error .textfield-outline {
+            height: 2.0px;
+            background-color: var(--md-sys-color-error);
+        }
+        .textfield-root-container.textfield-root-container.error .textfield-helper-text {
+            color: var(--md-sys-color-error);
+        }
+
+        /* --- DISABLED STATE (Scoped) --- */
+        .textfield-root-container.textfield-root-container.disabled .textfield-container {
+            background-color: rgba(0, 0, 0, 0.06);
+            color: rgba(0, 0, 0, 0.38);
+        }
+        .textfield-root-container.textfield-root-container.disabled .textfield-label,
+        .textfield-root-container.textfield-root-container.disabled .textfield-helper-text {
+            color: rgba(0, 0, 0, 0.38);
+        }
+        .textfield-root-container.textfield-root-container.disabled .textfield-outline {
             background-color: rgba(0, 0, 0, 0.12);
         }
         
@@ -963,7 +963,7 @@
                         }
                     });
                 });
-                window.__PYTHRA_CONFIG__ = {"app_name":"Note App","app_version":"0.0.1","win_width":1024,"win_height":710,"min_win_width":1024,"min_win_height":710,"frameless":false,"maximixed":false,"fixed_size":false,"Debug":true,"render_dir":"render","assets_dir":"assets","assets_server_port":8002,"app_id":"com.pythra.note-app"};
+                window.__PYTHRA_CONFIG__ = {"app_name":"Note App","app_version":"0.0.1","win_width":1024,"win_height":710,"min_win_width":1024,"min_win_height":710,"frameless":false,"maximixed":false,"fixed_size":false,"Debug":true,"render_dir":"render","assets_dir":"assets","assets_server_port":8002,"app_id":"com.pythra.note-app","plugins":["markdown","markdown_render","pythra_video_player"]};
                 try {
                     setFloatingLabelBg(color=getFinalSolidColor());
                 } catch (error) {
@@ -1080,7 +1080,7 @@ with Note App. Get started for free.</p><div id="fw_id_19" class="" data-key="" 
             type="text" 
             value=""
             placeholder="Username"
-            oninput="clearTimeout(this.to); this.to=setTimeout(()=>{handleInput('ctrl_138cc610a00145ab9bc78cc65a8a277a', this.value); console.log(`${this.value}`)}, 300);"
+            oninput="clearTimeout(this.to); this.to=setTimeout(()=>{handleInput('ctrl_6af5a7219a61404187b1fb62ae6853b1', this.value); console.log(`${this.value}`)}, 300);"
             
         >
         <label id="fw_id_23" class="textfield-label shared-textfield-0"></label><div id="fw_id_24" class="textfield-outline shared-textfield-0" data-key="" data-role=""></div></div><div id="fw_id_25" class="textfield-helper-text shared-textfield-0" data-key="" data-role=""></div></div><div id="fw_id_26" class="" data-key="" data-role="" style="height: 14px"></div><div id="fw_id_27" class="shared-textfield-1 has-trailing textfield-root-container" data-key="" data-role=""><div id="fw_id_28" class="textfield-container shared-textfield-1" data-key="" data-role="">
@@ -1090,7 +1090,7 @@ with Note App. Get started for free.</p><div id="fw_id_19" class="" data-key="" 
             type="password" 
             value=""
             placeholder="Password"
-            oninput="clearTimeout(this.to); this.to=setTimeout(()=>{handleInput('ctrl_9d4d5878b205442aaaa2ca9cfcb35411', this.value); console.log(`${this.value}`)}, 300);"
+            oninput="clearTimeout(this.to); this.to=setTimeout(()=>{handleInput('ctrl_3e1f908afa294ccc926e8474c0eb1c63', this.value); console.log(`${this.value}`)}, 300);"
             
         >
         <div id="fw_id_30" class="textfield-trailing shared-textfield-1" data-key="" data-role=""><button id="fw_id_31" class="shared-iconbutton-0" data-key="" data-role="" onclick="handleClick('_toggle_password_visibility')"><i id="fw_id_32" class="material-icon-0" data-key="" data-role="">visibility_off</i></button></div><label id="fw_id_33" class="textfield-label shared-textfield-1"></label><div id="fw_id_34" class="textfield-outline shared-textfield-1" data-key="" data-role=""></div></div><div id="fw_id_35" class="textfield-helper-text shared-textfield-1" data-key="" data-role=""></div></div><div id="fw_id_36" class="" data-key="" data-role="" style="height: 10px"></div><div id="fw_id_37" class="shared-row-0" data-key="" data-role=""><div id="fw_id_38" class="shared-gesture-0"><p id="fw_id_39" class="shared-text-2" data-key="" data-role="" style="color: #111827; font-family: sans-serif; font-size: 12; font-weight: 600">Forgot Password?</p></div></div><div id="fw_id_40" class="" data-key="" data-role="" style="height: 24px"></div><button id="fw_id_41" class="shared-elevatedbutton-0" data-key="" data-role="" onclick="handleClick('login_primary_button_pressed')"><div id="fw_id_42" class="shared-center-0" data-key="" data-role=""><p id="fw_id_43" class="shared-text-3" data-key="" data-role="" style="color: #FFFFFF; font-family: sans-serif; font-size: 15; font-weight: 600">Login</p></div></button><div id="fw_id_44" class="" data-key="" data-role="" style="height: 24px"></div><div id="fw_id_45" class="shared-row-1" data-key="" data-role=""><div id="fw_id_46" class="shared-container-2" data-key="None" data-role="None"></div><div id="fw_id_47" class="shared-container-3" data-key="login_or_continue_with" data-role="None"><p id="fw_id_48" class="shared-text-4" data-key="" data-role="" style="color: #9CA3AF; font-family: sans-serif; font-size: 12">or continue with</p></div><div id="fw_id_49" class="shared-container-2" data-key="None" data-role="None"></div></div><div id="fw_id_50" class="" data-key="" data-role="" style="height: 20px"></div><div id="fw_id_51" class="shared-row-2" data-key="" data-role=""><div id="fw_id_52" class="shared-gesture-0"><img id="fw_id_53" class="shared-image-0" data-key="" data-role="" src="http://localhost:8002/google_btn.png" alt=""></div><div id="fw_id_54" class="" data-key="" data-role="" style="width: 16px"></div><div id="fw_id_55" class="shared-gesture-0"><img id="fw_id_56" class="shared-image-0" data-key="" data-role="" src="http://localhost:8002/apple_btn.png" alt=""></div><div id="fw_id_57" class="" data-key="" data-role="" style="width: 16px"></div><div id="fw_id_58" class="shared-gesture-0"><img id="fw_id_59" class="shared-image-0" data-key="" data-role="" src="http://localhost:8002/facebook_btn.png" alt=""></div></div><div id="fw_id_60" class="" data-key="" data-role="" style="height: 36px"></div><div id="fw_id_61" class="shared-row-2" data-key="" data-role=""><p id="fw_id_62" class="shared-text-5" data-key="" data-role="" style="color: #6B7280; font-family: sans-serif; font-size: 13">Not a member? </p><div id="fw_id_63" class="shared-gesture-0"><p id="fw_id_64" class="shared-text-6" data-key="" data-role="" style="color: #43965B; font-family: sans-serif; font-size: 13; font-weight: 600">Register now</p></div></div></div></div></div></div></div></div><div id="fw_id_65" class="shared-container-10" data-key="login_right_container" data-role="None"><div id="fw_id_66" class="shared-scrollview-0" data-key="" data-role=""><div id="fw_id_67" class="shared-container-9" data-key="right_hero_card_container" data-role="None"><div id="fw_id_68" class="shared-center-0" data-key="" data-role=""><div id="fw_id_69" class="shared-column-1" data-key="" data-role=""><img id="fw_id_70" class="shared-image-1" data-key="" data-role="" src="http://localhost:8002/login_illustration.png" alt=""><div id="fw_id_71" class="" data-key="" data-role="" style="height: 24px"></div><div id="fw_id_72" class="shared-row-2" data-key="" data-role=""><div id="fw_id_73" class="shared-gesture-0"><div id="fw_id_74" class="shared-container-7" data-key="None" data-role="None"></div></div><div id="fw_id_75" class="" data-key="" data-role="" style="width: 6px"></div><div id="fw_id_76" class="shared-gesture-0"><div id="fw_id_77" class="shared-container-8" data-key="None" data-role="None"></div></div><div id="fw_id_78" class="" data-key="" data-role="" style="width: 6px"></div><div id="fw_id_79" class="shared-gesture-0"><div id="fw_id_80" class="shared-container-7" data-key="None" data-role="None"></div></div></div><div id="fw_id_81" class="" data-key="" data-role="" style="height: 28px"></div><p id="fw_id_82" class="shared-text-7" data-key="" data-role="" style="color: #111827; font-family: sans-serif; font-size: 18">Make your work easier and organized</p><div id="fw_id_83" class="" data-key="" data-role="" style="height: 6px"></div><div id="fw_id_84" class="shared-row-2" data-key="" data-role=""><p id="fw_id_85" class="shared-text-8" data-key="" data-role="" style="color: #111827; font-family: sans-serif; font-size: 18; font-weight: 500">with </p><p id="fw_id_86" class="shared-text-9" data-key="" data-role="" style="color: #111827; font-family: sans-serif; font-size: 18; font-weight: 800">Note App</p></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
@@ -1135,276 +1135,7 @@ with Note App. Get started for free.</p><div id="fw_id_19" class="" data-key="" 
                 window._pythra_instances = window._pythra_instances || {};
                 try {
                     // First, DEFINE all our JS classes and functions
-                    // --- Injected from textfield.js ---
-try {
-                        
-class PythraTextField {
-    
-    constructor(id, options) {
-        this.containerId = id;
-        
-        // The Reconciler generates dynamic IDs (e.g. fw_id_16). 
-        // Best approach is finding the container using its ID, 
-        // and querying the descendant label utilizing the specific CSS classes
-        this.container = document.getElementById(this.containerId);
-        
-        if (!this.container) return;
-        
-        // Find the inner label element using querySelector
-        this.label = this.container.querySelector('.textfield-label');
-        console.log(`text field init: ${this.label}`)
-        if (!this.label) return;
-        this.updateLabelBackground();
-
-    }
-
-    parseColor(colorStr) {
-        const matches = colorStr.match(/[\d.]+/g);
-        if (!matches) return [255, 255, 255, 1];
-        const values = matches.map(Number);
-        if (values.length === 3) values.push(1); // Default opaque alpha
-        return values;
-    }
-
-    updateLabelBackground() {
-        if (!this.container || !this.label) return;
-
-        // Find the solid background color behind the container by walking up the DOM
-        let parent = this.container.parentElement;
-        let bgRgb = [255, 255, 255]; // Default white
-
-        while (parent) {
-            const parentBg = window.getComputedStyle(parent).backgroundColor;
-            if (parentBg !== 'rgba(0, 0, 0, 0)' && parentBg !== 'transparent') {
-                bgRgb = this.parseColor(parentBg);
-                if (bgRgb[3] >= 0.99) { // Only stop if it's practically solid
-                    break;
-                }
-            }
-            parent = parent.parentElement;
-        }
-
-        // Get the container's designated background color
-        const containerBg = window.getComputedStyle(this.container).backgroundColor;
-        const fgRgba = this.parseColor(containerBg);
-
-        // Alpha blending formula for overlaying fgRgba on bgRgb
-        const alpha = fgRgba[3];
-        const r = Math.round((fgRgba[0] * alpha) + (bgRgb[0] * (1 - alpha)));
-        const g = Math.round((fgRgba[1] * alpha) + (bgRgb[1] * (1 - alpha)));
-        const b = Math.round((fgRgba[2] * alpha) + (bgRgb[2] * (1 - alpha)));
-
-        const finalSolidColor = `rgb(${r}, ${g}, ${b})`;
-
-
-        // Apply the dynamic linear gradient to visually mask the top border cleanly
-        this.label.style.background = `linear-gradient(to bottom, transparent 35%, ${finalSolidColor} 35%)`;
-    }
-}
-
-
-                        // Make common names available on window if defined
-
-                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
-
-                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
-
-                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
-
-                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
-
-                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
-
-                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
-
-                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
-
-                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
-
-                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
-
-                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
-
-                    } catch (e) { console.error('Error loading textfield.js:', e); }
-
-// --- Injected from gesture_detector.js ---
-try {
-                        
-/**
- * PythraGestureDetector: A client-side engine for a feature-rich gesture detector.
- *
- * It uses Pointer Events to handle mouse and touch统一. It disambiguates between
- * taps, double taps, long presses, and panning gestures.
- */
-class PythraGestureDetector {
-    constructor(elementId, options) {
-        this.element = document.getElementById(elementId);
-        if (!this.element) {
-            console.error(`GestureDetector element with ID #${elementId} not found.`);
-            return;
-        }
-
-        this.options = options;
-
-        // --- Gesture State ---
-        this.lastTapTime = 0;
-        this.tapTimeout = null;
-        this.longPressTimeout = null;
-        this.isPanning = false;
-        this.panStartPoint = { x: 0, y: 0 };
-        this.panThreshold = 5; // Pixels to move before a pan is detected
-
-        // --- Bind Handlers ---
-        this.handlePointerDown = this.handlePointerDown.bind(this);
-        this.handlePointerMove = this.handlePointerMove.bind(this);
-        this.handlePointerUp = this.handlePointerUp.bind(this);
-        this.fireTap = this.fireTap.bind(this);
-        this.fireLongPress = this.fireLongPress.bind(this);
-
-        // Attach the entry-point event listener
-        this.element.addEventListener('pointerdown', this.handlePointerDown);
-    }
-
-    
-    handlePointerDown(event) {
-        // Only respond to the primary button (e.g., left mouse click)
-        if (event.button !== 0) return;
-
-        const currentTime = Date.now();
-
-        // --- Double Tap Detection ---
-        if (currentTime - this.lastTapTime < 300) { // 300ms window for double tap
-            clearTimeout(this.tapTimeout);
-            this.tapTimeout = null;
-            this.lastTapTime = 0;
-            if (this.options.onDoubleTapName) {
-                window.pywebview.on_gesture_event(this.options.onDoubleTapName, {});
-            }
-            return;
-        }
-        
-        this.lastTapTime = currentTime;
-        this.panStartPoint = { x: event.clientX, y: event.clientY };
-
-        // --- Long Press Detection ---
-        if (this.options.onLongPressName) {
-            this.longPressTimeout = setTimeout(() => this.fireLongPress(), 500); // 500ms for long press
-        }
-
-        // --- Single Tap Detection (will be fired later if not cancelled) ---
-        if (this.options.onTapName) {
-            this.tapTimeout = setTimeout(() => this.fireTap(), 300);
-        }
-
-        // Listen for move/up on the entire document for robust dragging
-        document.addEventListener('pointermove', this.handlePointerMove);
-        document.addEventListener('pointerup', this.handlePointerUp);
-        document.addEventListener('pointercancel', this.handlePointerUp); // Treat cancel like up
-    }
-
-    handlePointerMove(event) {
-        if (this.isPanning) {
-            // --- Continue Panning ---
-            const dx = event.clientX - this.panStartPoint.x;
-            const dy = event.clientY - this.panStartPoint.y;
-            if (this.options.onPanUpdateName) {
-                window.pywebview.on_gesture_event(this.options.onPanUpdateName, { dx, dy });
-            }
-        } else {
-            // --- Check if a Pan has Started ---
-            const dx = event.clientX - this.panStartPoint.x;
-            const dy = event.clientY - this.panStartPoint.y;
-            if (Math.sqrt(dx * dx + dy * dy) > this.panThreshold) {
-                this.isPanning = true;
-                // A pan gesture cancels tap and long press
-                clearTimeout(this.tapTimeout);
-                this.tapTimeout = null;
-                clearTimeout(this.longPressTimeout);
-                this.longPressTimeout = null;
-                
-                if (this.options.onPanStartName) {
-                    window.pywebview.on_gesture_event(this.options.onPanStartName, {});
-                }
-            }
-        }
-    }
-
-    handlePointerUp(event) {
-        // Clean up document-level listeners immediately
-        document.removeEventListener('pointermove', this.handlePointerMove);
-        document.removeEventListener('pointerup', this.handlePointerUp);
-        document.removeEventListener('pointercancel', this.handlePointerUp);
-
-        // Always clear a pending long press if pointer is lifted
-        clearTimeout(this.longPressTimeout);
-        this.longPressTimeout = null;
-        
-        if (this.isPanning) {
-            // --- End Panning ---
-            this.isPanning = false;
-            if (this.options.onPanEndName) {
-                window.pywebview.on_gesture_event(this.options.onPanEndName, );
-            }
-        }
-    }
-
-    fireTap() {
-        if (this.tapTimeout) { // Ensure it wasn't cancelled
-            this.tapTimeout = null;
-            if (this.options.onTapName) {
-                window.pywebview.on_gesture_event(this.options.onTapName, {});
-            }
-        }
-    }
-    
-    fireLongPress() {
-        // A long press cancels a single tap
-        clearTimeout(this.tapTimeout);
-        this.tapTimeout = null;
-        this.lastTapTime = 0; // Prevent next tap from being a double tap
-        
-        if (this.longPressTimeout) {
-            this.longPressTimeout = null;
-            if (this.options.onLongPressName) {
-                window.pywebview.on_gesture_event(this.options.onLongPressName, {});
-            }
-        }
-    }
-
-    destroy() {
-        if (!this.element) return;
-        this.element.removeEventListener('pointerdown', this.handlePointerDown);
-        this.handlePointerUp(); // Ensure document listeners are cleaned up
-        clearTimeout(this.tapTimeout);
-        clearTimeout(this.longPressTimeout);
-    }
-}
-
-                        // Make common names available on window if defined
-
-                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
-
-                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
-
-                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
-
-                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
-
-                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
-
-                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
-
-                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
-
-                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
-
-                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
-
-                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
-
-                    } catch (e) { console.error('Error loading gesture_detector.js:', e); }
-
-// --- Injected from context_menu.js ---
+                    // --- Injected from context_menu.js ---
 try {
                         
 const _ctxMenuDefaults = {
@@ -1693,6 +1424,275 @@ if (typeof window !== 'undefined') {
                         if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
 
                     } catch (e) { console.error('Error loading context_menu.js:', e); }
+
+// --- Injected from textfield.js ---
+try {
+                        
+class PythraTextField {
+    
+    constructor(id, options) {
+        this.containerId = id;
+        
+        // The Reconciler generates dynamic IDs (e.g. fw_id_16). 
+        // Best approach is finding the container using its ID, 
+        // and querying the descendant label utilizing the specific CSS classes
+        this.container = document.getElementById(this.containerId);
+        
+        if (!this.container) return;
+        
+        // Find the inner label element using querySelector
+        this.label = this.container.querySelector('.textfield-label');
+        console.log(`text field init: ${this.label}`)
+        if (!this.label) return;
+        this.updateLabelBackground();
+
+    }
+
+    parseColor(colorStr) {
+        const matches = colorStr.match(/[\d.]+/g);
+        if (!matches) return [255, 255, 255, 1];
+        const values = matches.map(Number);
+        if (values.length === 3) values.push(1); // Default opaque alpha
+        return values;
+    }
+
+    updateLabelBackground() {
+        if (!this.container || !this.label) return;
+
+        // Find the solid background color behind the container by walking up the DOM
+        let parent = this.container.parentElement;
+        let bgRgb = [255, 255, 255]; // Default white
+
+        while (parent) {
+            const parentBg = window.getComputedStyle(parent).backgroundColor;
+            if (parentBg !== 'rgba(0, 0, 0, 0)' && parentBg !== 'transparent') {
+                bgRgb = this.parseColor(parentBg);
+                if (bgRgb[3] >= 0.99) { // Only stop if it's practically solid
+                    break;
+                }
+            }
+            parent = parent.parentElement;
+        }
+
+        // Get the container's designated background color
+        const containerBg = window.getComputedStyle(this.container).backgroundColor;
+        const fgRgba = this.parseColor(containerBg);
+
+        // Alpha blending formula for overlaying fgRgba on bgRgb
+        const alpha = fgRgba[3];
+        const r = Math.round((fgRgba[0] * alpha) + (bgRgb[0] * (1 - alpha)));
+        const g = Math.round((fgRgba[1] * alpha) + (bgRgb[1] * (1 - alpha)));
+        const b = Math.round((fgRgba[2] * alpha) + (bgRgb[2] * (1 - alpha)));
+
+        const finalSolidColor = `rgb(${r}, ${g}, ${b})`;
+
+
+        // Apply the dynamic linear gradient to visually mask the top border cleanly
+        this.label.style.background = `linear-gradient(to bottom, transparent 35%, ${finalSolidColor} 35%)`;
+    }
+}
+
+
+                        // Make common names available on window if defined
+
+                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
+
+                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
+
+                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
+
+                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
+
+                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
+
+                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
+
+                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
+
+                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
+
+                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
+
+                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
+
+                    } catch (e) { console.error('Error loading textfield.js:', e); }
+
+// --- Injected from gesture_detector.js ---
+try {
+                        
+/**
+ * PythraGestureDetector: A client-side engine for a feature-rich gesture detector.
+ *
+ * It uses Pointer Events to handle mouse and touch统一. It disambiguates between
+ * taps, double taps, long presses, and panning gestures.
+ */
+class PythraGestureDetector {
+    constructor(elementId, options) {
+        this.element = document.getElementById(elementId);
+        if (!this.element) {
+            console.error(`GestureDetector element with ID #${elementId} not found.`);
+            return;
+        }
+
+        this.options = options;
+
+        // --- Gesture State ---
+        this.lastTapTime = 0;
+        this.tapTimeout = null;
+        this.longPressTimeout = null;
+        this.isPanning = false;
+        this.panStartPoint = { x: 0, y: 0 };
+        this.panThreshold = 5; // Pixels to move before a pan is detected
+
+        // --- Bind Handlers ---
+        this.handlePointerDown = this.handlePointerDown.bind(this);
+        this.handlePointerMove = this.handlePointerMove.bind(this);
+        this.handlePointerUp = this.handlePointerUp.bind(this);
+        this.fireTap = this.fireTap.bind(this);
+        this.fireLongPress = this.fireLongPress.bind(this);
+
+        // Attach the entry-point event listener
+        this.element.addEventListener('pointerdown', this.handlePointerDown);
+    }
+
+    
+    handlePointerDown(event) {
+        // Only respond to the primary button (e.g., left mouse click)
+        if (event.button !== 0) return;
+
+        const currentTime = Date.now();
+
+        // --- Double Tap Detection ---
+        if (currentTime - this.lastTapTime < 300) { // 300ms window for double tap
+            clearTimeout(this.tapTimeout);
+            this.tapTimeout = null;
+            this.lastTapTime = 0;
+            if (this.options.onDoubleTapName) {
+                window.pywebview.on_gesture_event(this.options.onDoubleTapName, {});
+            }
+            return;
+        }
+        
+        this.lastTapTime = currentTime;
+        this.panStartPoint = { x: event.clientX, y: event.clientY };
+
+        // --- Long Press Detection ---
+        if (this.options.onLongPressName) {
+            this.longPressTimeout = setTimeout(() => this.fireLongPress(), 500); // 500ms for long press
+        }
+
+        // --- Single Tap Detection (will be fired later if not cancelled) ---
+        if (this.options.onTapName) {
+            this.tapTimeout = setTimeout(() => this.fireTap(), 300);
+        }
+
+        // Listen for move/up on the entire document for robust dragging
+        document.addEventListener('pointermove', this.handlePointerMove);
+        document.addEventListener('pointerup', this.handlePointerUp);
+        document.addEventListener('pointercancel', this.handlePointerUp); // Treat cancel like up
+    }
+
+    handlePointerMove(event) {
+        if (this.isPanning) {
+            // --- Continue Panning ---
+            const dx = event.clientX - this.panStartPoint.x;
+            const dy = event.clientY - this.panStartPoint.y;
+            if (this.options.onPanUpdateName) {
+                window.pywebview.on_gesture_event(this.options.onPanUpdateName, { dx, dy });
+            }
+        } else {
+            // --- Check if a Pan has Started ---
+            const dx = event.clientX - this.panStartPoint.x;
+            const dy = event.clientY - this.panStartPoint.y;
+            if (Math.sqrt(dx * dx + dy * dy) > this.panThreshold) {
+                this.isPanning = true;
+                // A pan gesture cancels tap and long press
+                clearTimeout(this.tapTimeout);
+                this.tapTimeout = null;
+                clearTimeout(this.longPressTimeout);
+                this.longPressTimeout = null;
+                
+                if (this.options.onPanStartName) {
+                    window.pywebview.on_gesture_event(this.options.onPanStartName, {});
+                }
+            }
+        }
+    }
+
+    handlePointerUp(event) {
+        // Clean up document-level listeners immediately
+        document.removeEventListener('pointermove', this.handlePointerMove);
+        document.removeEventListener('pointerup', this.handlePointerUp);
+        document.removeEventListener('pointercancel', this.handlePointerUp);
+
+        // Always clear a pending long press if pointer is lifted
+        clearTimeout(this.longPressTimeout);
+        this.longPressTimeout = null;
+        
+        if (this.isPanning) {
+            // --- End Panning ---
+            this.isPanning = false;
+            if (this.options.onPanEndName) {
+                window.pywebview.on_gesture_event(this.options.onPanEndName, );
+            }
+        }
+    }
+
+    fireTap() {
+        if (this.tapTimeout) { // Ensure it wasn't cancelled
+            this.tapTimeout = null;
+            if (this.options.onTapName) {
+                window.pywebview.on_gesture_event(this.options.onTapName, {});
+            }
+        }
+    }
+    
+    fireLongPress() {
+        // A long press cancels a single tap
+        clearTimeout(this.tapTimeout);
+        this.tapTimeout = null;
+        this.lastTapTime = 0; // Prevent next tap from being a double tap
+        
+        if (this.longPressTimeout) {
+            this.longPressTimeout = null;
+            if (this.options.onLongPressName) {
+                window.pywebview.on_gesture_event(this.options.onLongPressName, {});
+            }
+        }
+    }
+
+    destroy() {
+        if (!this.element) return;
+        this.element.removeEventListener('pointerdown', this.handlePointerDown);
+        this.handlePointerUp(); // Ensure document listeners are cleaned up
+        clearTimeout(this.tapTimeout);
+        clearTimeout(this.longPressTimeout);
+    }
+}
+
+                        // Make common names available on window if defined
+
+                        if (typeof ResponsiveClipPath !== 'undefined') window.ResponsiveClipPath = ResponsiveClipPath;
+
+                        if (typeof PythraSlider !== 'undefined') window.PythraSlider = PythraSlider;
+
+                        if (typeof PythraDropdown !== 'undefined') window.PythraDropdown = PythraDropdown;
+
+                        if (typeof PythraGestureDetector !== 'undefined') window.PythraGestureDetector = PythraGestureDetector;
+
+                        if (typeof PythraGradientClipPath !== 'undefined') window.PythraGradientClipPath = PythraGradientClipPath;
+
+                        if (typeof PythraVirtualList !== 'undefined') window.PythraVirtualList = PythraVirtualList;
+
+                        if (typeof PythraVirtualGrid !== 'undefined') window.PythraVirtualGrid = PythraVirtualGrid;
+
+                        if (typeof generateRoundedPath !== 'undefined') window.generateRoundedPath = generateRoundedPath;
+
+                        if (typeof scalePathAbsoluteMLA !== 'undefined') window.scalePathAbsoluteMLA = scalePathAbsoluteMLA;
+
+                        if (typeof PythraTextField !== 'undefined') window.PythraTextField = PythraTextField;
+
+                    } catch (e) { console.error('Error loading gesture_detector.js:', e); }
 
 // --- Injected Plugin 'pythra-markdown-editor': editor.js ---
 try {
@@ -4243,9 +4243,9 @@ try {
                             }, 100); // Check every 100ms
                         }
                         waitForAndInit('PythraContextMenuInternal', () => {
-                            window._pythra_instances['ctx_menu_135376383448976'] = new PythraContextMenuInternal(
+                            window._pythra_instances['ctx_menu_124338786222928'] = new PythraContextMenuInternal(
                                 document.getElementById('fw_id_2'),
-                                {"items":[{"label":"New Note","cb":"ctx_menu_7532250a8106","icon":"add_circle_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"Settings","cb":"ctx_menu_a61f61497135","icon":"settings_account_box","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"","cb":null,"icon":null,"fontFamily":null,"enabled":true,"divider":true,"shortcut":null},{"label":"Close App","cb":"ctx_menu_67dc1f3a4225","icon":"delete_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null}],"theme":{"panel":{"backgroundColor":"var(--md-sys-color-surface)","borderColor":"var(--md-sys-color-outline)","borderRadius":"8px","borderWidth":"1px","boxShadow":"0 8pxpx 16pxpx rgba(0,0,0,0.3)"},"item":{"color":"var(--md-sys-color-on-surface)","fontSize":"13px","fontFamily":"sans-serif","padding":"6px 16px","hoverBackgroundColor":"var(--md-sys-color-surface-variant)","disabledOpacity":0.4},"icon":{"size":"20"},"divider":{"color":"#555","margin":"4px 0"}}}
+                                {"items":[{"label":"New Note","cb":"ctx_menu_c6eea770899c","icon":"add_circle_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"Settings","cb":"ctx_menu_3c869638cbaa","icon":"settings_account_box","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null},{"label":"","cb":null,"icon":null,"fontFamily":null,"enabled":true,"divider":true,"shortcut":null},{"label":"Close App","cb":"ctx_menu_fe167902125d","icon":"delete_outline","fontFamily":"Material Symbols Rounded","enabled":true,"divider":false,"shortcut":null}],"theme":{"panel":{"backgroundColor":"var(--md-sys-color-surface)","borderColor":"var(--md-sys-color-outline)","borderRadius":"8px","borderWidth":"1px","boxShadow":"0 8pxpx 16pxpx rgba(0,0,0,0.3)"},"item":{"color":"var(--md-sys-color-on-surface)","fontSize":"13px","fontFamily":"sans-serif","padding":"6px 16px","hoverBackgroundColor":"var(--md-sys-color-surface-variant)","disabledOpacity":0.4},"icon":{"size":"20"},"divider":{"color":"#555","margin":"4px 0"}}}
                             );
                             
                         });
