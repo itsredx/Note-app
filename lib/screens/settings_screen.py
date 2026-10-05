@@ -304,6 +304,7 @@ class SettingsAndProfileScreenState(State):
                                                         controller=self.open_files,
                                                         onChanged=self.update_open_files,
                                                         items=self.open_files_options,
+                                                        disabled=True,
                                                         dropDirection=VerticalDirection.DOWN,
                                                         decoration=InputDecoration(
                                                             fillColor=AppColors.dropDownColor,
@@ -344,6 +345,7 @@ class SettingsAndProfileScreenState(State):
                                                         controller=self.open_app,
                                                         onChanged=self.update_open_app,
                                                         items=self.open_app_options,
+                                                        disabled=True,
                                                         dropDirection=VerticalDirection.DOWN,
                                                         decoration=InputDecoration(
                                                             fillColor=AppColors.dropDownColor,
@@ -367,6 +369,7 @@ class SettingsAndProfileScreenState(State):
                                                             # backgroundColor=AppColors.dropDownColor,
                                                             dropdownColor=AppColors.dropDownColor,
                                                             # textColor=AppColors.iconColor,
+                                                            selectedItemColor=AppColors.dropDownItemColor,
                                                             dropdownTextColor=AppColors.iconColor,
                                                             dropdownHoverColor=AppColors.dropDownMenuHoverColor,
                                                             hoverColor=AppColors.dropDownHoverColor,
@@ -382,6 +385,7 @@ class SettingsAndProfileScreenState(State):
                                                         key=Key("show_recent_filese_switch"),
                                                         value=self.show_recent,
                                                         onChanged=self.tog_show_recent,
+                                                        disabled=True,
                                                     )
                                                 )
                                             ]
@@ -398,6 +402,7 @@ class SettingsAndProfileScreenState(State):
                                                         key=Key("spell_check_switch"),
                                                         value=self.spell_check,
                                                         onChanged=self.tog_spell_check,
+                                                        disabled=True,
                                                     ),
                                                 ),
                                                 SettingsTile(
@@ -408,6 +413,7 @@ class SettingsAndProfileScreenState(State):
                                                         key=Key("autocorrect_switch"),
                                                         value=self.autocorrect,
                                                         onChanged=self.tog_autocorrect,
+                                                        disabled=True,
                                                     ),
                                                 ),
                                             ]
@@ -424,6 +430,7 @@ class SettingsAndProfileScreenState(State):
                                                         key=Key("ai_features_switch"),
                                                         value=self.ai_features,
                                                         onChanged=self.tog_ai_features,
+                                                        disabled=True,
                                                     ),
                                                 ),
                                             ]

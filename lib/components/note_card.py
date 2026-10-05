@@ -132,11 +132,12 @@ class NoteCardState(State):
                                         Icons.auto_awesome_rounded,
                                         key=Key(f"{base_key}_chat_icon"),
                                     ),
+                                    enabled=False,
                                     onPressed=on_chat,
                                     style=ButtonStyle(
                                         backgroundColor=AppColors.buttonBackgroundColor,
                                         hoverColor=AppColors.buttonHoverColor,
-                                        foregroundColor=AppColors.buttonForegroundColor,
+                                        foregroundColor=AppColors.buttonForegroundColor,                                        
                                     ),
                                 ),
                             ],

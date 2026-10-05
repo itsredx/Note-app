@@ -30,6 +30,11 @@ class AppColors:
         dark=Colors.hex("#383838"),
         light=Colors.rgba(0, 0, 0, 0.20)
     )
+
+    buttonDisabledBackgroundColor = Colors.adaptive(
+        dark=Colors.hex("#383838"),
+        light=Colors.rgba(0, 0, 0, 0.20)
+    )
     
     buttonForegroundColor = Colors.adaptive(
         dark="#d3d3d3",

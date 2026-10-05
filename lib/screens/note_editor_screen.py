@@ -624,6 +624,39 @@ class NoteEditorScreenState(State):
                                                                         on_tab_clicked=self._switch_note,
                                                                         on_tab_close=self._on_tab_close,
                                                                     ),
+                                                                    # SizedBox(
+                                                                    #     width=4,
+                                                                    #     key=Key(
+                                                                    #         "sixe_box_new_note_controls_1"
+                                                                    #     ),
+                                                                    # ),
+                                                                    Container(
+                                                                        key=Key(
+                                                                            "new_note_btn_container"
+                                                                        ),
+                                                                        width=30,
+                                                                        height=30,
+                                                                        child=Center(
+                                                                            child=IconButton(
+                                                                            key=Key(
+                                                                                "new_note_btn_1"
+                                                                            ),
+                                                                            iconSize=12,
+                                                                            icon=Icon(
+                                                                                Icons.add_rounded,
+                                                                                key=Key(
+                                                                                    "new_note_ico_1"
+                                                                                ),
+                                                                            ),
+                                                                            onPressed=lambda: print("add new note clicked"),
+                                                                            style=ButtonStyle(
+                                                                                backgroundColor=AppColors.buttonBackgroundColor,
+                                                                                hoverColor=AppColors.buttonHoverColor,
+                                                                                foregroundColor=AppColors.buttonForegroundColor,
+                                                                            ),
+                                                                        )
+                                                                        ),
+                                                                    ),
                                                                 ],
                                                             ),
                                                         ),
